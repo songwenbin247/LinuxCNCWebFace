@@ -9,5 +9,4 @@ Project uses PHP/HTML5/CSS3/JavaScript and WebSockets.
 
 **Here is some images**\\
 {{https://cloud.githubusercontent.com/assets/16130975/15825019/e5a6382c-2c23-11e6-8212-e48fb1abc4eb.jpg}}\\
-{{https://cloud.githubusercontent.com/assets/16130975/15825020/e5b4d5b2-2c23-11e6-8523-a68cf071440d.jpg}}\\
 {{https://cloud.githubusercontent.com/assets/16130975/15293410/a3b2ae12-1ba9-11e6-86c7-50413773d5b7.png}}
