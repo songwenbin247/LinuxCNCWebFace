@@ -1,0 +1,29 @@
+.log_panel
+{
+    position:       absolute;
+    bottom:         10px;
+    width:          99%;
+    height:         100px;
+    border:         1px solid rgba(0, 0, 0, 0.5);
+    overflow:       auto;
+}
+.log_panel > .clear
+{
+    position:       absolute;
+    right:          5px;
+    top:            5px;
+    border:         1px solid rgba(255, 0, 0, 0.5);
+    padding:        0px 4px;
+    cursor:         pointer;
+}
+.log_panel > .msg
+{
+    margin:         5px;
+}
+.log_panel > .msg > .time
+{
+    font-weight:    bold;
+}
+.log_panel > .msg > .text
+{
+}

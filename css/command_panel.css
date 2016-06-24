@@ -1,0 +1,25 @@
+.command
+{
+    position:       absolute;
+    bottom:         120px;
+    width:          99.3%;
+    text-align:     center;
+}
+.command > .command_text
+{
+    width:          80%;
+}
+.command > .command_send
+{
+    width:          20%;
+    min-width:      60px;
+}
+.command > .command_text,
+.command > .command_send
+{
+    padding:        3px;
+    text-align:     center;
+    text-transform: uppercase;
+    font-weight:    bold;
+    font-size:      120%;
+}

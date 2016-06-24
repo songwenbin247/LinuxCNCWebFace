@@ -1,0 +1,647 @@
+// UTF8 without BOM
+
+/*
+    JOG PANEL
+*/
+
+// local strings to translate
+var lng_local_dic =
+[
+    { en:"Before", ru:"Перед" },
+    { en:"cmd", ru:"код" },
+    { en:"Feed", ru:"Подача" },
+    { en:"After", ru:"После" },
+    { en:"HOME", ru:"ДОМОЙ" },
+    { en:"ALL", ru:"ВСЕ" },
+];
+
+// add local strings to translate to the global translate list
+if ( !lng ) lng = {};
+if ( !lng.dic ) lng.dic = [];
+lng.dic = lng.dic.concat(lng_local_dic);
+
+// JOG panel vars and functions
+var jog =
+{
+    db: {},
+
+    hotkeys:
+    [
+        // HOME buttons
+        { name: "homeALL",        title: "HOME ALL", ctrl:0, shift:0, alt:0, key:36 }, // SHIFT + Home
+        { name: "homeXY",         title: "HOME XY", ctrl:0, shift:0, alt:0, key:101 }, // SHIFT + num 5
+        { name: "homeZ",          title: "HOME Z", ctrl:0, shift:0, alt:0, key:106 }, // SHIFT + num *
+        { name: "homeE",          title: "HOME E", ctrl:0, shift:0, alt:0, key:111 }, // SHIFT + Num /
+        // L1 buttons
+        { name: "negX1",          title: "X - L1", ctrl:0, shift:0, alt:0, key:100 }, // SHIFT + num 4
+        { name: "posX1",          title: "X + L1", ctrl:0, shift:0, alt:0, key:102 }, // SHIFT + num 6
+        { name: "negY1",          title: "Y - L1", ctrl:0, shift:0, alt:0, key:98 }, // SHIFT + num 2
+        { name: "posY1",          title: "Y + L1", ctrl:0, shift:0, alt:0, key:104 }, // SHIFT + num 8
+        { name: "negX1_negY1",    title: "X - L1, Y - L1", ctrl:0, shift:0, alt:0, key:97 }, // SHIFT + num 1
+        { name: "negX1_posY1",    title: "X - L1, Y + L1", ctrl:0, shift:0, alt:0, key:103 }, // SHIFT + num 7
+        { name: "posX1_negY1",    title: "X + L1, Y - L1", ctrl:0, shift:0, alt:0, key:99 }, // SHIFT + num 3
+        { name: "posX1_posY1",    title: "X + L1, Y + L1", ctrl:0, shift:0, alt:0, key:105 }, // SHIFT + num 9
+        { name: "negZ1",          title: "Z - L1", ctrl:0, shift:0, alt:0, key:109 }, // SHIFT + num -
+        { name: "posZ1",          title: "Z + L1", ctrl:0, shift:0, alt:0, key:107 }, // SHIFT + num +
+        { name: "negE1",          title: "E - L1", ctrl:0, shift:0, alt:0, key:96 }, // SHIFT + num 0
+        { name: "posE1",          title: "E + L1", ctrl:0, shift:0, alt:0, key:110 }, // SHIFT + num .
+        // L2 buttons
+        { name: "negX2",          title: "X - L2", ctrl:0, shift:0, alt:1, key:100 }, // ALT + num 4
+        { name: "posX2",          title: "X + L2", ctrl:0, shift:0, alt:1, key:102 }, // ALT + num 6
+        { name: "negY2",          title: "Y - L2", ctrl:0, shift:0, alt:1, key:98 }, // ALT + num 2
+        { name: "posY2",          title: "Y + L2", ctrl:0, shift:0, alt:1, key:104 }, // ALT + num 8
+        { name: "negX2_negY2",    title: "X - L2, Y - L2", ctrl:0, shift:0, alt:1, key:97 }, // ALT + num 1
+        { name: "negX2_posY2",    title: "X - L2, Y + L2", ctrl:0, shift:0, alt:1, key:103 }, // ALT + num 7
+        { name: "posX2_negY2",    title: "X + L2, Y - L2", ctrl:0, shift:0, alt:1, key:99 }, // ALT + num 3
+        { name: "posX2_posY2",    title: "X + L2, Y + L2", ctrl:0, shift:0, alt:1, key:105 }, // ALT + num 9
+        { name: "negZ2",          title: "Z - L2", ctrl:0, shift:0, alt:1, key:109 }, // ALT + num -
+        { name: "posZ2",          title: "Z + L2", ctrl:0, shift:0, alt:1, key:107 }, // ALT + num +
+        { name: "negE2",          title: "E - L2", ctrl:0, shift:0, alt:1, key:96 }, // ALT + PageUp
+        { name: "posE2",          title: "E + L2", ctrl:0, shift:0, alt:1, key:110 }, // ALT + PageDown
+        // L1 +
+        { name: "posE1",          title: "E + L1", ctrl:0, shift:0, alt:0, key:231 } // SHIFT + num ,
+    ],
+
+    key_names:
+    {
+        8 : "BACKSPACE",
+        9 : "TAB",
+        13 : "ENTER",
+        16 : "SHIFT",
+        17 : "CTRL",
+        18 : "ALT",
+        19 : "PAUSE",
+        20 : "CAPS LOCK",
+        27 : "ESCAPE",
+        33 : "PAGE UP",
+        34 : "PAGE DOWN",
+        35 : "END",
+        36 : "HOME",
+        37 : "LEFT",
+        38 : "UP",
+        39 : "RIGHT",
+        40 : "DOWN",
+        45 : "INSERT",
+        46 : "DELETE",
+        91 : "LEFT WIN",
+        92 : "RIGHT WIN",
+        93 : "SELECT",
+        96 : "NUM 0",
+        97 : "NUM 1",
+        98 : "NUM 2",
+        99 : "NUM 3",
+        100 : "NUM 4",
+        101 : "NUM 5",
+        102 : "NUM 6",
+        103 : "NUM 7",
+        104 : "NUM 8",
+        105 : "NUM 9",
+        106 : "NUM *",
+        107 : "NUM +",
+        109 : "NUM -",
+        110 : "NUM .",
+        111 : "NUM /",
+        112 : "F1",
+        113 : "F2",
+        114 : "F3",
+        115 : "F4",
+        116 : "F5",
+        117 : "F6",
+        118 : "F7",
+        119 : "F8",
+        120 : "F9",
+        121 : "F10",
+        122 : "F11",
+        123 : "F12",
+        144 : "NUM LOCK",
+        145 : "SCROLL LOCK",
+        186 : ";",
+        187 : "=",
+        188 : ",",
+        189 : "-",
+        190 : ".",
+        191 : "/",
+        192 : "`",
+        219 : "[",
+        220 : "\\",
+        221 : "]",
+        222 : "'",
+        231 : "NUM ,"
+    }
+};
+// make a default copy of the hotkeys
+jog.hotkeys_defaults = JSON.parse( JSON.stringify(jog.hotkeys) );
+
+
+
+
+// have we a localStorage?
+if ( window.localStorage !== null ) jog.db = window.localStorage;
+
+
+
+
+// simple click animation
+jog.simpleClickAnimation = function ( id )
+{
+    document.querySelector("#"+id).style.opacity = "0";
+    setTimeout( 'document.querySelector("#'+id+'").style.opacity = "1";', 200 );
+}
+// simple Button Action Effect
+jog.simpleButtonEffect = function ( id, success, text, code_after )
+{
+    var btn_box = document.querySelector("#" + id);
+
+    if ( btn_box.dataset.animated && btn_box.dataset.animated == "1" ) return;
+
+    var _color       = btn_box.style.color,
+        _text        = btn_box.innerHTML,
+        _backColor   = btn_box.style.backgroundColor;
+
+    btn_box.dataset.animated        = "1";
+    btn_box.style.color             = success ? "green" : "red";
+    btn_box.style.backgroundColor   = success ? "rgba(0,255,0,0.2)" : "rgba(255,0,0,0.2)";
+    if ( text ) btn_box.innerHTML   = text;
+
+    setTimeout (
+        'var btn_box = document.querySelector("#' + id + '");' +
+        'btn_box.style.color = "' + _color + '";' +
+        'btn_box.style.backgroundColor = "' + _backColor + '";' +
+        ( text ? 'btn_box.innerHTML = "' + _text + '";' : '' ) +
+        'btn_box.dataset.animated = "0";' +
+        ( code_after ? code_after : '' ),
+        1500
+    );
+}
+
+
+
+
+// here is a good place to send command text to the smoothie controller
+jog.execute_command = function ( outcmd )
+{
+    if ( !smoothie_available || !parent.location.protocol.match("http") ) return;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open( "POST", "/command_silent", true );
+    xhr.send( outcmd + "\n" );
+
+    if ( log && log.add ) log.add("[JOG] " + outcmd);
+}
+
+
+
+
+// any of inputs was changed
+jog.inputs_changed = function ( event )
+{
+    switch ( event.target.id )
+    {
+        case "jog_inputs_before":
+            jog.db["jog.before"] = document.querySelector("#" + event.target.id).value; break;
+
+        case "jog_inputs_cmd":
+            jog.db["jog.cmd"] = document.querySelector("#" + event.target.id).value; break;
+
+        case "jog_inputs_feed":
+            jog.db["jog.feed"] = document.querySelector("#" + event.target.id).value; break;
+
+        case "jog_inputs_after":
+            jog.db["jog.after"] = document.querySelector("#" + event.target.id).value; break;
+
+        case "jog_inputs_L1":
+        case "jog_inputs_L2":
+            // saving actual values
+            jog.db["jog.L1"] = document.querySelector("#jog_inputs_L1").value;
+            jog.db["jog.L2"] = document.querySelector("#jog_inputs_L2").value;
+
+            // conversation to unsigned numbers
+            var L1_pos  = n( jog.db["jog.L1"] );
+            var L1_neg  = -1 * L1_pos;
+            var L2_pos  = n( jog.db["jog.L2"] );
+            var L2_neg  = -1 * L2_pos;
+
+            // changing info rows/columns
+            document.querySelector("#jog_info_left1").innerHTML = L1_neg;
+            document.querySelector("#jog_info_left2").innerHTML = L2_neg;
+            document.querySelector("#jog_info_bottom1").innerHTML = L1_neg;
+            document.querySelector("#jog_info_bottom2").innerHTML = L2_neg;
+            document.querySelector("#jog_info_right1").innerHTML = L1_pos;
+            document.querySelector("#jog_info_right2").innerHTML = L2_pos;
+            document.querySelector("#jog_info_top1").innerHTML = L1_pos;
+            document.querySelector("#jog_info_top2").innerHTML = L2_pos;
+
+            // changing buttons texts
+            document.querySelector("#jog_btn_negX1").innerHTML = L1_neg;
+            document.querySelector("#jog_btn_negY1").innerHTML = L1_neg;
+            document.querySelector("#jog_btn_negZ1").innerHTML = L1_neg;
+            document.querySelector("#jog_btn_negE1").innerHTML = L1_neg;
+            document.querySelector("#jog_btn_negX2").innerHTML = L2_neg;
+            document.querySelector("#jog_btn_negY2").innerHTML = L2_neg;
+            document.querySelector("#jog_btn_negZ2").innerHTML = L2_neg;
+            document.querySelector("#jog_btn_negE2").innerHTML = L2_neg;
+
+            document.querySelector("#jog_btn_posX1").innerHTML = L1_pos;
+            document.querySelector("#jog_btn_posY1").innerHTML = L1_pos;
+            document.querySelector("#jog_btn_posZ1").innerHTML = L1_pos;
+            document.querySelector("#jog_btn_posE1").innerHTML = L1_pos;
+            document.querySelector("#jog_btn_posX2").innerHTML = L2_pos;
+            document.querySelector("#jog_btn_posY2").innerHTML = L2_pos;
+            document.querySelector("#jog_btn_posZ2").innerHTML = L2_pos;
+            document.querySelector("#jog_btn_posE2").innerHTML = L2_pos;
+
+            document.querySelector("#jog_btn_negX1_negY1").innerHTML = "X" + L1_neg + "<br />" + "Y" + L1_neg;
+            document.querySelector("#jog_btn_negX2_negY1").innerHTML = "X" + L2_neg + "<br />" + "Y" + L1_neg;
+            document.querySelector("#jog_btn_negX1_negY2").innerHTML = "X" + L1_neg + "<br />" + "Y" + L2_neg;
+            document.querySelector("#jog_btn_negX2_negY2").innerHTML = "X" + L2_neg + "<br />" + "Y" + L2_neg;
+
+            document.querySelector("#jog_btn_posX1_posY1").innerHTML = "X" + L1_pos + "<br />" + "Y" + L1_pos;
+            document.querySelector("#jog_btn_posX2_posY1").innerHTML = "X" + L2_pos + "<br />" + "Y" + L1_pos;
+            document.querySelector("#jog_btn_posX1_posY2").innerHTML = "X" + L1_pos + "<br />" + "Y" + L2_pos;
+            document.querySelector("#jog_btn_posX2_posY2").innerHTML = "X" + L2_pos + "<br />" + "Y" + L2_pos;
+
+            document.querySelector("#jog_btn_negX1_posY1").innerHTML = "X" + L1_neg + "<br />" + "Y" + L1_pos;
+            document.querySelector("#jog_btn_negX2_posY1").innerHTML = "X" + L2_neg + "<br />" + "Y" + L1_pos;
+            document.querySelector("#jog_btn_negX1_posY2").innerHTML = "X" + L1_neg + "<br />" + "Y" + L2_pos;
+            document.querySelector("#jog_btn_negX2_posY2").innerHTML = "X" + L2_neg + "<br />" + "Y" + L2_pos;
+
+            document.querySelector("#jog_btn_posX1_negY1").innerHTML = "X" + L1_pos + "<br />" + "Y" + L1_neg;
+            document.querySelector("#jog_btn_posX2_negY1").innerHTML = "X" + L2_pos + "<br />" + "Y" + L1_neg;
+            document.querySelector("#jog_btn_posX1_negY2").innerHTML = "X" + L1_pos + "<br />" + "Y" + L2_neg;
+            document.querySelector("#jog_btn_posX2_negY2").innerHTML = "X" + L2_pos + "<br />" + "Y" + L2_neg;
+    }
+}
+
+// some of the move buttons was clicked
+jog.btn_clicked = function ( event )
+{
+    if ( ! /^jog_btn_/.test(event.target.id) ) return;
+
+    // visual click effect
+    jog.simpleClickAnimation(event.target.id);
+
+    var before  = document.querySelector("#jog_inputs_before").value;
+    var cmd     = document.querySelector("#jog_inputs_cmd").value;
+    var L1      = n( document.querySelector("#jog_inputs_L1").value );
+    var L2      = n( document.querySelector("#jog_inputs_L2").value );
+    var feed    = n( document.querySelector("#jog_inputs_feed").value );
+    var after   = document.querySelector("#jog_inputs_after").value;
+    var outcmd  = "";
+
+    switch ( event.target.id )
+    {
+        // home buttons
+        case "jog_btn_homeALL":
+            outcmd = "G90 " + cmd + " X0 Y0 Z0 E0 F" + feed; break;
+        case "jog_btn_homeXY":
+            outcmd = "G90 " + cmd + " X0 Y0 F" + feed; break;
+        case "jog_btn_homeZ":
+            outcmd = "G90 " + cmd + " Z0 F" + feed; break;
+        case "jog_btn_homeE":
+            outcmd = "G90 " + cmd + " E0 F" + feed; break;
+
+        // move buttons
+        case "jog_btn_posX1":
+            outcmd = before + " " + cmd + " X" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posX2":
+            outcmd = before + " " + cmd + " X" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negX1":
+            outcmd = before + " " + cmd + " X" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negX2":
+            outcmd = before + " " + cmd + " X" + (-1*L2) + " F" + feed + " " + after; break;
+
+        case "jog_btn_posY1":
+            outcmd = before + " " + cmd + " Y" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posY2":
+            outcmd = before + " " + cmd + " Y" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negY1":
+            outcmd = before + " " + cmd + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negY2":
+            outcmd = before + " " + cmd + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+
+        case "jog_btn_posZ1":
+            outcmd = before + " " + cmd + " Z" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posZ2":
+            outcmd = before + " " + cmd + " Z" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negZ1":
+            outcmd = before + " " + cmd + " Z" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negZ2":
+            outcmd = before + " " + cmd + " Z" + (-1*L2) + " F" + feed + " " + after; break;
+
+        case "jog_btn_posE1":
+            outcmd = before + " " + cmd + " E" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posE2":
+            outcmd = before + " " + cmd + " E" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negE1":
+            outcmd = before + " " + cmd + " E" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negE2":
+            outcmd = before + " " + cmd + " E" + (-1*L2) + " F" + feed + " " + after; break;
+
+        // multiple axes move buttons
+        case "jog_btn_posX1_posY1":
+            outcmd = before + " " + cmd + " X" + L1 + " Y" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posX2_posY1":
+            outcmd = before + " " + cmd + " X" + L2 + " Y" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posX1_posY2":
+            outcmd = before + " " + cmd + " X" + L1 + " Y" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_posX2_posY2":
+            outcmd = before + " " + cmd + " X" + L2 + " Y" + L2 + " F" + feed + " " + after; break;
+
+        case "jog_btn_negX1_negY1":
+            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negX2_negY1":
+            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negX1_negY2":
+            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+        case "jog_btn_negX2_negY2":
+            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+
+        case "jog_btn_posX1_negY1":
+            outcmd = before + " " + cmd + " X" + L1 + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_posX2_negY1":
+            outcmd = before + " " + cmd + " X" + L2 + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_posX1_negY2":
+            outcmd = before + " " + cmd + " X" + L1 + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+        case "jog_btn_posX2_negY2":
+            outcmd = before + " " + cmd + " X" + L2 + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+
+        case "jog_btn_negX1_posY1":
+            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_negX2_posY1":
+            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_negX1_posY2":
+            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negX2_posY2":
+            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + L2 + " F" + feed + " " + after; break;
+    }
+
+    if ( outcmd != "" ) jog.execute_command(outcmd);
+}
+
+
+
+
+// catch any input elements focus state
+jog.on_input_focus_in = function()
+{
+    jog.input_is_active = true;
+}
+jog.on_input_focus_out = function()
+{
+    jog.input_is_active = false;
+}
+
+// any keyboard key was pressed
+jog.on_keyboard_key = function ( event )
+{
+    if ( !jog.hotkeys_enabled || jog.input_is_active || jog.settings_visible ) return;
+
+    for ( var i = jog.hotkeys.length - 1; i >= 0; i-- )
+    {
+        if
+        (
+            jog.hotkeys[i].alt   == event.altKey &&
+            jog.hotkeys[i].shift == event.shiftKey &&
+            jog.hotkeys[i].ctrl  == event.ctrlKey &&
+            jog.hotkeys[i].key   == event.keyCode
+        )
+        {
+            jog.btn_clicked( { target: { id: "jog_btn_" + jog.hotkeys[i].name } } );
+            return;
+        }
+    }
+}
+
+// blur any input element on keyboard ENTER key
+jog.on_input_keyup = function ( event )
+{
+    if ( event.keyCode == 13 ) this.blur();
+}
+
+
+
+
+// open/close settings window
+jog.settings_show = function()
+{
+    if ( jog.settings_visible ) return;
+
+    document.querySelector("#JOG_settings").style.display = "block";
+    jog.settings_visible = true;
+}
+jog.settings_hide = function ( event )
+{
+    if ( ! jog.settings_visible ) return;
+
+    document.querySelector("#JOG_settings").style.display = "none";
+    jog.settings_visible = false;
+}
+
+
+
+
+// on settings tab click
+jog.on_settings_tab_click = function ( event )
+{
+    var tab         = event.target,
+        tab_parent  = tab.parentElement,
+        tab_index   = tab_parent.children.length - 1,
+        contents    = document.querySelector("#jog_settings_tabs_content");
+
+    for ( ; tab_index >= 0; tab_index-- )
+    {
+        if ( tab_parent.children[tab_index] == tab )
+        {
+            tab_parent.children[tab_index].classList.add("jog_settings_active_tab");
+            contents.children[tab_index].style.display = "block";
+        }
+        else
+        {
+            tab_parent.children[tab_index].classList.remove("jog_settings_active_tab");
+            contents.children[tab_index].style.display = "none";
+        }
+    }
+}
+
+
+
+
+// create content for settings hotkeys tab
+jog.add_hotkeys_tab_to_settings = function()
+{
+    // repeat start of this function if settings is not loaded
+    if ( !set ) return setTimeout(jog.add_hotkeys_tab_to_settings, 3000);
+
+    var settings_panel  = document.querySelector("#settings"),
+        html            = "",
+        hotkeys_obj     = {};
+
+    for ( var i = 0, size = jog.hotkeys.length; i < size; i++ )
+    {
+        if ( ! hotkeys_obj[ jog.hotkeys[i].title ] )
+            hotkeys_obj[ jog.hotkeys[i].title ] = [];
+
+        hotkeys_obj[ jog.hotkeys[i].title ].push(
+            '<i class="btn" onclick="jog.on_settings_hotkey_click(' + i + ')">' +
+                ( jog.hotkeys[i].ctrl > 0 ? "CTRL + " : "" ) +
+                ( jog.hotkeys[i].alt > 0 ? "ALT + " : "" ) +
+                ( jog.hotkeys[i].shift > 0 ? "SHIFT + " : "" ) +
+                ( jog.key_names[ jog.hotkeys[i].key ] ? jog.key_names[ jog.hotkeys[i].key ] : jog.hotkeys[i].key ) +
+            "</i>"
+        );
+    }
+
+    html +=
+        '<div class="hotkeys_state_box">' +
+            '<label for="jog_settings_hotkeys_enabled_flag">enable hotkeys</label>' +
+            '<input type="checkbox" checked="checked" id="jog_settings_hotkeys_enabled_flag" />' +
+        '</div>';
+
+    for ( var name in hotkeys_obj )
+    {
+        html +=
+            '<div class="jog_hotkey_box">' +
+                "<b>" + name + ":</b>&nbsp;" +
+                hotkeys_obj[name].join(" , ") +
+            "</div> ";
+    }
+
+    set.add_settings_tab("JOG Hotkeys", html);
+
+    settings_panel.innerHTML +=
+        '<div class="jog_settings_hotkey_edit" id="jog_settings_hotkey_edit">' +
+            '<div class="box">' +
+                '<div class="key_name" id="jog_settings_hotkey_edit_name" >key name:</div>' +
+                '<input type="text" id="jog_settings_hotkey_edit_input" placeholder="press any keys" disabled="disabled" />' +
+                '<div class="btn" id="jog_settings_hotkey_edit_reset" title="Reset current hotkey to default value">reset</div>\r\n' +
+                '<div class="btn" id="jog_settings_hotkey_edit_delete" title="Delete current hotkey">delete</div>\r\n' +
+                '<div class="btn" id="jog_settings_hotkey_edit_save" title="Save entered keys">save</div>\r\n' +
+                '<div class="btn" id="jog_settings_hotkey_edit_cancel" title="Close this window">close</div>' +
+            '</div>' +
+        '</div>';
+
+    // add event listener for hotkeys state checkbox and get current state
+    jog.hotkeys_enabled = document.querySelector("#jog_settings_hotkeys_enabled_flag").checked ? true : false;
+    document.querySelector("#jog_settings_hotkeys_enabled_flag").addEventListener("click", jog.on_settings_hotkeys_state_change);
+
+    // hotkey edit box buttons
+    document.querySelector('#jog_settings_hotkey_edit_cancel')
+        .addEventListener( "click", jog.on_edit_hotkey_CANCEL_click );
+    document.querySelector('#jog_settings_hotkey_edit_save')
+        .addEventListener( "click", jog.on_edit_hotkey_SAVE_click );
+    document.querySelector('#jog_settings_hotkey_edit_delete')
+        .addEventListener( "click", jog.on_edit_hotkey_DELETE_click );
+    document.querySelector('#jog_settings_hotkey_edit_reset')
+        .addEventListener( "click", jog.on_edit_hotkey_RESET_click );
+}
+
+// on hotkey box click
+jog.on_settings_hotkey_click = function ( id )
+{
+    var edit_box = document.querySelector("#jog_settings_hotkey_edit");
+
+    edit_box.dataset.hotkey_id = id;
+    edit_box.querySelector("#jog_settings_hotkey_edit_name").innerHTML = "Action: &nbsp;" + jog.hotkeys[id].title;
+    edit_box.querySelector("#jog_settings_hotkey_edit_input").value = "" +
+        ( jog.hotkeys[id].ctrl > 0 ? "CTRL + " : "" ) +
+        ( jog.hotkeys[id].alt > 0 ? "ALT + " : "" ) +
+        ( jog.hotkeys[id].shift > 0 ? "SHIFT + " : "" ) +
+        ( jog.key_names[ jog.hotkeys[id].key ] ? jog.key_names[ jog.hotkeys[id].key ] : jog.hotkeys[id].key ) +
+        "";
+
+    edit_box.style.display = "block";
+}
+
+// on hotkey edit box button click
+jog.on_edit_hotkey_CANCEL_click = function()
+{
+    document.querySelector("#jog_settings_hotkey_edit").style.display = "none";
+}
+jog.on_edit_hotkey_SAVE_click = function()
+{
+    var edit_box = document.querySelector("#jog_settings_hotkey_edit");
+
+    jog.simpleButtonEffect (
+        "jog_settings_hotkey_edit_save",
+        true,
+        "SAVED",
+        'document.querySelector("#jog_settings_hotkey_edit").style.display = "none";'
+    );
+}
+jog.on_edit_hotkey_DELETE_click = function()
+{
+    var edit_box = document.querySelector("#jog_settings_hotkey_edit");
+    jog.simpleButtonEffect( "jog_settings_hotkey_edit_delete", false );
+}
+jog.on_edit_hotkey_RESET_click = function()
+{
+    var edit_box = document.querySelector("#jog_settings_hotkey_edit");
+    jog.simpleButtonEffect( "jog_settings_hotkey_edit_reset", true, "RESETED" );
+}
+jog.on_settings_hotkeys_state_change = function()
+{
+    jog.hotkeys_enabled = document.querySelector("#jog_settings_hotkeys_enabled_flag").checked ? true : false;
+}
+
+
+
+
+// do it when window is fully loaded
+jog.js_init = function()
+{
+    console.log("jog.js_init()");
+
+    // repeat start of this function if settings is not loaded
+    if ( !set || !document.querySelector("#jog_inputs_before") ) return setTimeout(jog.js_init, 3000);
+
+    if ( jog.js_initialized ) return;
+    else jog.js_initialized = true;
+
+    // put saved values into the input fields
+    if ( jog.db["jog.before"] != null ) document.querySelector("#jog_inputs_before").value = jog.db["jog.before"] ;
+    if ( jog.db["jog.cmd"] != null )    document.querySelector("#jog_inputs_cmd").value = jog.db["jog.cmd"] ;
+    if ( jog.db["jog.L1"] != null )     document.querySelector("#jog_inputs_L1").value = jog.db["jog.L1"] ;
+    if ( jog.db["jog.L2"] != null )     document.querySelector("#jog_inputs_L2").value = jog.db["jog.L2"] ;
+    if ( jog.db["jog.feed"] != null )   document.querySelector("#jog_inputs_feed").value = jog.db["jog.feed"] ;
+    if ( jog.db["jog.after"] != null )  document.querySelector("#jog_inputs_after").value = jog.db["jog.after"] ;
+
+    // update buttons text if L1 or L2 was changed
+    if ( jog.db["jog.L1"] != null || jog.db["jog.L1"] != null )
+    {
+        jog.inputs_changed( { target: { id: "jog_inputs_L1" } } );
+    }
+
+    // add event listener for the input fields changes
+    document.querySelector("#JOG_inputs_table").addEventListener("keyup", jog.inputs_changed);
+
+    // add event listener for buttons clicks
+    document.querySelector("#JOG_table").addEventListener("click", jog.btn_clicked);
+
+    // add event listeners for any input fields focus states
+    // it helps to prevent HOTKEYS action while some input is active
+    var list = document.querySelectorAll("textarea, input");
+    for ( var i = 0, size = list.length; i < size; i++ )
+    {
+        list[i].addEventListener("focus", jog.on_input_focus_in);
+        list[i].addEventListener("blur", jog.on_input_focus_out);
+    }
+
+    // add event listeners for any input fields of the JOG panel
+    // it needs to blur any input element on keyboard ENTER key
+    list = document.querySelectorAll("#JOG_table input");
+    for ( var i = 0, size = list.length; i < size; i++ )
+    {
+        list[i].addEventListener("keyup", jog.on_input_keyup);
+    }
+
+    // add event listener for any keyboard keys
+    document.querySelector("body").addEventListener("keyup", jog.on_keyboard_key);
+
+    // add hotkeys tab to general settings
+    jog.add_hotkeys_tab_to_settings();
+}
+
+
+
+
+window.addEventListener( "DOMContentLoaded", jog.js_init );

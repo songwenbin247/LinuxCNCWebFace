@@ -1,0 +1,416 @@
+@charset "utf-8";
+
+/*
+    JOG panel
+*/
+
+/* JOG table */
+.JOG
+{
+    display:        inline-block;
+    border:         0px solid black;
+    border-spacing: 8px;
+    empty-cells:    show;
+    min-width:      350px;
+}
+
+/* every jog table cell */
+.JOG tbody > tr > td
+{
+    font-size:      60%;
+    padding:        0px;
+    margin:         0px;
+    box-sizing:     border-box;
+    text-align:     center;
+    vertical-align: middle;
+    background:     rgba(0,0,0,0);
+}
+
+
+
+
+/* control buttons cells */
+.JOG tbody > .row1 > td:not([class="col0"]),
+.JOG tbody > .row2 > td:not([class="col0"]),
+.JOG tbody > .row3 > td:not([class="col0"]),
+.JOG tbody > .row4 > td:not([class="col0"]),
+.JOG tbody > .row5 > td:not([class="col0"]),
+.JOG tbody > .row7 > td:not([class="col0"])
+{
+    border:         1px solid rgba(0,0,0,0.1);
+    border-radius:  3px;
+    cursor:         pointer;
+    transition:     all 200ms linear;
+}
+
+/* control button cells - when mouse over */
+.JOG tbody > .row1 > td:not([class="col0"]):hover,
+.JOG tbody > .row2 > td:not([class="col0"]):hover,
+.JOG tbody > .row3 > td:not([class="col0"]):hover,
+.JOG tbody > .row4 > td:not([class="col0"]):hover,
+.JOG tbody > .row5 > td:not([class="col0"]):hover,
+.JOG tbody > .row7 > td:not([class="col0"]):hover
+{
+    border-color:   rgba(0,0,0,0.8) !important;
+    background:     rgba(0,0,0,0.2) !important;
+}
+
+
+
+
+/* info col0 and info row0 */
+.JOG tbody > .row1 > td[class="col0"],
+.JOG tbody > .row2 > td[class="col0"],
+.JOG tbody > .row3 > td[class="col0"],
+.JOG tbody > .row4 > td[class="col0"],
+.JOG tbody > .row5 > td[class="col0"],
+.JOG tbody > .row7 > td[class="col0"],
+.JOG tbody > .row0 > td
+{
+    cursor:         default;
+}
+/* L1 */
+.JOG tbody > .row0 > .col2,
+.JOG tbody > .row0 > .col4,
+.JOG tbody > .row2 > .col0,
+.JOG tbody > .row4 > .col0
+{
+    color:          blue;
+}
+/* L2 */
+.JOG tbody > .row0 > .col1,
+.JOG tbody > .row0 > .col5,
+.JOG tbody > .row1 > .col0,
+.JOG tbody > .row5 > .col0
+{
+    color:          red;
+}
+
+
+
+
+/* rows style */
+.JOG tbody > .row1 > td,
+.JOG tbody > .row2 > td,
+.JOG tbody > .row4 > td,
+.JOG tbody > .row5 > td
+{
+    height:         40px;
+}
+
+/* X and E axes */
+.JOG tbody > .row3 > td,
+.JOG tbody > .row7 > td
+{
+    height:         50px;
+}
+.JOG tbody > .row3 > td:not([class="col0"]),
+.JOG tbody > .row7 > td:not([class="col0"])
+{
+    border-width:   2px;
+    border-color:   rgba(0,0,0,0.3);
+}
+
+
+
+
+/* columns style */
+.JOG tbody > tr > .col1,
+.JOG tbody > tr > .col2,
+.JOG tbody > tr > .col4,
+.JOG tbody > tr > .col5
+{
+    width:          40px;
+}
+
+/* Y and Z axes */
+.JOG tbody > tr > .col3,
+.JOG tbody > tr > .col7
+{
+    width:          50px;
+    border-width:   2px !important;
+    border-color:   rgba(0,0,0,0.3) !important;
+}
+
+
+
+
+/* additional coloring for main axes rows/columns */
+
+/* X axis */
+.JOG tbody > .row3 > .col1,
+.JOG tbody > .row3 > .col2,
+.JOG tbody > .row3 > .col4,
+.JOG tbody > .row3 > .col5
+{
+    background:     rgba(0,0,255,0.1);
+}
+
+/* Y axis */
+.JOG tbody > .row1 > .col3,
+.JOG tbody > .row2 > .col3,
+.JOG tbody > .row4 > .col3,
+.JOG tbody > .row5 > .col3
+{
+    background:     rgba(0,255,0,0.1);
+}
+
+/* Z axis */
+.JOG tbody > .row1 > .col7,
+.JOG tbody > .row2 > .col7,
+.JOG tbody > .row4 > .col7,
+.JOG tbody > .row5 > .col7
+{
+    background:     rgba(255,0,0,0.1);
+}
+
+/* E axis */
+.JOG tbody > .row7 > .col1,
+.JOG tbody > .row7 > .col2,
+.JOG tbody > .row7 > .col4,
+.JOG tbody > .row7 > .col5
+{
+    background:     rgba(255,255,0,0.1);
+}
+
+
+
+
+/* HOME buttons */
+
+/* all HOME buttons */
+.JOG tbody > .row3 > .col3,
+.JOG tbody > .row3 > .col7,
+.JOG tbody > .row7 > .col3,
+.JOG tbody > .row7 > .col7
+{
+    border-width:   3px !important;
+    border-color:   rgba(0,0,0,0.5) !important;
+}
+
+/* "HOME XY" button */
+.JOG tbody > .row3 > .col3
+{
+    background:     rgba(0,255,255,0.2);
+}
+
+/* "HOME Z" button */
+.JOG tbody > .row3 > .col7
+{
+    background:     rgba(255,0,0,0.3);
+}
+
+/* "HOME E" button */
+.JOG tbody > .row7 > .col3
+{
+    background:     rgba(255,255,0,0.3);
+}
+
+/* "HOME ALL" button */
+.JOG tbody > .row7 > .col7
+{
+    background:     rgba(192,128,0,0.3);
+}
+
+
+
+
+/* additional coloring for XY directions */
+.JOG tbody > .row2 > .col2,
+.JOG tbody > .row4 > .col4,
+.JOG tbody > .row2 > .col4,
+.JOG tbody > .row4 > .col2
+{
+    background:     rgba(0,0,0,0.03);
+}
+
+
+
+
+/* additional style for axes names */
+.JOG tbody > .row0 > .col3,
+.JOG tbody > .row0 > .col7,
+.JOG tbody > .row3 > .col0,
+.JOG tbody > .row7 > .col0
+{
+    font-weight:    bold;
+    font-size:      80%;
+}
+
+
+
+
+/* last row with control inputs table*/
+.JOG tbody > .row8 > .col0
+{
+    /*height:         100px;*/
+    /*border-top:       1px solid rgba(0,0,0,0.3);*/
+}
+
+/* input table */
+.JOG .inputs
+{
+    margin:         0px;
+    margin-top:     8px;
+    width:          100%;
+    /*border:         1px solid red;*/
+    border-spacing: 2px;
+    empty-cells:    show;
+    /*background:     rgba(0,255,255,0.1);*/
+}
+
+/* all cells */
+.JOG .inputs > tbody > tr > td
+{
+    padding:        0px;
+    margin:         0px;
+    box-sizing:     border-box;
+    text-align:     center;
+    vertical-align: middle;
+}
+
+/* input cells width */
+.JOG .inputs > tbody > .input > .input1 /* BEFORE */
+{
+    width:          15%;
+}
+.JOG .inputs > tbody > .input > .input2 /* CMD */
+{
+    width:          15%;
+}
+.JOG .inputs > tbody > .input > .input3 /* L1 */
+{
+    width:          15%;
+}
+.JOG .inputs > tbody > .input > .input4 /* L2 */
+{
+    width:          20%;
+}
+.JOG .inputs > tbody > .input > .input5 /* FEED */
+{
+    width:          20%;
+    font-weight:    bold;
+}
+.JOG .inputs > tbody > .input > .input6 /* AFTER */
+{
+    width:          15%;
+}
+
+/* all cells with input elements */
+/* input cells */
+.JOG .inputs > tbody > .input > td
+{
+    font-size:      100%;
+}
+/* input elements */
+.JOG .inputs > tbody > tr > td > input
+{
+    padding:        4px 2px 2px 2px;
+    margin:         0px;
+    width:          100%;
+    text-align:     center;
+    vertical-align: middle;
+    font-size:      100%;
+    border:         1px solid rgba(0,0,0,0.5);
+    border-radius:  3px;
+    background:     rgba(255,128,0,0.1);
+    font-weight:    bold;
+    text-transform: uppercase;
+}
+.JOG .inputs > tbody > .input > .input3 > input /* L1 */
+{
+    color:          blue;
+}
+.JOG .inputs > tbody > .input > .input4 > input /* L2 */
+{
+    color:          red;
+}
+.JOG .inputs > tbody > .input > .input5 > input /* feed */
+{
+    color:          green;
+}
+
+/* all description cells */
+.JOG .inputs > tbody > .desc > td
+{
+    font-size:      70%;
+    text-transform: uppercase;
+    color:          rgba(0,0,0,0.7);
+}
+
+
+
+
+/* JOG settings tab */
+.settings > .settings_tabs_content > div > .hotkeys_state_box
+{
+    padding-bottom: 10px;
+    text-align:     right;
+}
+.settings > .settings_tabs_content > div > .hotkeys_state_box > input[type="checkbox"]
+{
+    vertical-align: top;
+}
+.settings > .settings_tabs_content > div > .hotkeys_state_box > label
+{
+    display:        inline-block;
+    padding:        1px 0 0 0;
+    text-transform: uppercase;
+    color:          rgba(0, 0, 192, 0.8);
+}
+.settings > .settings_tabs_content > div > .jog_hotkey_box
+{
+    display:        inline-block;
+    min-width:      48%;
+    margin:         0 0 5px 0;
+}
+.settings > .settings_tabs_content > div > .jog_hotkey_box > b
+{
+    display:        inline-block;
+    min-width:      100px;
+    font-style:     normal;
+    padding:        2px 4px 2px 4px;
+    border:         1px solid rgba(0, 0, 0, 0);
+    border-radius:  2px;
+    cursor:         default;
+}
+.settings > .settings_tabs_content > div > .jog_hotkey_box > i
+{
+    font-style:     normal;
+}
+.settings > .jog_settings_hotkey_edit
+{
+    display:        none;
+    text-align:     center;
+    position:       absolute;
+    top:            0;
+    bottom:         0;
+    left:           0;
+    right:          0;
+    background:     rgba(0, 0, 0, 0.7);
+}
+.settings > .jog_settings_hotkey_edit > .box
+{
+    display:        inline-block;
+    position:       absolute;
+    top:            37%;
+    left:           20%;
+    right:          20%;
+    padding:        20px;
+    border:         1px solid rgba(255, 255, 255, 0.7);
+    border-radius:  8px;
+    background:     rgba(255, 255, 255, 0.9);
+    box-shadow:     0px 0px 16px rgba(255, 255, 255, 0.5);
+}
+.settings > .jog_settings_hotkey_edit > .box > .key_name
+{
+    font-weight:    bold;
+}
+.settings > .jog_settings_hotkey_edit > .box > input
+{
+    display:        block;
+    text-align:     center;
+    width:          100%;
+    margin:         10px 0 20px 0;
+    padding:        4px;
+}

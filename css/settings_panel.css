@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+.settings
+{
+    display:        none;
+    position:       absolute;
+    left:           20%;
+    right:          20%;
+    top:            10%;
+    min-height:     70%;
+    border:         2px solid rgba(0,0,0,0.4);
+    border-radius:  8px;
+    background:     rgba(255,255,255,0.95);
+    box-shadow:     0px 0px 16px rgba(0,0,0,0.8);
+    overflow:       auto;
+    text-align:     left;
+    padding:        0 1% 0 1%;
+}
+.settings .btn
+{
+    display:        inline-block;
+    padding:        2px 4px 2px 4px;
+    border:         1px solid rgba(0, 0, 0, 0.3);
+    background:     rgba(0, 0, 0, 0.05);
+    border-radius:  2px;
+    cursor:         pointer;
+    transition:     all 200ms linear;
+    text-transform: uppercase;
+}
+.settings .btn:hover
+{
+    border:         1px solid rgba(0, 0, 0, 1);
+    background:     rgba(0, 0, 0, 0.15);
+}
+.settings > .settings_close
+{
+    position:       absolute;
+    right:          2%;
+    top:            1%;
+    font-weight:    bold;
+    font-size:      150%;
+    color:          rgba(0,0,0,0.8);
+    text-shadow:    0px 0px 8px rgba(0,0,0,0.5);
+    cursor:         pointer;
+}
+.settings > .settings_close:hover
+{
+    color:          rgba(255,0,0,0.8);
+    text-shadow:    0px 0px 16px rgba(255,0,0,0.9);
+}
+.settings > .settings_tabs > div
+{
+    display:        inline-block;
+    padding:        5px 8px 4px 8px;
+    background:     rgba(0, 0, 0, 0.1);
+    border:         1px solid rgba(0, 0, 0, 0);
+    border-radius:  8px 8px 0 0;
+    cursor:         pointer;
+    color:          rgba(0, 0, 0, 0.7);
+    font-weight:    bold;
+    transition:     all 200ms linear;
+}
+.settings > .settings_tabs > div:hover
+{
+    border:         1px solid rgba(0, 0, 0, 0.5);
+    border-bottom:  1px solid rgba(0, 0, 0, 0);
+}
+.settings > .settings_tabs > .settings_active_tab
+{
+    background:     rgba(0, 0, 0, 0.3) !important;
+}
+.settings > .settings_tabs_content > div
+{
+    padding:        10px 0 10px 0;
+    border-top:     1px solid rgba(0, 0, 0, 0.3);
+    max-height:     75%;
+    overflow:       auto;
+}
+.settings > .settings_tabs_content > div:not(:first-child)
+{
+    display:        none;
+}

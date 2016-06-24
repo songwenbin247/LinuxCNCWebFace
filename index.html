@@ -1,0 +1,203 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Smoothie Web - &#x2009;CNC Router&#x2009;</title>
+        <link rel="shortcut icon" href="img/calendar2.gif" />
+        <link rel='stylesheet' href='css/main.css' type='text/css' media='screen' />
+        <script src="js/main.js" type="text/javascript" ></script>
+        <script type="text/javascript" >var lng;</script>
+    </head>
+    <body>
+        <!-- Settings panel -->
+        <style type="text/css">@import "css/settings_panel.css";</style>
+        <div class="settings" id="settings">
+            <h3>&#x2009;Settings&#x2009;</h3>
+            <div class="settings_close" id="settings_close">x</div>
+            <div class="settings_tabs" id="settings_tabs"></div>
+            <div class="settings_tabs_content" id="settings_tabs_content"></div>
+        </div>
+        <script type="text/javascript" src="js/settings_panel.js"></script>
+
+        <!-- Main table -->
+        <table class="main" id="main" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td class="left">
+                    <!-- position panel -->
+                    <style type="text/css">@import "css/position_panel.css";</style>
+                    <div class="position">
+                        <div class="position_box">
+                            <div class="axis_name x_axis_name">X</div>
+                            <input type="text" class="axis_value" size="1" id="x_axis_value" value="0.0" tabindex="1" title="&#x2009;Click - Edit, ESC - Cancel, ENTER - Set&#x2009;" />
+                            <div id="x_axis_reset" class="axis_reset" title="&#x2009;Set&#x2009; X = 0">0</div>
+                            <div class="axis_limits_box">
+                                <div class="axis_limit max_limit" id="x_axis_limit_max" title="X &#x2009;endstop (max) status&#x2009;"></div>
+                                <div class="axis_limit min_limit" id="x_axis_limit_min" title="X &#x2009;endstop (min) status&#x2009;"></div>
+                            </div>
+                        </div>
+                        <div class="position_box">
+                            <div class="axis_name y_axis_name">Y</div>
+                            <input type="text" class="axis_value" size="1" id="y_axis_value" value="0.0" tabindex="2" title="&#x2009;Click - Edit, ESC - Cancel, ENTER - Set&#x2009;" />
+                            <div id="y_axis_reset" class="axis_reset" title="&#x2009;Set&#x2009; Y = 0">0</div>
+                            <div class="axis_limits_box">
+                                <div class="axis_limit max_limit" id="y_axis_limit_max" title="Y &#x2009;endstop (max) status&#x2009;"></div>
+                                <div class="axis_limit min_limit" id="y_axis_limit_min" title="Y &#x2009;endstop (min) status&#x2009;"></div>
+                            </div>
+                        </div>
+                        <div class="position_box">
+                            <div class="axis_name z_axis_name">Z</div>
+                            <input type="text" class="axis_value" size="1" id="z_axis_value" value="0.0" tabindex="3" title="&#x2009;Click - Edit, ESC - Cancel, ENTER - Set&#x2009;" />
+                            <div id="z_axis_reset" class="axis_reset" title="&#x2009;Set&#x2009; Z = 0">0</div>
+                            <div class="axis_limits_box">
+                                <div class="axis_limit max_limit" id="z_axis_limit_max" title="Z &#x2009;endstop (max) status&#x2009;"></div>
+                                <div class="axis_limit min_limit" id="z_axis_limit_min" title="Z &#x2009;endstop (min) status&#x2009;"></div>
+                            </div>
+                        </div>
+                        <div class="position_box">
+                            <div class="axis_name e_axis_name">E</div>
+                            <input type="text" class="axis_value" size="1" id="e_axis_value" value="0.0" tabindex="4" title="&#x2009;Click - Edit, ESC - Cancel, ENTER - Set&#x2009;" />
+                            <div id="e_axis_reset" class="axis_reset" title="&#x2009;Set&#x2009; E = 0">0</div>
+                        </div>
+                        <div class="position_type_box">
+                            <select id="pos_type_select" class="pos_type_select" tabindex="5" title="&#x2009;Coordinates type&#x2009;">
+                                <option value="last_work">&#x2009;last, work&#x2009;</option>
+                                <option value="real_work">&#x2009;real, work&#x2009;</option>
+                                <option value="real_machine">&#x2009;real, machine&#x2009;</option>
+                                <option value="real_actuators">&#x2009;real, actuators&#x2009;</option>
+                                <option value="last_milestone">&#x2009;last milestone&#x2009;</option>
+                                <option value="last_machine">&#x2009;last, machine&#x2009;</option>
+                            </select>
+                        </div>
+                    </div>
+                    <script type="text/javascript" src="js/position_panel.js"></script>
+                </td>
+                <td class="center">
+                    <!-- command panel -->
+                    <style type="text/css">@import "css/command_panel.css";</style>
+                    <div class="command">
+                        <input class="command_text" id="command_text" type="text" size="1" placeholder="&#x2009;enter command here&#x2009;" tabindex="11"
+                        /><input class="command_send" id="command_send" type="button" value="&#x2009;SEND&#x2009;" tabindex="12" />
+                    </div>
+                    <script type="text/javascript" src="js/command_panel.js"></script>
+
+                    <!-- log panel -->
+                    <style type="text/css">@import "css/log_panel.css";</style>
+                    <div class="log_panel" id="log_panel">
+                        <div class="clear" title="&#x2009;Clear LOG&#x2009;">X</div>
+                    </div>
+                    <script type="text/javascript" src="js/log_panel.js"></script>
+                </div>
+                <td class="right">
+                    <!-- JOG panel -->
+                    <style type="text/css">@import "css/JOG_panel.css";</style>
+                    <table class="JOG" id="JOG_table">
+                        <tr class="row0">
+                            <td class="col0" ></td>
+                            <td class="col1" id="jog_info_left2">-10</td>
+                            <td class="col2" id="jog_info_left1">-1</td>
+                            <td class="col3">Y</td>
+                            <td class="col4" id="jog_info_right1">1</td>
+                            <td class="col5" id="jog_info_right2">10</td>
+                            <td class="col6" rowspan="8"></td>
+                            <td class="col7">Z</td>
+                        </tr>
+                        <tr class="row1">
+                            <td class="col0" id="jog_info_top2">10</td>
+                            <td class="col1" id="jog_btn_negX2_posY2">X-10<br />Y10</td>
+                            <td class="col2" id="jog_btn_negX1_posY2">X-1<br />Y10</td>
+                            <td class="col3" id="jog_btn_posY2">10</td>
+                            <td class="col4" id="jog_btn_posX1_posY2">X1<br />Y10</td>
+                            <td class="col5" id="jog_btn_posX2_posY2">X10<br />Y10</td>
+                            <td class="col7" id="jog_btn_posZ2">10</td>
+                        </tr>
+                        <tr class="row2">
+                            <td class="col0" id="jog_info_top1">1</td>
+                            <td class="col1" id="jog_btn_negX2_posY1">X-10<br />Y1</td>
+                            <td class="col2" id="jog_btn_negX1_posY1">X-1<br />Y1</td>
+                            <td class="col3" id="jog_btn_posY1">1</td>
+                            <td class="col4" id="jog_btn_posX1_posY1">X1<br />Y1</td>
+                            <td class="col5" id="jog_btn_posX2_posY1">X10<br />Y1</td>
+                            <td class="col7" id="jog_btn_posZ1">1</td>
+                        </tr>
+                        <tr class="row3">
+                            <td class="col0">X</td>
+                            <td class="col1" id="jog_btn_negX2">-10</td>
+                            <td class="col2" id="jog_btn_negX1">-1</td>
+                            <td class="col3" id="jog_btn_homeXY">&#x2009;HOME&#x2009;<br />XY</td>
+                            <td class="col4" id="jog_btn_posX1">1</td>
+                            <td class="col5" id="jog_btn_posX2">10</td>
+                            <td class="col7" id="jog_btn_homeZ">&#x2009;HOME&#x2009;<br />Z</td>
+                        </tr>
+                        <tr class="row4">
+                            <td class="col0" id="jog_info_bottom1">-1</td>
+                            <td class="col1" id="jog_btn_negX2_negY1">X-10<br />Y-1</td>
+                            <td class="col2" id="jog_btn_negX1_negY1">X-1<br />Y-1</td>
+                            <td class="col3" id="jog_btn_negY1">-1</td>
+                            <td class="col4" id="jog_btn_posX1_negY1">X1<br />Y-1</td>
+                            <td class="col5" id="jog_btn_posX2_negY1">X10<br />Y-1</td>
+                            <td class="col7" id="jog_btn_negZ1">-1</td>
+                        </tr>
+                        <tr class="row5">
+                            <td class="col0" id="jog_info_bottom2">-10</td>
+                            <td class="col1" id="jog_btn_negX2_negY2">X-10<br />Y-10</td>
+                            <td class="col2" id="jog_btn_negX1_negY2">X-1<br />Y-10</td>
+                            <td class="col3" id="jog_btn_negY2">-10</td>
+                            <td class="col4" id="jog_btn_posX1_negY2">X1<br />Y-10</td>
+                            <td class="col5" id="jog_btn_posX2_negY2">X10<br />Y-10</td>
+                            <td class="col7" id="jog_btn_negZ2">-10</td>
+                        </tr>
+                        <tr class="row6">
+                            <td class="col0" colspan="8"></td>
+                        </tr>
+                        <tr class="row7">
+                            <td class="col0">E</td>
+                            <td class="col1" id="jog_btn_negE2">-10</td>
+                            <td class="col2" id="jog_btn_negE1">-1</td>
+                            <td class="col3" id="jog_btn_homeE">&#x2009;HOME&#x2009;<br />E</td>
+                            <td class="col4" id="jog_btn_posE1">1</td>
+                            <td class="col5" id="jog_btn_posE2">10</td>
+                            <td class="col7" id="jog_btn_homeALL">&#x2009;HOME&#x2009;<br />&#x2009;ALL&#x2009;</td>
+                        </tr>
+                        <tr class="row8">
+                            <td class="col0" colspan="8">
+                                <table class="inputs" id="JOG_inputs_table">
+                                    <tr class="input">
+                                        <td class="input1">
+                                            <input type="text" value="G91" size="1" id="jog_inputs_before" tabindex="21" />
+                                        </td>
+                                        <td class="input2">
+                                            <input type="text" value="G0" size="1" id="jog_inputs_cmd" tabindex="22" />
+                                        </td>
+                                        <td class="input3">
+                                            <input type="text" value="1" size="1" id="jog_inputs_L1" tabindex="23" />
+                                        </td>
+                                        <td class="input4">
+                                            <input type="text" value="10" size="1" id="jog_inputs_L2" tabindex="24" />
+                                        </td>
+                                        <td class="input5">
+                                            <input type="text" value="500" size="1" id="jog_inputs_feed" tabindex="25" />
+                                        </td>
+                                        <td class="input6">
+                                            <input type="text" value="G90" size="1" id="jog_inputs_after" tabindex="26" />
+                                        </td>
+                                    </tr>
+                                    <tr class="desc">
+                                        <td class="desc1">&#x2009;Before&#x2009;</td>
+                                        <td class="desc2">&#x2009;cmd&#x2009;</td>
+                                        <td class="desc3">L1</td>
+                                        <td class="desc4">L2</td>
+                                        <td class="desc5">&#x2009;Feed&#x2009;</td>
+                                        <td class="desc6">&#x2009;After&#x2009;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <script type="text/javascript" src="js/JOG_panel.js"></script>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+    <!-- language script -->
+    <script type="text/javascript" src="js/language.js"></script>
+</html>
