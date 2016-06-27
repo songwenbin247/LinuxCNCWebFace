@@ -31,10 +31,10 @@ if ( window.localStorage ) cmd.db = window.localStorage;
 
 
 
-// send command text to the smoothie controller
+// send command text to the LinuxCNC controller
 cmd.exec = function ( cmd_text )
 {
-    if ( !smoothie_available || !parent.location.protocol.match("http") ) return;
+    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
 
     var xhr = new XMLHttpRequest();
     xhr.open( "POST", "/command", true );
@@ -46,12 +46,12 @@ cmd.exec = function ( cmd_text )
         if ( this.status == 200 ) {
             var answer = this.responseText.trim();
             if ( answer.match(/[\r\n]+/m) ) answer = "<br />" + answer.replace(/[\r\n]+/gm, "<br />");
-            if ( log && log.add ) log.add("[SMOOTHIE] " + answer);
+            if ( log && log.add ) log.add("[LinuxCNC] " + answer);
         } else {
-            if ( log && log.add && smoothie_available ) {
-                log.add("[CMD] Smoothie isn't available ("+this.status+":"+this.statusText+")", "red");
+            if ( log && log.add && lcnc_available ) {
+                log.add("[CMD] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
             }
-            smoothie_available = false;
+            lcnc_available = false;
         }
     }
     xhr.send( cmd_text + "\n" );

@@ -43,7 +43,7 @@ if ( window.localStorage ) pos.db = window.localStorage;
 
 pos.update = function ( type )
 {
-    if ( !smoothie_available || pos.update.busy || !parent.location.protocol.match("http") ) return;
+    if ( !lcnc_available || pos.update.busy || !parent.location.protocol.match("http") ) return;
 
     pos.update.busy = true;
     pos.update.xhr = pos.update.xhr ? pos.update.xhr : new XMLHttpRequest();
@@ -66,10 +66,10 @@ pos.update = function ( type )
                 }
             }
             else {
-                if ( log && log.add && smoothie_available ) {
-                    log.add("[POS] Smoothie isn't available ("+this.status+":"+this.statusText+")", "red");
+                if ( log && log.add && lcnc_available ) {
+                    log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
                 }
-                smoothie_available = false;
+                lcnc_available = false;
             }
 
             pos.update.busy = false;
@@ -88,7 +88,7 @@ pos.update = function ( type )
 
 pos.limits_update = function()
 {
-    if ( !smoothie_available || pos.limits_update.busy || !parent.location.protocol.match("http") ) return;
+    if ( !lcnc_available || pos.limits_update.busy || !parent.location.protocol.match("http") ) return;
 
     pos.limits_update.busy = true;
     pos.limits_update.xhr = pos.limits_update.xhr ? pos.limits_update.xhr : new XMLHttpRequest();
@@ -115,10 +115,10 @@ pos.limits_update = function()
                 }
             }
             else {
-                if ( log && log.add && smoothie_available ) {
-                    log.add("[POS] Smoothie isn't available ("+this.status+":"+this.statusText+")", "red");
+                if ( log && log.add && lcnc_available ) {
+                    log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
                 }
-                smoothie_available = false;
+                lcnc_available = false;
             }
 
             pos.limits_update.busy = false;
@@ -129,10 +129,10 @@ pos.limits_update = function()
 
 
 
-// here is a good place to send command text to the smoothie controller
+// here is a good place to send command text to the LinuxCNC controller
 pos.execute_command = function ( outcmd )
 {
-    if ( !smoothie_available || !parent.location.protocol.match("http") ) return;
+    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
 
     var xhr = new XMLHttpRequest();
     xhr.open( "POST", "/command_silent", true );

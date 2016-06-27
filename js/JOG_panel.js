@@ -177,10 +177,10 @@ jog.simpleButtonEffect = function ( id, success, text, code_after )
 
 
 
-// here is a good place to send command text to the smoothie controller
+// here is a good place to send command text to the LinuxCNC controller
 jog.execute_command = function ( outcmd )
 {
-    if ( !smoothie_available || !parent.location.protocol.match("http") ) return;
+    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
 
     var xhr = new XMLHttpRequest();
     xhr.open( "POST", "/command_silent", true );

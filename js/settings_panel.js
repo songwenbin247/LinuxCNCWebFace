@@ -14,7 +14,6 @@ var set =
 var lng_local_dic =
 [
     { en:"Settings", ru:"Настройки" },
-    { en:"CNC Router", ru:"Станок с ЧПУ" },
 ];
 
 // add local strings to translate to the global translate list

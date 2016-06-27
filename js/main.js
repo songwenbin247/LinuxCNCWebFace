@@ -4,7 +4,7 @@
     GENERAL
 */
 
-var smoothie_available = false;
+var lcnc_available = false;
 
 
 
@@ -23,7 +23,7 @@ function n ( value )
 
 
 
-// smoothie connection test
+// LinuxCNC connection test
 function _con_test()
 {
     if ( _con_test.busy || !parent.location.protocol.match("http") ) return;
@@ -38,14 +38,14 @@ function _con_test()
             if ( this.readyState != 4 ) return;
 
             if ( this.status == 200 ) {
-                if ( log && log.add && !smoothie_available ) log.add("[MAIN] Smoothie is here", "green");
-                smoothie_available = true;
+                if ( log && log.add && !lcnc_available ) log.add("[MAIN] LinuxCNC is here", "green");
+                lcnc_available = true;
             }
             else {
-                if ( log && log.add && smoothie_available ) {
-                    log.add("[MAIN] Smoothie isn't available ("+this.status+":"+this.statusText+")", "red");
+                if ( log && log.add && lcnc_available ) {
+                    log.add("[MAIN] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
                 }
-                smoothie_available = false;
+                lcnc_available = false;
             }
 
             _con_test.busy = false;
