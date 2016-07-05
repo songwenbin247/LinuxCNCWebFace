@@ -42,7 +42,7 @@ log.add = function ( msg, color )
         panel   = document.querySelector("#log_panel");
 
     time.innerHTML = t.toLocaleDateString() + ", " + t.toLocaleTimeString() + ": ";
-    text.innerHTML = msg;
+    text.innerHTML = msg.replace(/\&/gm,"&amp;").replace(/\</gm,"&lt;").replace(/\>/gm,"&gt;");
 
     block.className = "msg";
     time.className = "time";
