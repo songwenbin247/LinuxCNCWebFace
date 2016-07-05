@@ -81,11 +81,25 @@ cmd.js_init = function()
         "telnet", // protocol
         function(e) { // onopen callback
             if ( log && log.add ) log.add("[CMD] [HAL] Socket is open","green");
+            cmd.halsock.hello = false;
+            cmd.halsock.enable = false;
+            // send hello with some passwords
+            cmd.halsock.send("hello EMC mx 1\r\nset enable EMCTOO\r\n");
         },
         function(e) { // onmessage callback
+            if ( !cmd.halsock.hello && e.data.match(/^hello/i) ) {
+                cmd.halsock.hello = true;
+                return;
+            }
+            if ( !cmd.halsock.enable && e.data.match(/^set enable/i) ) {
+                cmd.halsock.enable = true;
+                return;
+            }
             if ( log && log.add ) log.add("[CMD] [HAL] " + e.data);
         },
         function(e) { // onclose callback
+            cmd.halsock.hello = false;
+            cmd.halsock.enable = false;
             if ( log && log.add ) log.add("[CMD] [HAL] Socket was closed ("+e.code+":"+e.message+")","red");
             setTimeout(
                 function() {
