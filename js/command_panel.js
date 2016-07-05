@@ -34,37 +34,28 @@ if ( window.localStorage ) cmd.db = window.localStorage;
 // send command text to the LinuxCNC controller
 cmd.exec = function ( cmd_text )
 {
-    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
+    if ( !parent.location.protocol.match("http") ) return;
 
-    var xhr = new XMLHttpRequest();
-    xhr.open( "POST", "/command", true );
-    xhr.cmd_text = cmd_text;
-    xhr.onreadystatechange = function()
-    {
-        if ( this.readyState != 4 ) return;
-        if ( log && log.add ) log.add("[CMD] " + this.cmd_text);
-        if ( this.status == 200 ) {
-            var answer = this.responseText.trim();
-            if ( answer.match(/[\r\n]+/m) ) answer = "<br />" + answer.replace(/[\r\n]+/gm, "<br />");
-            if ( log && log.add ) log.add("[LinuxCNC] " + answer);
+    if ( log && log.add ) log.add("[CMD] " + cmd_text);
+
+    if ( cmd_text.match(/^hal\s+/i) ) {
+        if ( hal_available ) {
+            websock.hal.sock.send( cmd_text.replace(/^hal\s+/i, "") + "\r\n" );
         } else {
-            if ( log && log.add && lcnc_available ) {
-                log.add("[CMD] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
-            }
-            lcnc_available = false;
+            if ( log && log.add ) log.add("[CMD] HAL isn't available","red");
+        }
+    } else if ( cmd_text.match(/^lcnc\s+/i) ) {
+        if ( lcnc_available ) {
+            websock.lcnc.sock.send( cmd_text.replace(/^lcnc\s+/i, "") + "\r\n" );
+        } else {
+            if ( log && log.add ) log.add("[CMD] LCNC isn't available","red");
         }
     }
-    xhr.send( cmd_text + "\n" );
 }
 
 cmd.on_cmd_send = function()
 {
-    var cmd_text = document.querySelector("#command_text").value.trim();
-
-    if ( cmd_text.match(/[a-z][0-9]/im) ) cmd_text = cmd_text.toUpperCase();
-    
-    cmd_text = cmd_text.replace(/;\s*/igm,"\n");
-
+    var cmd_text = document.querySelector("#command_text").value.trim().replace(/;\s*/igm,"\r\n");
     cmd.exec(cmd_text);
 }
 
