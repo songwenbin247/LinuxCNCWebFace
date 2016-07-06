@@ -16,7 +16,9 @@ var cmd =
     lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
     sock_proto:             "telnet",
-    sock_check_interval:    5000
+    sock_check_interval:    5000,
+    
+    historyMaxItems:        100
 };
 
 // local strings to translate
@@ -62,13 +64,30 @@ cmd.exec = function ( cmd_text )
 
 cmd.on_cmd_send = function()
 {
-    var cmd_text = document.querySelector("#command_text").value.trim();
+    var cmd_text = document.querySelector("#command_text").value;
+    if ( cmd_text.trim().length < 1 ) return;
+    cmd.add2history(cmd_text);
     cmd.exec(cmd_text);
+    cmd.clear_current_cmd();
 }
 
 cmd.on_cmd_input_keyup = function ( event )
 {
-    if ( event.keyCode == 13 ) cmd.on_cmd_send();
+    switch (event.keyCode) {
+        case 13 :
+            cmd.on_cmd_send();
+            break;
+        case 38 : // up
+            cmd.historyBack();
+            break;
+        case 40 : // down
+            cmd.historyForward();
+            break;
+        default :
+            var cmd_text = document.querySelector("#command_text").value;
+            if ( cmd_text == cmd.historyList[cmd.historyID] ) break;
+            cmd.update_current_cmd(cmd_text);
+    }
 }
 
 
@@ -123,6 +142,55 @@ cmd.check_sockets = function()
 
 
 
+cmd.get_history = function()
+{
+    if ( !cmd.db["cmd.history"] ) cmd.db["cmd.history"] = "";
+    cmd.historyList = cmd.db["cmd.history"].split("\r\n");
+
+    // cut the history
+    var start = cmd.historyList.length - cmd.historyMaxItems;
+    if ( start > 0 ) {
+        cmd.historyList = cmd.historyList.slice(start, cmd.historyList.length);
+        cmd.db["cmd.history"] = cmd.historyList.join("\r\n");
+    }
+
+    cmd.historyID = cmd.historyList.length;
+    cmd.historyList[cmd.historyList.length] = "";
+}
+cmd.add2history = function ( cmd_text )
+{
+    if ( cmd.historyList.length > 1 && cmd.historyList[cmd.historyList.length - 2] == cmd_text ) return;
+    cmd.historyList[cmd.historyList.length - 1] = cmd_text;
+    cmd.historyID = cmd.historyList.length;
+    cmd.historyList[cmd.historyID] = "";
+    cmd.db["cmd.history"] += "\r\n" + cmd_text;
+}
+cmd.update_current_cmd = function ( cmd_text )
+{
+    cmd.historyList[cmd.historyList.length - 1] = cmd_text;
+    cmd.historyID = cmd.historyList.length - 1;
+}
+cmd.historyBack = function()
+{
+    cmd.historyID--;
+    if ( cmd.historyID < 0 ) cmd.historyID = 0;
+    document.querySelector("#command_text").value = cmd.historyList[cmd.historyID];
+}
+cmd.historyForward = function()
+{
+    cmd.historyID++;
+    if ( cmd.historyID >= cmd.historyList.length ) cmd.historyID = cmd.historyList.length - 1;
+    document.querySelector("#command_text").value = cmd.historyList[cmd.historyID];
+}
+cmd.clear_current_cmd = function()
+{
+    document.querySelector("#command_text").value = "";
+    cmd.update_current_cmd("");
+}
+
+
+
+
 // do it when window is fully loaded
 cmd.js_init = function()
 {
@@ -137,6 +205,8 @@ cmd.js_init = function()
 
     // create check timer for these sockets
     setInterval(cmd.check_sockets, cmd.sock_check_interval);
+    
+    cmd.get_history();
 }
 
 
