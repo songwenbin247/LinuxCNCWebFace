@@ -8,6 +8,15 @@
 var cmd =
 {
     db: {},
+
+    halsock:                false,
+    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
+    halsock_open:           false,
+    lcncsock:               false,
+    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
+    lcncsock_open:          false,
+    sock_proto:             "telnet",
+    sock_check_interval:    5000
 };
 
 // local strings to translate
@@ -34,8 +43,6 @@ if ( window.localStorage ) cmd.db = window.localStorage;
 // send command text to the LinuxCNC controller
 cmd.exec = function ( cmd_text )
 {
-    if ( !parent.location.protocol.match("http") ) return;
-
     if ( log && log.add ) log.add("[CMD] " + cmd_text);
 
     if ( cmd_text.match(/^hal\s+/i) ) {
@@ -67,6 +74,55 @@ cmd.on_cmd_input_keyup = function ( event )
 
 
 
+cmd.halsock_onopen = function(e)
+{
+    if ( log && log.add && !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
+    cmd.halsock_open = true;
+    // send hello with some passwords
+    cmd.halsock.send("hello EMC cmdhal 1\r\nset enable EMCTOO\r\n");
+}
+cmd.halsock_onmessage = function(e)
+{
+    if ( e.data.match(/^(hello|set enable)/i) ) return;
+    if ( log && log.add ) log.add("[CMD] [HAL] " + e.data);
+}
+cmd.halsock_onclose = function(e)
+{
+    if ( log && log.add && cmd.halsock_open ) log.add("[CMD] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    cmd.halsock_open = false;
+}
+
+cmd.lcncsock_onopen = function(e)
+{
+    if ( log && log.add && !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
+    cmd.lcncsock_open = true;
+    // send hello with some passwords
+    cmd.lcncsock.send("hello EMC cmdlcnc 1\r\nset enable EMCTOO\r\n");
+}
+cmd.lcncsock_onmessage = function(e)
+{
+    if ( e.data.match(/^(hello|set enable)/i) ) return;
+    if ( log && log.add ) log.add("[CMD] [LCNC] " + e.data);
+}
+cmd.lcncsock_onclose = function(e)
+{
+    if ( log && log.add && cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    cmd.lcncsock_open = false;
+}
+
+cmd.check_sockets = function()
+{
+    if ( !cmd.halsock_open ) {
+        cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
+    }
+    if ( !cmd.lcncsock_open ) {
+        cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+    }
+}
+
+
+
+
 // do it when window is fully loaded
 cmd.js_init = function()
 {
@@ -75,72 +131,12 @@ cmd.js_init = function()
     document.querySelector("#command_text").addEventListener("keyup", cmd.on_cmd_input_keyup);
     document.querySelector("#command_send").addEventListener("click", cmd.on_cmd_send);
     
-    // create a socket to talk with halrmt
-    cmd.halsock = websock.create(
-        "ws://"+parent.location.hostname+"/halrmt", // url
-        "telnet", // protocol
-        function(e) { // onopen callback
-            if ( log && log.add ) log.add("[CMD] [HAL] Socket is open","green");
-            cmd.halsock.hello = false;
-            cmd.halsock.enable = false;
-            // send hello with some passwords
-            cmd.halsock.send("hello EMC mx 1\r\nset enable EMCTOO\r\n");
-        },
-        function(e) { // onmessage callback
-            if ( !cmd.halsock.hello && e.data.match(/^hello/i) ) {
-                cmd.halsock.hello = true;
-                return;
-            }
-            if ( !cmd.halsock.enable && e.data.match(/^set enable/i) ) {
-                cmd.halsock.enable = true;
-                return;
-            }
-            if ( log && log.add ) log.add("[CMD] [HAL] " + e.data);
-        },
-        function(e) { // onclose callback
-            cmd.halsock.hello = false;
-            cmd.halsock.enable = false;
-            if ( log && log.add ) log.add("[CMD] [HAL] Socket was closed ("+e.code+":"+e.message+")","red");
-            setTimeout(
-                function() {
-                    cmd.halsock = websock.create(
-                        cmd.halsock.url,
-                        cmd.halsock.protocol,
-                        cmd.halsock.onopen,
-                        cmd.halsock.onmessage,
-                        cmd.halsock.onclose
-                    );
-                },
-                2000
-            );
-        }
-    );
-    // create a socket to talk with linuxcncrsh
-    cmd.lcncsock = websock.create(
-        "ws://"+parent.location.hostname+"/linuxcncrsh", // url
-        "telnet", // protocol
-        function(e) { // onopen callback
-            if ( log && log.add ) log.add("[CMD] [LCNC] Socket is open","green");
-        },
-        function(e) { // onmessage callback
-            if ( log && log.add ) log.add("[CMD] [LCNC] " + e.data);
-        },
-        function(e) { // onclose callback
-            if ( log && log.add ) log.add("[CMD] [LCNC] Socket was closed ("+e.code+":"+e.message+")","red");
-            setTimeout(
-                function() {
-                    cmd.lcncsock = websock.create(
-                        cmd.lcncsock.url,
-                        cmd.lcncsock.protocol,
-                        cmd.lcncsock.onopen,
-                        cmd.lcncsock.onmessage,
-                        cmd.lcncsock.onclose
-                    );
-                },
-                2000
-            );
-        }
-    );
+    // create sockets to talk with LCNC
+    cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
+    cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+
+    // create check timer for these sockets
+    setInterval(cmd.check_sockets, cmd.sock_check_interval);
 }
 
 
