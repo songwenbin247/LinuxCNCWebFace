@@ -8,7 +8,7 @@
 var pos =
 {
     db:         {},
-    current:    {x:0, y:0, z:0, e:0}
+    current:    {x:0, y:0, z:0, a:0}
 };
 
 // local strings to translate
@@ -155,7 +155,7 @@ pos.on_input_keyup = function ( event )
 
     // if ENTER key pressed
     if ( event.keyCode == 13 ) {
-        pos.execute_command( "G92 " + this.id.match(/^[xyze]/i)[0].toUpperCase() + n(this.value) );
+        pos.execute_command( "G92 " + this.id.match(/^[xyza]/i)[0].toUpperCase() + n(this.value) );
         this.blur();
     }
 }
@@ -203,7 +203,7 @@ pos.on_axis_reset_click = function ( event )
 {
     pos.simpleClickAnimation(event.target.id);
 
-    var axis = event.target.id.match(/^[xyze]/i)[0].toUpperCase();
+    var axis = event.target.id.match(/^[xyza]/i)[0].toUpperCase();
     pos.execute_command("G92 " + axis + "0");
 }
 

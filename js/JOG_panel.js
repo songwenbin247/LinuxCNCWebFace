@@ -31,7 +31,7 @@ var jog =
         { name: "homeALL",        title: "HOME ALL", ctrl:0, shift:0, alt:0, key:36 }, // SHIFT + Home
         { name: "homeXY",         title: "HOME XY", ctrl:0, shift:0, alt:0, key:101 }, // SHIFT + num 5
         { name: "homeZ",          title: "HOME Z", ctrl:0, shift:0, alt:0, key:106 }, // SHIFT + num *
-        { name: "homeE",          title: "HOME E", ctrl:0, shift:0, alt:0, key:111 }, // SHIFT + Num /
+        { name: "homeA",          title: "HOME A", ctrl:0, shift:0, alt:0, key:111 }, // SHIFT + Num /
         // L1 buttons
         { name: "negX1",          title: "X - L1", ctrl:0, shift:0, alt:0, key:100 }, // SHIFT + num 4
         { name: "posX1",          title: "X + L1", ctrl:0, shift:0, alt:0, key:102 }, // SHIFT + num 6
@@ -43,8 +43,8 @@ var jog =
         { name: "posX1_posY1",    title: "X + L1, Y + L1", ctrl:0, shift:0, alt:0, key:105 }, // SHIFT + num 9
         { name: "negZ1",          title: "Z - L1", ctrl:0, shift:0, alt:0, key:109 }, // SHIFT + num -
         { name: "posZ1",          title: "Z + L1", ctrl:0, shift:0, alt:0, key:107 }, // SHIFT + num +
-        { name: "negE1",          title: "E - L1", ctrl:0, shift:0, alt:0, key:96 }, // SHIFT + num 0
-        { name: "posE1",          title: "E + L1", ctrl:0, shift:0, alt:0, key:110 }, // SHIFT + num .
+        { name: "negA1",          title: "A - L1", ctrl:0, shift:0, alt:0, key:96 }, // SHIFT + num 0
+        { name: "posA1",          title: "A + L1", ctrl:0, shift:0, alt:0, key:110 }, // SHIFT + num .
         // L2 buttons
         { name: "negX2",          title: "X - L2", ctrl:0, shift:0, alt:1, key:100 }, // ALT + num 4
         { name: "posX2",          title: "X + L2", ctrl:0, shift:0, alt:1, key:102 }, // ALT + num 6
@@ -56,10 +56,10 @@ var jog =
         { name: "posX2_posY2",    title: "X + L2, Y + L2", ctrl:0, shift:0, alt:1, key:105 }, // ALT + num 9
         { name: "negZ2",          title: "Z - L2", ctrl:0, shift:0, alt:1, key:109 }, // ALT + num -
         { name: "posZ2",          title: "Z + L2", ctrl:0, shift:0, alt:1, key:107 }, // ALT + num +
-        { name: "negE2",          title: "E - L2", ctrl:0, shift:0, alt:1, key:96 }, // ALT + PageUp
-        { name: "posE2",          title: "E + L2", ctrl:0, shift:0, alt:1, key:110 }, // ALT + PageDown
+        { name: "negA2",          title: "A - L2", ctrl:0, shift:0, alt:1, key:96 }, // ALT + PageUp
+        { name: "posA2",          title: "A + L2", ctrl:0, shift:0, alt:1, key:110 }, // ALT + PageDown
         // L1 +
-        { name: "posE1",          title: "E + L1", ctrl:0, shift:0, alt:0, key:231 } // SHIFT + num ,
+        { name: "posA1",          title: "A + L1", ctrl:0, shift:0, alt:0, key:231 } // SHIFT + num ,
     ],
 
     key_names:
@@ -235,20 +235,20 @@ jog.inputs_changed = function ( event )
             document.querySelector("#jog_btn_negX1").innerHTML = L1_neg;
             document.querySelector("#jog_btn_negY1").innerHTML = L1_neg;
             document.querySelector("#jog_btn_negZ1").innerHTML = L1_neg;
-            document.querySelector("#jog_btn_negE1").innerHTML = L1_neg;
+            document.querySelector("#jog_btn_negA1").innerHTML = L1_neg;
             document.querySelector("#jog_btn_negX2").innerHTML = L2_neg;
             document.querySelector("#jog_btn_negY2").innerHTML = L2_neg;
             document.querySelector("#jog_btn_negZ2").innerHTML = L2_neg;
-            document.querySelector("#jog_btn_negE2").innerHTML = L2_neg;
+            document.querySelector("#jog_btn_negA2").innerHTML = L2_neg;
 
             document.querySelector("#jog_btn_posX1").innerHTML = L1_pos;
             document.querySelector("#jog_btn_posY1").innerHTML = L1_pos;
             document.querySelector("#jog_btn_posZ1").innerHTML = L1_pos;
-            document.querySelector("#jog_btn_posE1").innerHTML = L1_pos;
+            document.querySelector("#jog_btn_posA1").innerHTML = L1_pos;
             document.querySelector("#jog_btn_posX2").innerHTML = L2_pos;
             document.querySelector("#jog_btn_posY2").innerHTML = L2_pos;
             document.querySelector("#jog_btn_posZ2").innerHTML = L2_pos;
-            document.querySelector("#jog_btn_posE2").innerHTML = L2_pos;
+            document.querySelector("#jog_btn_posA2").innerHTML = L2_pos;
 
             document.querySelector("#jog_btn_negX1_negY1").innerHTML = "X" + L1_neg + "<br />" + "Y" + L1_neg;
             document.querySelector("#jog_btn_negX2_negY1").innerHTML = "X" + L2_neg + "<br />" + "Y" + L1_neg;
@@ -292,13 +292,13 @@ jog.btn_clicked = function ( event )
     {
         // home buttons
         case "jog_btn_homeALL":
-            outcmd = "G90 " + cmd + " X0 Y0 Z0 E0 F" + feed; break;
+            outcmd = "G90 " + cmd + " X0 Y0 Z0 A0 F" + feed; break;
         case "jog_btn_homeXY":
             outcmd = "G90 " + cmd + " X0 Y0 F" + feed; break;
         case "jog_btn_homeZ":
             outcmd = "G90 " + cmd + " Z0 F" + feed; break;
-        case "jog_btn_homeE":
-            outcmd = "G90 " + cmd + " E0 F" + feed; break;
+        case "jog_btn_homeA":
+            outcmd = "G90 " + cmd + " A0 F" + feed; break;
 
         // move buttons
         case "jog_btn_posX1":
@@ -328,14 +328,14 @@ jog.btn_clicked = function ( event )
         case "jog_btn_negZ2":
             outcmd = before + " " + cmd + " Z" + (-1*L2) + " F" + feed + " " + after; break;
 
-        case "jog_btn_posE1":
-            outcmd = before + " " + cmd + " E" + L1 + " F" + feed + " " + after; break;
-        case "jog_btn_posE2":
-            outcmd = before + " " + cmd + " E" + L2 + " F" + feed + " " + after; break;
-        case "jog_btn_negE1":
-            outcmd = before + " " + cmd + " E" + (-1*L1) + " F" + feed + " " + after; break;
-        case "jog_btn_negE2":
-            outcmd = before + " " + cmd + " E" + (-1*L2) + " F" + feed + " " + after; break;
+        case "jog_btn_posA1":
+            outcmd = before + " " + cmd + " A" + L1 + " F" + feed + " " + after; break;
+        case "jog_btn_posA2":
+            outcmd = before + " " + cmd + " A" + L2 + " F" + feed + " " + after; break;
+        case "jog_btn_negA1":
+            outcmd = before + " " + cmd + " A" + (-1*L1) + " F" + feed + " " + after; break;
+        case "jog_btn_negA2":
+            outcmd = before + " " + cmd + " A" + (-1*L2) + " F" + feed + " " + after; break;
 
         // multiple axes move buttons
         case "jog_btn_posX1_posY1":
