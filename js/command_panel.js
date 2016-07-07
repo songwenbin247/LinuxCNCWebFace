@@ -47,18 +47,15 @@ cmd.exec = function ( cmd_text )
 {
     log.add("[CMD] " + cmd_text);
 
-    if ( cmd_text.match(/^hal\s+/i) ) {
-        if ( cmd.halsock ) {
-            cmd.halsock.send( cmd_text.replace(/^hal\s+/i, "") + "\r\n" );
-        } else {
-            log.add("[CMD] HAL socket isn't available","red");
-        }
-    } else if ( cmd_text.match(/^lcnc\s+/i) ) {
-        if ( cmd.lcncsock ) {
-            cmd.lcncsock.send( cmd_text.replace(/^lcnc\s+/i, "") + "\r\n" );
-        } else {
-            log.add("[CMD] LCNC socket isn't available","red");
-        }
+    if ( cmd_text.match(/^hal\s+/i) ) { // halrmt cmd
+        if ( cmd.halsock ) cmd.halsock.send( cmd_text.replace(/^hal\s+/i, "") + "\r\n" );
+        else log.add("[CMD] HAL socket isn't available","red");
+    } else if ( cmd_text.match(/^lcnc\s+/i) ) { // linuxcnc cmd
+        if ( cmd.lcncsock ) cmd.lcncsock.send( cmd_text.replace(/^lcnc\s+/i, "") + "\r\n" );
+        else log.add("[CMD] LCNC socket isn't available","red");
+    } else { // mdi cmd
+        if ( cmd.lcncsock ) cmd.lcncsock.send( "set mode mdi\r\nset mdi "+cmd_text+"\r\n" );
+        else log.add("[CMD] LCNC socket isn't available","red");
     }
 }
 
