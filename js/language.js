@@ -30,7 +30,7 @@ lng.change = function ( from, to )
         return;
     }
 
-    if ( log && log.add ) log.add("[LNG] " + from.toUpperCase() + " -> " + to.toUpperCase());
+    log.add("[LNG] " + from.toUpperCase() + " -> " + to.toUpperCase());
 
     // find all elements with innerText contains special char (\u2009)
     var with_text = document.evaluate (

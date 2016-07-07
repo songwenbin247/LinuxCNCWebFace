@@ -66,7 +66,7 @@ pos.update = function ( type )
                 }
             }
             else {
-                if ( log && log.add && lcnc_available ) {
+                if ( lcnc_available ) {
                     log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
                 }
                 lcnc_available = false;
@@ -115,7 +115,7 @@ pos.limits_update = function()
                 }
             }
             else {
-                if ( log && log.add && lcnc_available ) {
+                if ( lcnc_available ) {
                     log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
                 }
                 lcnc_available = false;
@@ -138,7 +138,7 @@ pos.execute_command = function ( outcmd )
     xhr.open( "POST", "/command_silent", true );
     xhr.send( outcmd + "\n" );
 
-    if ( log && log.add ) log.add("[POS] " + outcmd);
+    log.add("[POS] " + outcmd);
 }
 
 
@@ -183,7 +183,7 @@ pos.on_pos_type_change = function ( event )
 
     pos.db["pos.type"] = event.target.value;
 
-    if ( log && log.add ) log.add("[POS] type = " + event.target.value);
+    log.add("[POS] type = " + event.target.value);
 }
 
 

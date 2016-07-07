@@ -186,7 +186,7 @@ jog.execute_command = function ( outcmd )
     xhr.open( "POST", "/command_silent", true );
     xhr.send( outcmd + "\n" );
 
-    if ( log && log.add ) log.add("[JOG] " + outcmd);
+    log.add("[JOG] " + outcmd);
 }
 
 

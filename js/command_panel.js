@@ -45,19 +45,19 @@ if ( window.localStorage ) cmd.db = window.localStorage;
 // send command text to the LinuxCNC controller
 cmd.exec = function ( cmd_text )
 {
-    if ( log && log.add ) log.add("[CMD] " + cmd_text);
+    log.add("[CMD] " + cmd_text);
 
     if ( cmd_text.match(/^hal\s+/i) ) {
         if ( cmd.halsock ) {
             cmd.halsock.send( cmd_text.replace(/^hal\s+/i, "") + "\r\n" );
         } else {
-            if ( log && log.add ) log.add("[CMD] HAL socket isn't available","red");
+            log.add("[CMD] HAL socket isn't available","red");
         }
     } else if ( cmd_text.match(/^lcnc\s+/i) ) {
         if ( cmd.lcncsock ) {
             cmd.lcncsock.send( cmd_text.replace(/^lcnc\s+/i, "") + "\r\n" );
         } else {
-            if ( log && log.add ) log.add("[CMD] LCNC socket isn't available","red");
+            log.add("[CMD] LCNC socket isn't available","red");
         }
     }
 }
@@ -95,7 +95,7 @@ cmd.on_cmd_input_keyup = function ( event )
 
 cmd.halsock_onopen = function(e)
 {
-    if ( log && log.add && !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
+    if ( !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
     cmd.halsock_open = true;
     // send hello with some passwords
     cmd.halsock.send("hello EMC cmdhal 1\r\nset enable EMCTOO\r\n");
@@ -103,17 +103,17 @@ cmd.halsock_onopen = function(e)
 cmd.halsock_onmessage = function(e)
 {
     if ( e.data.match(/^(hello|set enable)/i) ) return;
-    if ( log && log.add ) log.add("[CMD] [HAL] " + e.data);
+    log.add("[CMD] [HAL] " + e.data);
 }
 cmd.halsock_onclose = function(e)
 {
-    if ( log && log.add && cmd.halsock_open ) log.add("[CMD] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( cmd.halsock_open ) log.add("[CMD] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
     cmd.halsock_open = false;
 }
 
 cmd.lcncsock_onopen = function(e)
 {
-    if ( log && log.add && !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
+    if ( !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
     cmd.lcncsock_open = true;
     // send hello with some passwords
     cmd.lcncsock.send("hello EMC cmdlcnc 1\r\nset enable EMCTOO\r\n");
@@ -121,11 +121,11 @@ cmd.lcncsock_onopen = function(e)
 cmd.lcncsock_onmessage = function(e)
 {
     if ( e.data.match(/^(hello|set enable)/i) ) return;
-    if ( log && log.add ) log.add("[CMD] [LCNC] " + e.data);
+    log.add("[CMD] [LCNC] " + e.data);
 }
 cmd.lcncsock_onclose = function(e)
 {
-    if ( log && log.add && cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
     cmd.lcncsock_open = false;
 }
 
