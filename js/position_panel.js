@@ -138,14 +138,16 @@ pos.limits_update = function()
 
 
 
-// here is a good place to send command text to the LinuxCNC controller
-pos.execute_command = function ( outcmd )
+pos.exec_mdi = function ( outcmd )
 {
-    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
+    if ( !pos.lcncsock_open ) return;
 
-    var xhr = new XMLHttpRequest();
-    xhr.open( "POST", "/command_silent", true );
-    xhr.send( outcmd + "\n" );
+    pos.lcncsock.send(
+        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        "set mode mdi\r\n" + 
+        "set mdi " + outcmd + "\r\n" +
+        "set enable off\r\n"
+    );
 
     log.add("[POS] " + outcmd);
 }
@@ -164,7 +166,9 @@ pos.on_input_keyup = function ( event )
 
     // if ENTER key pressed
     if ( event.keyCode == 13 ) {
-        pos.execute_command( "G92 " + this.id.match(/^[xyzabc]/i)[0].toUpperCase() + n(this.value) );
+        var value = n(this.value);
+        value = value >= 0 ? value - value*2 : value + value*2;
+        pos.exec_mdi("G10 L2 P0 " + this.id.match(/^[xyzabc]/i)[0].toUpperCase() + value);
         this.blur();
     }
 }
@@ -211,9 +215,7 @@ pos.simpleClickAnimation = function ( id )
 pos.on_axis_reset_click = function ( event )
 {
     pos.simpleClickAnimation(event.target.id);
-
-    var axis = event.target.id.match(/^[xyzabc]/i)[0].toUpperCase();
-    pos.execute_command("G92 " + axis + "0");
+    pos.exec_mdi("G10 L2 P0 " + event.target.id.match(/^[xyzabc]/i)[0].toUpperCase() + "0");
 }
 
 
