@@ -95,7 +95,7 @@ cmd.halsock_onopen = function(e)
     if ( !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
     cmd.halsock_open = true;
     // send hello with some passwords
-    cmd.halsock.send("hello EMC cmdhal 1\r\nset enable EMCTOO\r\n");
+    cmd.halsock.send("hello "+halrmt_hello_password+" cmdhal 1\r\nset enable "+halrmt_enable_password+"\r\n");
 }
 cmd.halsock_onmessage = function(e)
 {
@@ -113,7 +113,7 @@ cmd.lcncsock_onopen = function(e)
     if ( !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
     cmd.lcncsock_open = true;
     // send hello with some passwords
-    cmd.lcncsock.send("hello EMC cmdlcnc 1\r\nset enable EMCTOO\r\n");
+    cmd.lcncsock.send("hello "+linuxcncrsh_hello_password+" cmdhal 1\r\nset enable "+linuxcncrsh_enable_password+"\r\n");
 }
 cmd.lcncsock_onmessage = function(e)
 {
