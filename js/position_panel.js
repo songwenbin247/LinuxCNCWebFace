@@ -55,7 +55,7 @@ pos.lcncsock_onopen = function(e)
     if ( !pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is open","green");
     pos.lcncsock_open = true;
     // send hello with some passwords
-    pos.lcncsock.send("hello "+linuxcncrsh_hello_password+" poslcnc 1\r\nset enable "+linuxcncrsh_enable_password+"\r\n");
+    pos.lcncsock.send("hello "+linuxcncrsh_hello_password+" poslcnc 1\r\n");
 }
 pos.lcncsock_onmessage = function(e)
 {
