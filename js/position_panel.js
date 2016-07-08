@@ -8,7 +8,7 @@
 var pos =
 {
     db:         {},
-    current:    {x:0, y:0, z:0, a:0}
+    current:    {x:0, y:0, z:0, a:0, b:0, c:0}
 };
 
 // local strings to translate
@@ -100,9 +100,9 @@ pos.limits_update = function()
             if ( this.readyState != 4 ) return;
 
             if ( this.status == 200 ) {
-                var states = this.responseText.match( /(max|min)_[xyz]:\s*[01]/igm );
+                var states = this.responseText.match( /(max|min)_[xyzabc]:\s*[01]/igm );
                 for ( var s = 0, axis, type, state, element; s < states.length; s++ ) {
-                    axis = states[s].match( /[xyz]:/i )[0].substr(0,1).toLowerCase();
+                    axis = states[s].match( /[xyzabc]:/i )[0].substr(0,1).toLowerCase();
                     type = states[s].match( /^(max|min)/i )[0].toLowerCase();
                     state = states[s].match( /[01]$/ )[0];
                     element = document.querySelector("#"+axis+"_axis_limit_"+type);
@@ -155,7 +155,7 @@ pos.on_input_keyup = function ( event )
 
     // if ENTER key pressed
     if ( event.keyCode == 13 ) {
-        pos.execute_command( "G92 " + this.id.match(/^[xyza]/i)[0].toUpperCase() + n(this.value) );
+        pos.execute_command( "G92 " + this.id.match(/^[xyzabc]/i)[0].toUpperCase() + n(this.value) );
         this.blur();
     }
 }
@@ -203,7 +203,7 @@ pos.on_axis_reset_click = function ( event )
 {
     pos.simpleClickAnimation(event.target.id);
 
-    var axis = event.target.id.match(/^[xyza]/i)[0].toUpperCase();
+    var axis = event.target.id.match(/^[xyzabc]/i)[0].toUpperCase();
     pos.execute_command("G92 " + axis + "0");
 }
 

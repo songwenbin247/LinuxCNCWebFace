@@ -38,6 +38,14 @@
 {
     background:     rgba(255,255,0,0.2);
 }
+.position > .position_box > .b_axis_name
+{
+    background:     rgba(0,255,255,0.2);
+}
+.position > .position_box > .c_axis_name
+{
+    background:     rgba(255,0,255,0.2);
+}
 .position > .position_box > .axis_value
 {
     display:        inline-block;
