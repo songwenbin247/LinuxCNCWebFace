@@ -27,7 +27,8 @@ var lng_local_dic =
     { en:"work, actual", ru:"рабочие, текущие" },
     { en:"machine, actual", ru:"машинные, текущие" },
     { en:"work, commanded", ru:"рабочие, последние" },
-    { en:"machine, commanded", ru:"мащинные, последние" },
+    { en:"machine, commanded", ru:"машинные, последние" },
+    { en:"joints, absolute", ru:"актуаторы, абсолютные" },
     { en:"Set", ru:"Выставить" },
     { en:"Click - Edit, ESC - Cancel, ENTER - Set", ru:"Клик - Изменить, ESC - Отмета, ENTER - Применить" },
     { en:"Coordinates type", ru:"Тип координат" },
@@ -121,6 +122,7 @@ pos.update = function ( coords_type )
         case "commanded_absolute_pos":  pos.lcncsock.send("get abs_cmd_pos\r\n"); break;
         case "commanded_relative_pos":  pos.lcncsock.send("get rel_cmd_pos\r\n"); break;
         case "actual_absolute_pos":     pos.lcncsock.send("get abs_act_pos\r\n"); break;
+        case "joints_absolute_pos":     pos.lcncsock.send("get joint_pos\r\n"); break;
         default:                        pos.lcncsock.send("get rel_act_pos\r\n"); // actual_relative_pos
     }
 }
