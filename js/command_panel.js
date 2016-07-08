@@ -47,14 +47,21 @@ cmd.exec = function ( cmd_text )
 {
     log.add("[CMD] " + cmd_text);
 
-    if ( cmd_text.match(/^hal\s+/i) ) { // halrmt cmd
-        if ( cmd.halsock ) cmd.halsock.send( cmd_text.replace(/^hal\s+/i, "") + "\r\n" );
+    var hal = cmd_text.match(/^hal\s+/i) ? true : false;
+    var mdi = !cmd_text.match(/^(lcnc|hal)\s+/i) ? true : false;
+    var enable = mdi || cmd_text.match(/^(lcnc|hal)\s+set\s+/i) ? true : false;
+    var outcmd = enable ? "set enable " + (hal ? halrmt_enable_password : linuxcncrsh_enable_password) + "\r\n" : "";
+    
+    outcmd += mdi ? "set mode mdi\r\nset mdi " : "";
+    outcmd += cmd_text.replace(/^(hal|lcnc)\s+/i, "");
+    outcmd += "\r\n";
+    outcmd += enable ? "set enable off\r\n" : "";
+
+    if ( hal ) {
+        if ( cmd.halsock_open ) cmd.halsock.send(outcmd);
         else log.add("[CMD] HAL socket isn't available","red");
-    } else if ( cmd_text.match(/^lcnc\s+/i) ) { // linuxcnc cmd
-        if ( cmd.lcncsock ) cmd.lcncsock.send( cmd_text.replace(/^lcnc\s+/i, "") + "\r\n" );
-        else log.add("[CMD] LCNC socket isn't available","red");
-    } else { // mdi cmd
-        if ( cmd.lcncsock ) cmd.lcncsock.send( "set mode mdi\r\nset mdi "+cmd_text+"\r\n" );
+    } else {
+        if ( cmd.lcncsock_open ) cmd.lcncsock.send(outcmd);
         else log.add("[CMD] LCNC socket isn't available","red");
     }
 }
@@ -95,7 +102,7 @@ cmd.halsock_onopen = function(e)
     if ( !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
     cmd.halsock_open = true;
     // send hello with some passwords
-    cmd.halsock.send("hello "+halrmt_hello_password+" cmdhal 1\r\nset enable "+halrmt_enable_password+"\r\n");
+    cmd.halsock.send("hello "+halrmt_hello_password+" cmdhal 1\r\n");
 }
 cmd.halsock_onmessage = function(e)
 {
@@ -113,7 +120,7 @@ cmd.lcncsock_onopen = function(e)
     if ( !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
     cmd.lcncsock_open = true;
     // send hello with some passwords
-    cmd.lcncsock.send("hello "+linuxcncrsh_hello_password+" cmdhal 1\r\nset enable "+linuxcncrsh_enable_password+"\r\n");
+    cmd.lcncsock.send("hello "+linuxcncrsh_hello_password+" cmdlcnc 1\r\n");
 }
 cmd.lcncsock_onmessage = function(e)
 {
