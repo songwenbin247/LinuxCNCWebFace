@@ -7,19 +7,27 @@
 // settings vars and functions
 var pos =
 {
-    db:         {},
-    current:    {x:0, y:0, z:0, a:0, b:0, c:0}
+    db: {},
+
+    lcncsock:               false,
+    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
+    lcncsock_open:          false,
+    sock_proto:             "telnet",
+    sock_check_interval:    5000,
+    
+    update_interval:        200,
+    limits_update_interval: 500,
+
+    axes: ["x","y","z","a","b","c"]
 };
 
 // local strings to translate
 var lng_local_dic =
 [
-    { en:"last, work", ru:"последние, рабочие" },
-    { en:"real, work", ru:"текущие, рабочие" },
-    { en:"last milestone", ru:"последнее значение" },
-    { en:"real, machine", ru:"текущие, машинные" },
-    { en:"last, machine", ru:"последние, машинные" },
-    { en:"real, actuators", ru:"текущие, актуаторы" },
+    { en:"work, actual", ru:"рабочие, текущие" },
+    { en:"machine, actual", ru:"машинные, текущие" },
+    { en:"work, commanded", ru:"рабочие, последние" },
+    { en:"machine, commanded", ru:"мащинные, последние" },
     { en:"Set", ru:"Выставить" },
     { en:"Click - Edit, ESC - Cancel, ENTER - Set", ru:"Клик - Изменить, ESC - Отмета, ENTER - Применить" },
     { en:"Coordinates type", ru:"Тип координат" },
@@ -41,89 +49,86 @@ if ( window.localStorage ) pos.db = window.localStorage;
 
 
 
-pos.update = function ( type )
+pos.lcncsock_onopen = function(e)
 {
-    if ( !lcnc_available || pos.update.busy || !parent.location.protocol.match("http") ) return;
-
-    pos.update.busy = true;
-    pos.update.xhr = pos.update.xhr ? pos.update.xhr : new XMLHttpRequest();
-    pos.update.xhr.open('POST', "/command", true);
-    pos.update.xhr.onreadystatechange = pos.update.xhr.onreadystatechange ? 
-        pos.update.xhr.onreadystatechange :
-        function()
-        {
-            if ( this.readyState != 4 ) return;
-
-            if ( this.status == 200 ) {
-                var find;
-                for ( var axis in pos.current ) {
-                    find = new RegExp(axis+":\\s*([0-9\\.\\-]+)","i");
-                    pos.current[axis] = this.responseText.match(find);
-                    pos.current[axis] = pos.current[axis] ? pos.current[axis][1] : 0;
-                    if ( !pos[axis+"_axis_value_focused"] ) {
-                        document.querySelector("#"+axis+"_axis_value").value = pos.current[axis];
-                    }
-                }
-            }
-            else {
-                if ( lcnc_available ) {
-                    log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
-                }
-                lcnc_available = false;
-            }
-
-            pos.update.busy = false;
+    if ( !pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is open","green");
+    pos.lcncsock_open = true;
+    // send hello with some passwords
+    pos.lcncsock.send("hello "+linuxcncrsh_hello_password+" poslcnc 1\r\nset enable "+linuxcncrsh_enable_password+"\r\n");
+}
+pos.lcncsock_onmessage = function(e)
+{
+    if ( e.data.match(/^\s*\w+_pos/i) ) { // position values
+        var params = e.data.match(/[\-\.0-9]+/g);
+        for ( var a = 0; a < pos.axes.length && params && params[a]; a++ ) {
+            document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
         }
+    } else if ( e.data.match(/^\s*joint_limit/i) ) { // limits values
+        var params = e.data.match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
+        for ( var a = 0, max, min; a < pos.axes.length && params && params[a]; a++ ) {
+            min = document.querySelector("#"+pos.axes[a]+"_axis_limit_min");
+            max = document.querySelector("#"+pos.axes[a]+"_axis_limit_max");
+            switch ( params[a].toLowerCase() ) {
+                case "ok":
+                    min.classList.remove("limit_hard","limit_soft");
+                    max.classList.remove("limit_hard","limit_soft");
+                    break;
+                case "minsoft":
+                    max.classList.remove("limit_hard","limit_soft");
+                    min.classList.remove("limit_hard");
+                    min.classList.add("limit_soft");
+                    break;
+                case "minhard":
+                    max.classList.remove("limit_hard","limit_soft");
+                    min.classList.remove("limit_soft");
+                    min.classList.add("limit_hard");
+                    break;
+                case "maxsoft":
+                    min.classList.remove("limit_hard","limit_soft");
+                    max.classList.remove("limit_hard");
+                    max.classList.add("limit_soft");
+                    break;
+                case "maxhard":
+                    min.classList.remove("limit_hard","limit_soft");
+                    max.classList.remove("limit_soft");
+                    max.classList.add("limit_hard");
+                    break;
+            }
+        }
+    }
+}
+pos.lcncsock_onclose = function(e)
+{
+    if ( pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    pos.lcncsock_open = false;
+}
 
-    switch (type) {
-        case "last_work":       pos.update.xhr.send("M114\n"); break;
-        case "real_work":       pos.update.xhr.send("M114.1\n"); break;
-        case "real_machine":    pos.update.xhr.send("M114.2\n"); break;
-        case "real_actuators":  pos.update.xhr.send("M114.3\n"); break;
-        case "last_milestone":  pos.update.xhr.send("M114.4\n"); break;
-        case "last_machine":    pos.update.xhr.send("M114.5\n"); break;
-        default:                pos.update.xhr.send("M114\n");
+pos.check_sockets = function()
+{
+    if ( !pos.lcncsock_open ) {
+        pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
     }
 }
 
+
+
+
+pos.update = function ( coords_type )
+{
+    if ( !pos.lcncsock_open ) return;
+
+    switch (coords_type) {
+        case "commanded_absolute_pos":  pos.lcncsock.send("get abs_cmd_pos\r\n"); break;
+        case "commanded_relative_pos":  pos.lcncsock.send("get rel_cmd_pos\r\n"); break;
+        case "actual_absolute_pos":     pos.lcncsock.send("get abs_act_pos\r\n"); break;
+        default:                        pos.lcncsock.send("get rel_act_pos\r\n"); // actual_relative_pos
+    }
+}
 pos.limits_update = function()
 {
-    if ( !lcnc_available || pos.limits_update.busy || !parent.location.protocol.match("http") ) return;
+    if ( !pos.lcncsock_open ) return;
 
-    pos.limits_update.busy = true;
-    pos.limits_update.xhr = pos.limits_update.xhr ? pos.limits_update.xhr : new XMLHttpRequest();
-    pos.limits_update.xhr.open('POST', "/command", true);
-    pos.limits_update.xhr.onreadystatechange = pos.limits_update.xhr.onreadystatechange ? 
-        pos.limits_update.xhr.onreadystatechange :
-        function()
-        {
-            if ( this.readyState != 4 ) return;
-
-            if ( this.status == 200 ) {
-                var states = this.responseText.match( /(max|min)_[xyzabc]:\s*[01]/igm );
-                for ( var s = 0, axis, type, state, element; s < states.length; s++ ) {
-                    axis = states[s].match( /[xyzabc]:/i )[0].substr(0,1).toLowerCase();
-                    type = states[s].match( /^(max|min)/i )[0].toLowerCase();
-                    state = states[s].match( /[01]$/ )[0];
-                    element = document.querySelector("#"+axis+"_axis_limit_"+type);
-                    
-                    if ( state == "1" && !element.classList.contains("limit_hit") ) {
-                        element.classList.add("limit_hit");
-                    } else if ( state == "0" && element.classList.contains("limit_hit") ) {
-                        element.classList.remove("limit_hit");
-                    }
-                }
-            }
-            else {
-                if ( lcnc_available ) {
-                    log.add("[POS] LinuxCNC isn't available ("+this.status+":"+this.statusText+")", "red");
-                }
-                lcnc_available = false;
-            }
-
-            pos.limits_update.busy = false;
-        }
-    pos.limits_update.xhr.send("M119\n");
+    pos.lcncsock.send("get joint_limit\r\n");
 }
 
 
@@ -179,7 +184,7 @@ pos.on_input_blur = function ( event )
 pos.on_pos_type_change = function ( event )
 {
     clearInterval(pos.update_timer);
-    pos.update_timer = setInterval( pos.update, 200, event.target.value );
+    pos.update_timer = setInterval( pos.update, pos.update_interval, event.target.value );
 
     pos.db["pos.type"] = event.target.value;
 
@@ -228,22 +233,27 @@ pos.js_init = function()
     }
 
     // start limits update process
-    pos.limits_update_timer = setInterval( pos.limits_update, 3000 );
+    pos.limits_update_timer = setInterval( pos.limits_update, pos.limits_update_interval );
 
     // start position update process
-    pos.update_timer = setInterval( pos.update, 200, pos.db["pos.type"] );
+    pos.update_timer = setInterval( pos.update, pos.update_interval, pos.db["pos.type"] );
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
-    for ( var axis in pos.current ) {
-        document.querySelector("#"+axis+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
-        document.querySelector("#"+axis+"_axis_value").addEventListener("focus", pos.on_input_focus);
-        document.querySelector("#"+axis+"_axis_value").addEventListener("blur", pos.on_input_blur);
-        document.querySelector("#"+axis+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
+    for ( var a = 0; a < pos.axes.length; a++ ) {
+        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
+        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
+        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
+        document.querySelector("#"+pos.axes[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
     }
 
     // catch position type changes
     document.querySelector("#pos_type_select").addEventListener("change", pos.on_pos_type_change);
+
+    // create sockets to talk with LCNC
+    pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
+    // create check timer for these sockets
+    setInterval(pos.check_sockets, pos.sock_check_interval);
 }
 
 

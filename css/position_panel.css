@@ -116,7 +116,11 @@
     height:         15px;
     border-radius:  0px 0px 3px 3px;
 }
-.position > .position_box > .axis_limits_box > .limit_hit
+.position > .position_box > .axis_limits_box > .limit_hard
 {
     background:     rgba(255, 0, 0, 0.5) !important;
+}
+.position > .position_box > .axis_limits_box > .limit_soft
+{
+    background:     rgba(255, 255, 0, 0.5) !important;
 }
