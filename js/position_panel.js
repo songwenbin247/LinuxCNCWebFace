@@ -62,7 +62,9 @@ pos.lcncsock_onmessage = function(e)
     if ( e.data.match(/^\s*\w+_pos/i) ) { // position values
         var params = e.data.match(/[\-\.0-9]+/g);
         for ( var a = 0; a < pos.axes.length && params && params[a]; a++ ) {
-            document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
+            if ( !pos[pos.axes[a]+"_axis_value_focused"] ) {
+                document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
+            }
         }
     } else if ( e.data.match(/^\s*joint_limit/i) ) { // limits values
         var params = e.data.match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
