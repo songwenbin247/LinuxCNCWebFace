@@ -166,9 +166,7 @@ pos.on_input_keyup = function ( event )
 
     // if ENTER key pressed
     if ( event.keyCode == 13 ) {
-        var value = n(this.value);
-        value = value >= 0 ? value - value*2 : value + value*2;
-        pos.exec_mdi("G10 L2 P0 " + this.id.match(/^[xyzabc]/i)[0].toUpperCase() + value);
+        pos.exec_mdi("G92 " + this.id.match(/^[xyzabc]/i)[0].toUpperCase() + n(this.value));
         this.blur();
     }
 }
@@ -215,7 +213,7 @@ pos.simpleClickAnimation = function ( id )
 pos.on_axis_reset_click = function ( event )
 {
     pos.simpleClickAnimation(event.target.id);
-    pos.exec_mdi("G10 L2 P0 " + event.target.id.match(/^[xyzabc]/i)[0].toUpperCase() + "0");
+    pos.exec_mdi("G92 " + event.target.id.match(/^[xyzabc]/i)[0].toUpperCase() + "0");
 }
 
 
