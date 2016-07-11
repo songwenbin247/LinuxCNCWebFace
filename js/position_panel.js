@@ -9,6 +9,9 @@ var pos =
 {
     db: {},
 
+    halsock:                false,
+    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
+    halsock_open:           false,
     lcncsock:               false,
     lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
@@ -49,6 +52,39 @@ if ( window.localStorage ) pos.db = window.localStorage;
 
 
 
+
+pos.halsock_onopen = function(e)
+{
+    if ( !pos.halsock_open ) log.add("[POS] [HAL] Socket is open","green");
+    pos.halsock_open = true;
+    // send hello with some passwords
+    pos.halsock.send("hello "+halrmt_hello_password+" poshal 1\r\n");
+    // check axis visibility
+    for ( var a = 0; a < pos.axes.length; a++ ) {
+        pos.halsock.send("get pinval ini."+a+".max_acceleration\r\n");
+    }
+
+}
+
+pos.halsock_onmessage = function(e)
+{
+    if ( e.data.match(/^PINVAL/i) ) {
+        var strings = e.data.match(/PINVAL[\ \t]+ini\.[0-9]+\.max_acceleration[\ \t]+[\-\.0-9]+/igm);
+        for ( var s = 0, params, block; s < strings.length; s++ ) {
+            params      = strings[s].match(/\-?[0-9](\.?[0-9]+)?/g);
+            disp        = "block";
+            params[0]   = n(params[0]);
+            if ( n(params[1]) <= 0 ) disp = "none";
+            if ( params[0] >= 0 && params[0] < pos.axes.length )
+                document.querySelector("#"+pos.axes[params[0]]+"_axis_pos_box").style.display = disp;
+        }
+    }
+}
+pos.halsock_onclose = function(e)
+{
+    if ( pos.halsock_open ) log.add("[POS] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    pos.halsock_open = false;
+}
 
 pos.lcncsock_onopen = function(e)
 {
@@ -108,6 +144,9 @@ pos.lcncsock_onclose = function(e)
 
 pos.check_sockets = function()
 {
+    if ( !pos.halsock_open ) {
+        pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
+    }
     if ( !pos.lcncsock_open ) {
         pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
     }
@@ -255,6 +294,7 @@ pos.js_init = function()
     document.querySelector("#pos_type_select").addEventListener("change", pos.on_pos_type_change);
 
     // create sockets to talk with LCNC
+    pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
     pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
     // create check timer for these sockets
     setInterval(pos.check_sockets, pos.sock_check_interval);
