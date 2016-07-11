@@ -7,10 +7,11 @@
 // local strings to translate
 var lng_local_dic =
 [
-    { en:"Before", ru:"Перед" },
+    { en:"Before", ru:"До" },
     { en:"cmd", ru:"код" },
     { en:"Feed", ru:"Подача" },
     { en:"After", ru:"После" },
+    { en:"GOTO", ru:"ЕДЕМ" },
     { en:"HOME", ru:"ДОМОЙ" },
     { en:"ALL", ru:"ВСЕ" },
 ];
