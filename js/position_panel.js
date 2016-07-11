@@ -60,23 +60,32 @@ pos.halsock_onopen = function(e)
     // send hello with some passwords
     pos.halsock.send("hello "+halrmt_hello_password+" poshal 1\r\n");
     // check axis visibility
-    for ( var a = 0; a < pos.axes.length; a++ ) {
-        pos.halsock.send("get pinval ini."+a+".max_acceleration\r\n");
-    }
-
+    setTimeout(
+        function() {
+            for ( var a = 0; a < pos.axes.length; a++ )
+                pos.halsock.send("get pinval ini."+a+".max_acceleration\r\n");
+        },
+        200
+    );
 }
 
 pos.halsock_onmessage = function(e)
 {
     if ( e.data.match(/^PINVAL/i) ) {
         var strings = e.data.match(/PINVAL[\ \t]+ini\.[0-9]+\.max_acceleration[\ \t]+[\-\.0-9]+/igm);
-        for ( var s = 0, params, block; s < strings.length; s++ ) {
+        for ( var s = 0, params, hide, id, elem; s < strings.length; s++ ) {
             params      = strings[s].match(/\-?[0-9](\.?[0-9]+)?/g);
-            disp        = "block";
             params[0]   = n(params[0]);
-            if ( n(params[1]) <= 0 ) disp = "none";
-            if ( params[0] >= 0 && params[0] < pos.axes.length )
-                document.querySelector("#"+pos.axes[params[0]]+"_axis_pos_box").style.display = disp;
+            hide        = false;
+
+            if ( n(params[1]) <= 0 ) hide = true;
+
+            if ( params[0] >= 0 && params[0] < pos.axes.length ) {
+                id      = pos.axes[params[0]]+"_axis_pos_box";
+                elem    = document.querySelector("#"+id);
+                if ( hide && elem.style.display != "none" ) pos.simpleHideAnimation(id);
+                else if ( !hide && elem.style.display == "none" ) pos.simpleShowAnimation(id);
+            }
         }
     }
 }
@@ -244,6 +253,21 @@ pos.simpleClickAnimation = function ( id )
 {
     document.querySelector("#"+id).style.opacity = "0";
     setTimeout( 'document.querySelector("#'+id+'").style.opacity = "1";', 200 );
+}
+
+// simple toggle animations
+pos.simpleHideAnimation = function ( id, elemType )
+{
+    var delay = Math.ceil(Math.random()*2000) + 500;
+    var elem = document.querySelector("#"+id);
+
+    elem.style.transition = "all "+delay+"ms linear";
+    elem.style.opacity = "0";
+    setTimeout( 'document.querySelector("#'+id+'").style.display = "none";', delay );
+}
+pos.simpleShowAnimation = function ( id, elemType )
+{
+    document.querySelector("#"+id).style.display = elemType ? elemType : "block";
 }
 
 
