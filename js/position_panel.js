@@ -68,8 +68,9 @@ pos.halsock_onopen = function(e)
     // check axis visibility
     setTimeout(
         function() {
-            for ( var a = 0; a < pos.axes.length; a++ )
-                pos.halsock.send("get pinval ini."+a+".max_acceleration\r\n");
+            var msg = "";
+            for ( var a = 0; a < pos.axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
+            pos.halsock.send(msg);
         },
         200
     );
