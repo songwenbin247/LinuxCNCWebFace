@@ -86,9 +86,17 @@
 }
 .position > .position_type_box > .pos_type_select
 {
-    width:          192px;
+    display:        inline-block;
+    width:          172px;
     padding:        3px 5px 3px 5px;
-    font-weight:    bold;
+    font-family:    inherit;
+    border-radius:  3px;
+}
+.position > .position_type_box > .pos_coord_sys_select
+{
+    display:        inline-block;
+    width:          70px;
+    padding:        3px 5px 3px 5px;
     font-family:    inherit;
     border-radius:  3px;
 }

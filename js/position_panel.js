@@ -18,8 +18,9 @@ var pos =
     sock_proto:             "telnet",
     sock_check_interval:    5000,
     
-    update_interval:        200,
-    limits_update_interval: 500,
+    update_interval:            200,
+    limits_update_interval:     500,
+    coord_sys_update_interval:  500,
 
     axes: ["x","y","z","a","b","c"]
 };
@@ -31,7 +32,7 @@ var lng_local_dic =
     { en:"machine, actual", ru:"машинные, текущие" },
     { en:"work, commanded", ru:"рабочие, последние" },
     { en:"machine, commanded", ru:"машинные, последние" },
-    { en:"joints, absolute", ru:"актуаторы, абсолютные" },
+    { en:"joints, absolute", ru:"моторы, абсолют" },
     { en:"Set", ru:"Выставить" },
     { en:"Click - Edit, ESC - Cancel, ENTER - Set", ru:"Клик - Изменить, ESC - Отмета, ENTER - Применить" },
     { en:"Coordinates type", ru:"Тип координат" },
@@ -124,6 +125,9 @@ pos.lcncsock_onmessage = function(e)
                 document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
             }
         }
+    } else if ( e.data.match(/^program_codes/i) ) { // program current G codes
+        var coord_sys_code = e.data.match(/G5[3-9](\.[1-3])?/i);
+        document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
     } else if ( e.data.match(/^\s*joint_limit/i) ) { // limits values
         var params = e.data.match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
         for ( var a = 0, max, min; a < pos.axes.length && params && params[a]; a++ ) {
@@ -195,6 +199,12 @@ pos.limits_update = function()
 
     pos.lcncsock.send("get joint_limit\r\n");
 }
+pos.coord_sys_update = function()
+{
+    if ( !pos.lcncsock_open ) return;
+
+    pos.lcncsock.send("get program_codes\r\n");
+}
 
 
 
@@ -258,6 +268,11 @@ pos.on_pos_type_change = function ( event )
     log.add("[POS] type = " + event.target.value);
 }
 
+pos.on_coord_sys_change = function ( event )
+{
+    pos.exec_mdi(event.target.value);
+}
+
 
 
 
@@ -314,9 +329,10 @@ pos.js_init = function()
 
     // start limits update process
     pos.limits_update_timer = setInterval( pos.limits_update, pos.limits_update_interval );
-
     // start position update process
     pos.update_timer = setInterval( pos.update, pos.update_interval, pos.db["pos.type"] );
+    // start coordinate system update process
+    pos.coord_sys_update_timer = setInterval( pos.coord_sys_update, pos.coord_sys_update_interval );
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
@@ -329,6 +345,8 @@ pos.js_init = function()
 
     // catch position type changes
     document.querySelector("#pos_type_select").addEventListener("change", pos.on_pos_type_change);
+    // catch coordinate system changes
+    document.querySelector("#pos_coord_sys_select").addEventListener("change", pos.on_coord_sys_change);
 
     // create sockets to talk with LCNC
     pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
