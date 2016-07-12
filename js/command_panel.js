@@ -103,6 +103,12 @@ cmd.halsock_onopen = function(e)
     cmd.halsock_open = true;
     // send hello with some passwords
     cmd.halsock.send("hello "+halrmt_hello_password+" cmdhal 1\r\n");
+    // disable echo in answers
+    cmd.halsock.send(
+        "set enable "+halrmt_enable_password+"\r\n"+
+        "set echo off\r\n"+
+        "set enable off\r\n"
+    );
 }
 cmd.halsock_onmessage = function(e)
 {
@@ -121,6 +127,12 @@ cmd.lcncsock_onopen = function(e)
     cmd.lcncsock_open = true;
     // send hello with some passwords
     cmd.lcncsock.send("hello "+linuxcncrsh_hello_password+" cmdlcnc 1\r\n");
+    // disable echo in answers
+    cmd.lcncsock.send(
+        "set enable "+linuxcncrsh_enable_password+"\r\n"+
+        "set echo off\r\n"+
+        "set enable off\r\n"
+    );
 }
 cmd.lcncsock_onmessage = function(e)
 {

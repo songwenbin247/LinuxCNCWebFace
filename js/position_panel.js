@@ -59,6 +59,12 @@ pos.halsock_onopen = function(e)
     pos.halsock_open = true;
     // send hello with some passwords
     pos.halsock.send("hello "+halrmt_hello_password+" poshal 1\r\n");
+    // disable echo in answers
+    pos.halsock.send(
+        "set enable "+halrmt_enable_password+"\r\n"+
+        "set echo off\r\n"+
+        "set enable off\r\n"
+    );
     // check axis visibility
     setTimeout(
         function() {
@@ -101,6 +107,12 @@ pos.lcncsock_onopen = function(e)
     pos.lcncsock_open = true;
     // send hello with some passwords
     pos.lcncsock.send("hello "+linuxcncrsh_hello_password+" poslcnc 1\r\n");
+    // disable echo in answers
+    pos.lcncsock.send(
+        "set enable "+linuxcncrsh_enable_password+"\r\n"+
+        "set echo off\r\n"+
+        "set enable off\r\n"
+    );
 }
 pos.lcncsock_onmessage = function(e)
 {
