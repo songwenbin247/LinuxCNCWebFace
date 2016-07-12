@@ -12,6 +12,8 @@ var lng_local_dic =
     { en:"Feed", ru:"Подача" },
     { en:"After", ru:"После" },
     { en:"GOTO", ru:"ЕДЕМ" },
+    { en:"GO", ru:"ЕДЕМ" },
+    { en:"TO", ru:"В" },
     { en:"HOME", ru:"ДОМОЙ" },
     { en:"ALL", ru:"ВСЕ" },
 ];
