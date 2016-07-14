@@ -268,10 +268,14 @@ jog.inputs_changed = function ( event )
 // some of the move buttons was clicked
 jog.btn_clicked = function ( event )
 {
-    if ( ! /^jog_btn_/.test(event.target.id) ) return;
+    var id;
+
+    if ( /^jog_btn_/.test(event.target.id) ) id = event.target.id;
+    else if ( /^jog_btn_/.test(event.target.parentElement.id) ) id = event.target.parentElement.id;
+    else return;
 
     // visual click effect
-    jog.simpleClickAnimation(event.target.id);
+    jog.simpleClickAnimation(id);
 
     var before  = document.querySelector("#jog_inputs_before").value;
     var cmd     = document.querySelector("#jog_inputs_cmd").value;
@@ -281,7 +285,7 @@ jog.btn_clicked = function ( event )
     var after   = document.querySelector("#jog_inputs_after").value;
     var outcmd  = "";
 
-    switch ( event.target.id )
+    switch ( id )
     {
         // home buttons
         case "jog_btn_homeALL":
