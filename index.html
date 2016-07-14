@@ -126,109 +126,82 @@
                 <td class="right">
                     <!-- JOG panel -->
                     <style type="text/css">@import "css/JOG_panel.css";</style>
-                    <table class="JOG" id="JOG_table">
-                        <tr class="row0">
-                            <td class="col0" ></td>
-                            <td class="col1" id="jog_info_left2">-10</td>
-                            <td class="col2" id="jog_info_left1">-1</td>
-                            <td class="col3">Y</td>
-                            <td class="col4" id="jog_info_right1">1</td>
-                            <td class="col5" id="jog_info_right2">10</td>
-                            <td class="col6" rowspan="8"></td>
-                            <td class="col7">Z</td>
-                        </tr>
-                        <tr class="row1">
-                            <td class="col0" id="jog_info_top2">10</td>
-                            <td class="col1" id="jog_btn_negX2_posY2">X-10<br />Y10</td>
-                            <td class="col2" id="jog_btn_negX1_posY2">X-1<br />Y10</td>
-                            <td class="col3" id="jog_btn_posY2">10</td>
-                            <td class="col4" id="jog_btn_posX1_posY2">X1<br />Y10</td>
-                            <td class="col5" id="jog_btn_posX2_posY2">X10<br />Y10</td>
-                            <td class="col7" id="jog_btn_posZ2">10</td>
-                        </tr>
-                        <tr class="row2">
-                            <td class="col0" id="jog_info_top1">1</td>
-                            <td class="col1" id="jog_btn_negX2_posY1">X-10<br />Y1</td>
-                            <td class="col2" id="jog_btn_negX1_posY1">X-1<br />Y1</td>
-                            <td class="col3" id="jog_btn_posY1">1</td>
-                            <td class="col4" id="jog_btn_posX1_posY1">X1<br />Y1</td>
-                            <td class="col5" id="jog_btn_posX2_posY1">X10<br />Y1</td>
-                            <td class="col7" id="jog_btn_posZ1">1</td>
-                        </tr>
-                        <tr class="row3">
-                            <td class="col0">X</td>
-                            <td class="col1" id="jog_btn_negX2">-10</td>
-                            <td class="col2" id="jog_btn_negX1">-1</td>
-                            <td class="col3" id="jog_btn_homeXY">&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />X0 Y0</td>
-                            <td class="col4" id="jog_btn_posX1">1</td>
-                            <td class="col5" id="jog_btn_posX2">10</td>
-                            <td class="col7" id="jog_btn_homeZ">&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />Z0</td>
-                        </tr>
-                        <tr class="row4">
-                            <td class="col0" id="jog_info_bottom1">-1</td>
-                            <td class="col1" id="jog_btn_negX2_negY1">X-10<br />Y-1</td>
-                            <td class="col2" id="jog_btn_negX1_negY1">X-1<br />Y-1</td>
-                            <td class="col3" id="jog_btn_negY1">-1</td>
-                            <td class="col4" id="jog_btn_posX1_negY1">X1<br />Y-1</td>
-                            <td class="col5" id="jog_btn_posX2_negY1">X10<br />Y-1</td>
-                            <td class="col7" id="jog_btn_negZ1">-1</td>
-                        </tr>
-                        <tr class="row5">
-                            <td class="col0" id="jog_info_bottom2">-10</td>
-                            <td class="col1" id="jog_btn_negX2_negY2">X-10<br />Y-10</td>
-                            <td class="col2" id="jog_btn_negX1_negY2">X-1<br />Y-10</td>
-                            <td class="col3" id="jog_btn_negY2">-10</td>
-                            <td class="col4" id="jog_btn_posX1_negY2">X1<br />Y-10</td>
-                            <td class="col5" id="jog_btn_posX2_negY2">X10<br />Y-10</td>
-                            <td class="col7" id="jog_btn_negZ2">-10</td>
-                        </tr>
-                        <tr class="row6">
-                            <td class="col0" colspan="8"></td>
-                        </tr>
-                        <tr class="row7">
-                            <td class="col0">A</td>
-                            <td class="col1" id="jog_btn_negA2">-10</td>
-                            <td class="col2" id="jog_btn_negA1">-1</td>
-                            <td class="col3" id="jog_btn_homeA">&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />A0</td>
-                            <td class="col4" id="jog_btn_posA1">1</td>
-                            <td class="col5" id="jog_btn_posA2">10</td>
-                            <td class="col7" id="jog_btn_homeALL">&#x2009;GOTO&#x2009;<br />&#x2009;HOME&#x2009;<br />&#x2009;ALL&#x2009;</td>
-                        </tr>
-                        <tr class="row8">
-                            <td class="col0" colspan="8">
-                                <table class="inputs" id="JOG_inputs_table">
-                                    <tr class="input">
-                                        <td class="input1">
-                                            <input type="text" value="G91" size="1" id="jog_inputs_before" tabindex="21" />
-                                        </td>
-                                        <td class="input2">
-                                            <input type="text" value="G0" size="1" id="jog_inputs_cmd" tabindex="22" />
-                                        </td>
-                                        <td class="input3">
-                                            <input type="text" value="1" size="1" id="jog_inputs_L1" tabindex="23" />
-                                        </td>
-                                        <td class="input4">
-                                            <input type="text" value="10" size="1" id="jog_inputs_L2" tabindex="24" />
-                                        </td>
-                                        <td class="input5">
-                                            <input type="text" value="500" size="1" id="jog_inputs_feed" tabindex="25" />
-                                        </td>
-                                        <td class="input6">
-                                            <input type="text" value="G90" size="1" id="jog_inputs_after" tabindex="26" />
-                                        </td>
-                                    </tr>
-                                    <tr class="desc">
-                                        <td class="desc1">&#x2009;Before&#x2009;</td>
-                                        <td class="desc2">&#x2009;cmd&#x2009;</td>
-                                        <td class="desc3">L1</td>
-                                        <td class="desc4">L2</td>
-                                        <td class="desc5">&#x2009;Feed&#x2009;</td>
-                                        <td class="desc6">&#x2009;After&#x2009;</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="JOG" id="JOG_table">
+                        <div class="row">
+                            <div class="cell" id="jog_btn_negX2_posY2"><div>X-10<br />Y10</div></div
+                            ><div class="cell" id="jog_btn_negX1_posY2"><div>X-1<br />Y10</div></div
+                            ><div class="cell axis_vert axis x" id="jog_btn_posY2"><div>10</div></div
+                            ><div class="cell" id="jog_btn_posX1_posY2"><div>X1<br />Y10</div></div
+                            ><div class="cell" id="jog_btn_posX2_posY2"><div>X10<br />Y10</div></div
+                            ><div class="cell axis_vert axis z" id="jog_btn_posZ2"><div>10</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" id="jog_btn_negX2_posY1"><div>X-10<br />Y1</div></div
+                            ><div class="cell L1_axes" id="jog_btn_negX1_posY1"><div>X-1<br />Y1</div></div
+                            ><div class="cell axis_vert axis x" id="jog_btn_posY1"><div>1</div></div
+                            ><div class="cell L1_axes" id="jog_btn_posX1_posY1"><div>X1<br />Y1</div></div
+                            ><div class="cell" id="jog_btn_posX2_posY1"><div>X10<br />Y1</div></div
+                            ><div class="cell axis_vert axis z" id="jog_btn_posZ1"><div>1</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell axis_horiz axis y" id="jog_btn_negX2"><div>-10</div></div
+                            ><div class="cell axis_horiz axis y" id="jog_btn_negX1"><div>-1</div></div
+                            ><div class="cell axis_horiz axis_vert home home_xy" id="jog_btn_homeXY"><div>&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />X0 Y0</div></div
+                            ><div class="cell axis_horiz axis y" id="jog_btn_posX1"><div>1</div></div
+                            ><div class="cell axis_horiz axis y" id="jog_btn_posX2"><div>10</div></div
+                            ><div class="cell axis_horiz axis_vert home home_z" id="jog_btn_homeZ"><div>&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />Z0</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" id="jog_btn_negX2_negY1"><div>X-10<br />Y-1</div></div
+                            ><div class="cell L1_axes" id="jog_btn_negX1_negY1"><div>X-1<br />Y-1</div></div
+                            ><div class="cell axis_vert axis x" id="jog_btn_negY1"><div>-1</div></div
+                            ><div class="cell L1_axes" id="jog_btn_posX1_negY1"><div>X1<br />Y-1</div></div
+                            ><div class="cell" id="jog_btn_posX2_negY1"><div>X10<br />Y-1</div></div
+                            ><div class="cell axis_vert axis z" id="jog_btn_negZ1"><div>-1</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" id="jog_btn_negX2_negY2"><div>X-10<br />Y-10</div></div
+                            ><div class="cell" id="jog_btn_negX1_negY2"><div>X-1<br />Y-10</div></div
+                            ><div class="cell axis_vert axis x" id="jog_btn_negY2"><div>-10</div></div
+                            ><div class="cell" id="jog_btn_posX1_negY2"><div>X1<br />Y-10</div></div
+                            ><div class="cell" id="jog_btn_posX2_negY2"><div>X10<br />Y-10</div></div
+                            ><div class="cell axis_vert axis z" id="jog_btn_negZ2"><div>-10</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell axis_horiz axis a" id="jog_btn_negA2"><div>-10</div></div
+                            ><div class="cell axis_horiz axis a" id="jog_btn_negA1"><div>-1</div></div
+                            ><div class="cell axis_horiz axis_vert home home_a" id="jog_btn_homeA"><div>&#x2009;GO&#x2009;&#x2009;TO&#x2009;<br />A0</div></div
+                            ><div class="cell axis_horiz axis a" id="jog_btn_posA1"><div>1</div></div
+                            ><div class="cell axis_horiz axis a" id="jog_btn_posA2"><div>10</div></div
+                            ><div class="cell axis_horiz axis_vert home home_all" id="jog_btn_homeALL"><div>&#x2009;GOTO&#x2009;<br />&#x2009;HOME&#x2009;<br />&#x2009;ALL&#x2009;</div></div>
+                        </div>
+                        <div class="inputs" id="JOG_inputs_table">
+                            <div class="input1">
+                                <input type="text" value="G91" size="1" id="jog_inputs_before" tabindex="21" />
+                                <span class="desc">&#x2009;Before&#x2009;</span>
+                            </div
+                            ><div class="input2">
+                                <input type="text" value="G0" size="1" id="jog_inputs_cmd" tabindex="22" />
+                                <span class="desc">&#x2009;cmd&#x2009;</span>
+                            </div
+                            ><div class="input3">
+                                <input type="text" value="1" size="1" id="jog_inputs_L1" tabindex="23" />
+                                <span class="desc">L1</span>
+                            </div
+                            ><div class="input4">
+                                <input type="text" value="10" size="1" id="jog_inputs_L2" tabindex="24" />
+                                <span class="desc">L2</span>
+                            </div
+                            ><div class="input5">
+                                <input type="text" value="500" size="1" id="jog_inputs_feed" tabindex="25" />
+                                <span class="desc">&#x2009;Feed&#x2009;</span>
+                            </div
+                            ><div class="input6">
+                                <input type="text" value="G90" size="1" id="jog_inputs_after" tabindex="26" />
+                                <span class="desc">&#x2009;After&#x2009;</span>
+                            </div>
+                        </div>
+                    </div>
                     <script type="text/javascript" src="js/JOG_panel.js"></script>
                 </td>
             </tr>

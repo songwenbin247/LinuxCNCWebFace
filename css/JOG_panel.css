@@ -7,333 +7,130 @@
 /* JOG table */
 .JOG
 {
-    display:        inline-block;
-    border:         0px solid black;
-    border-spacing: 8px;
-    empty-cells:    show;
-    min-width:      350px;
-}
-
-/* every jog table cell */
-.JOG tbody > tr > td
-{
-    font-size:      60%;
-    padding:        0px;
-    margin:         0px;
-    box-sizing:     border-box;
-    text-align:     center;
-    vertical-align: middle;
-    background:     rgba(0,0,0,0);
+    display:            inline-block;
+    min-width:          calc( 4*40px + 2*50px + 5*8px );
+    margin:             10px;
 }
 
 
 
 
-/* control buttons cells */
-.JOG tbody > .row1 > td:not([class="col0"]),
-.JOG tbody > .row2 > td:not([class="col0"]),
-.JOG tbody > .row3 > td:not([class="col0"]),
-.JOG tbody > .row4 > td:not([class="col0"]),
-.JOG tbody > .row5 > td:not([class="col0"]),
-.JOG tbody > .row7 > td:not([class="col0"])
-{
-    border:         1px solid rgba(0,0,0,0.1);
-    border-radius:  3px;
-    cursor:         pointer;
-    transition:     all 200ms linear;
+/* general style for rows and cells */
+.JOG > .row {
+    text-align:         left;
+    margin-top:         8px;
 }
-
-/* control button cells - when mouse over */
-.JOG tbody > .row1 > td:not([class="col0"]):hover,
-.JOG tbody > .row2 > td:not([class="col0"]):hover,
-.JOG tbody > .row3 > td:not([class="col0"]):hover,
-.JOG tbody > .row4 > td:not([class="col0"]):hover,
-.JOG tbody > .row5 > td:not([class="col0"]):hover,
-.JOG tbody > .row7 > td:not([class="col0"]):hover
-{
-    border-color:   rgba(0,0,0,0.8) !important;
-    background:     rgba(0,0,0,0.2) !important;
+.JOG > .row:first-child {
+    margin-top:         0;
 }
-
-
-
-
-/* info col0 and info row0 */
-.JOG tbody > .row1 > td[class="col0"],
-.JOG tbody > .row2 > td[class="col0"],
-.JOG tbody > .row3 > td[class="col0"],
-.JOG tbody > .row4 > td[class="col0"],
-.JOG tbody > .row5 > td[class="col0"],
-.JOG tbody > .row7 > td[class="col0"],
-.JOG tbody > .row0 > td
-{
-    cursor:         default;
+.JOG > .row > .cell {
+    display:            inline-flex;
+    height:             40px; 
+    width:              40px; 
+    align-items:        center;
+    padding:            0;
+    margin:             0 0 0 8px;
+    vertical-align:     middle;
+    overflow:           hidden;
+    border-radius:      3px;
+    border:             1px solid rgba(0,0,0,0.1);
+    background:         rgba(0,0,0,0);
+    cursor:             pointer;
+    transition:         all 200ms linear;
+    box-sizing:         border-box;
 }
-/* L1 */
-.JOG tbody > .row0 > .col2,
-.JOG tbody > .row0 > .col4,
-.JOG tbody > .row2 > .col0,
-.JOG tbody > .row4 > .col0
-{
-    color:          blue;
+.JOG > .row > .cell:hover {
+    border-color:       rgba(0,0,0,0.8) !important;
+    background-color:   rgba(0,0,0,0.2) !important;
 }
-/* L2 */
-.JOG tbody > .row0 > .col1,
-.JOG tbody > .row0 > .col5,
-.JOG tbody > .row1 > .col0,
-.JOG tbody > .row5 > .col0
-{
-    color:          red;
+.JOG > .row > .cell:first-child {
+    margin-left:        0;
+}
+.JOG > .row > .cell > * {
+    font-size:          75%;
+    width:              99%; 
+    text-align:         center;
+    /*outline:1px solid red; */
 }
 
 
 
 
-/* rows style */
-.JOG tbody > .row1 > td,
-.JOG tbody > .row2 > td,
-.JOG tbody > .row4 > td,
-.JOG tbody > .row5 > td
-{
-    height:         40px;
-}
+.JOG > .row > .cell.axis_horiz { height: 50px; }
+.JOG > .row > .cell.axis_vert { width: 50px; }
 
-/* X and A axes */
-.JOG tbody > .row3 > td,
-.JOG tbody > .row7 > td
-{
-    height:         50px;
-}
-.JOG tbody > .row3 > td:not([class="col0"]),
-.JOG tbody > .row7 > td:not([class="col0"])
-{
-    border-width:   2px;
-    border-color:   rgba(0,0,0,0.3);
-}
+.JOG > .row > .cell.L1_axes { background: rgba(0,0,0,0.03); }
 
+.JOG > .row > .cell.axis { border: 2px solid rgba(0,0,0,0.3); }
+.JOG > .row > .cell.x { background: rgba(0,255,0,0.1); }
+.JOG > .row > .cell.y { background: rgba(0,0,255,0.1); }
+.JOG > .row > .cell.z { background: rgba(255,0,0,0.1); }
+.JOG > .row > .cell.a { background: rgba(255,255,0,0.1); }
+.JOG > .row > .cell.b { background: rgba(0,255,255,0.1); }
+.JOG > .row > .cell.c { background: rgba(255,0,255,0.1); }
+
+.JOG > .row > .cell.home { border: 3px solid rgba(0,0,0,0.5); }
+.JOG > .row > .cell.home_xy { background: rgba(0,255,255,0.2); }
+.JOG > .row > .cell.home_z { background: rgba(255,0,0,0.3); }
+.JOG > .row > .cell.home_a { background: rgba(255,255,0,0.3) }
+.JOG > .row > .cell.home_b { background: rgba(0,255,255,0.3); }
+.JOG > .row > .cell.home_c { background: rgba(255,0,255,0.3); }
+.JOG > .row > .cell.home_all { background: rgba(192,128,0,0.3); }
 
 
 
-/* columns style */
-.JOG tbody > tr > .col1,
-.JOG tbody > tr > .col2,
-.JOG tbody > tr > .col4,
-.JOG tbody > tr > .col5
-{
-    width:          40px;
-}
-
-/* Y and Z axes */
-.JOG tbody > tr > .col3,
-.JOG tbody > tr > .col7
-{
-    width:          50px;
-    border-width:   2px !important;
-    border-color:   rgba(0,0,0,0.3) !important;
-}
-
-
-
-
-/* additional coloring for main axes rows/columns */
-
-/* X axis */
-.JOG tbody > .row3 > .col1,
-.JOG tbody > .row3 > .col2,
-.JOG tbody > .row3 > .col4,
-.JOG tbody > .row3 > .col5
-{
-    background:     rgba(0,0,255,0.1);
-}
-
-/* Y axis */
-.JOG tbody > .row1 > .col3,
-.JOG tbody > .row2 > .col3,
-.JOG tbody > .row4 > .col3,
-.JOG tbody > .row5 > .col3
-{
-    background:     rgba(0,255,0,0.1);
-}
-
-/* Z axis */
-.JOG tbody > .row1 > .col7,
-.JOG tbody > .row2 > .col7,
-.JOG tbody > .row4 > .col7,
-.JOG tbody > .row5 > .col7
-{
-    background:     rgba(255,0,0,0.1);
-}
-
-/* A axis */
-.JOG tbody > .row7 > .col1,
-.JOG tbody > .row7 > .col2,
-.JOG tbody > .row7 > .col4,
-.JOG tbody > .row7 > .col5
-{
-    background:     rgba(255,255,0,0.1);
-}
-
-
-
-
-/* HOME buttons */
-
-/* all HOME buttons */
-.JOG tbody > .row3 > .col3,
-.JOG tbody > .row3 > .col7,
-.JOG tbody > .row7 > .col3,
-.JOG tbody > .row7 > .col7
-{
-    border-width:   3px !important;
-    border-color:   rgba(0,0,0,0.5) !important;
-}
-
-/* "HOME XY" button */
-.JOG tbody > .row3 > .col3
-{
-    background:     rgba(0,255,255,0.2);
-}
-
-/* "HOME Z" button */
-.JOG tbody > .row3 > .col7
-{
-    background:     rgba(255,0,0,0.3);
-}
-
-/* "HOME A" button */
-.JOG tbody > .row7 > .col3
-{
-    background:     rgba(255,255,0,0.3);
-}
-
-/* "HOME ALL" button */
-.JOG tbody > .row7 > .col7
-{
-    background:     rgba(192,128,0,0.3);
-}
-
-
-
-
-/* additional coloring for XY directions */
-.JOG tbody > .row2 > .col2,
-.JOG tbody > .row4 > .col4,
-.JOG tbody > .row2 > .col4,
-.JOG tbody > .row4 > .col2
-{
-    background:     rgba(0,0,0,0.03);
-}
-
-
-
-
-/* additional style for axes names */
-.JOG tbody > .row0 > .col3,
-.JOG tbody > .row0 > .col7,
-.JOG tbody > .row3 > .col0,
-.JOG tbody > .row7 > .col0
-{
-    font-weight:    bold;
-    font-size:      80%;
-}
-
-
-
-
-/* last row with control inputs table*/
-.JOG tbody > .row8 > .col0
-{
-    /*height:         100px;*/
-    /*border-top:       1px solid rgba(0,0,0,0.3);*/
-}
 
 /* input table */
 .JOG .inputs
 {
-    margin:         0px;
-    margin-top:     8px;
-    width:          100%;
-    /*border:         1px solid red;*/
-    border-spacing: 2px;
-    empty-cells:    show;
-    /*background:     rgba(0,255,255,0.1);*/
+    padding-top:    8px;
+    width:          calc( 4*40px + 2*50px + 5*8px );
 }
 
 /* all cells */
-.JOG .inputs > tbody > tr > td
+.JOG .inputs > div
 {
-    padding:        0px;
-    margin:         0px;
-    box-sizing:     border-box;
+    display:        inline-block;
+    margin-left:    1%;
     text-align:     center;
-    vertical-align: middle;
+}
+.JOG .inputs > div:first-child
+{
+    margin-left:    0;
 }
 
 /* input cells width */
-.JOG .inputs > tbody > .input > .input1 /* BEFORE */
-{
-    width:          15%;
-}
-.JOG .inputs > tbody > .input > .input2 /* CMD */
-{
-    width:          15%;
-}
-.JOG .inputs > tbody > .input > .input3 /* L1 */
-{
-    width:          15%;
-}
-.JOG .inputs > tbody > .input > .input4 /* L2 */
-{
-    width:          20%;
-}
-.JOG .inputs > tbody > .input > .input5 /* FEED */
-{
-    width:          20%;
-    font-weight:    bold;
-}
-.JOG .inputs > tbody > .input > .input6 /* AFTER */
-{
-    width:          15%;
-}
+.JOG .inputs > .input1 { width: 15%; } /* BEFORE */
+.JOG .inputs > .input2 { width: 15%; } /* CMD */
+.JOG .inputs > .input3 { width: 13%; } /* L1 */
+.JOG .inputs > .input4 { width: 17%; } /* L2 */
+.JOG .inputs > .input5 { width: 20%; } /* FEED */
+.JOG .inputs > .input6 { width: 15%; } /* AFTER */
 
-/* all cells with input elements */
-/* input cells */
-.JOG .inputs > tbody > .input > td
-{
-    font-size:      100%;
-}
 /* input elements */
-.JOG .inputs > tbody > tr > td > input
+.JOG .inputs > div > input
 {
     padding:        4px 2px 2px 2px;
-    margin:         0px;
+    margin:         0 0 3px 0;
     width:          100%;
     text-align:     center;
     vertical-align: middle;
-    font-size:      100%;
+    font-size:      120%;
     border:         1px solid rgba(0,0,0,0.5);
     border-radius:  3px;
     background:     rgba(255,128,0,0.1);
+    box-sizing:     border-box;
     font-weight:    bold;
     text-transform: uppercase;
 }
-.JOG .inputs > tbody > .input > .input3 > input /* L1 */
-{
-    color:          blue;
-}
-.JOG .inputs > tbody > .input > .input4 > input /* L2 */
-{
-    color:          red;
-}
-.JOG .inputs > tbody > .input > .input5 > input /* feed */
-{
-    color:          green;
-}
+.JOG .inputs > .input3 > input { color: blue; } /* L1 */
+.JOG .inputs > .input4 > input { color: red; } /* L2 */
+.JOG .inputs > .input5 > input { color: green; } /* feed */
 
 /* all description cells */
-.JOG .inputs > tbody > .desc > td
+.JOG .inputs > div > .desc
 {
-    font-size:      70%;
+    font-size:      80%;
     text-transform: uppercase;
     color:          rgba(0,0,0,0.7);
 }

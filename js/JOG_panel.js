@@ -224,54 +224,44 @@ jog.inputs_changed = function ( event )
             var L2_pos  = n( jog.db["jog.L2"] );
             var L2_neg  = -1 * L2_pos;
 
-            // changing info rows/columns
-            document.querySelector("#jog_info_left1").innerHTML = L1_neg;
-            document.querySelector("#jog_info_left2").innerHTML = L2_neg;
-            document.querySelector("#jog_info_bottom1").innerHTML = L1_neg;
-            document.querySelector("#jog_info_bottom2").innerHTML = L2_neg;
-            document.querySelector("#jog_info_right1").innerHTML = L1_pos;
-            document.querySelector("#jog_info_right2").innerHTML = L2_pos;
-            document.querySelector("#jog_info_top1").innerHTML = L1_pos;
-            document.querySelector("#jog_info_top2").innerHTML = L2_pos;
-
             // changing buttons texts
-            document.querySelector("#jog_btn_negX1").innerHTML = L1_neg;
-            document.querySelector("#jog_btn_negY1").innerHTML = L1_neg;
-            document.querySelector("#jog_btn_negZ1").innerHTML = L1_neg;
-            document.querySelector("#jog_btn_negA1").innerHTML = L1_neg;
-            document.querySelector("#jog_btn_negX2").innerHTML = L2_neg;
-            document.querySelector("#jog_btn_negY2").innerHTML = L2_neg;
-            document.querySelector("#jog_btn_negZ2").innerHTML = L2_neg;
-            document.querySelector("#jog_btn_negA2").innerHTML = L2_neg;
+            document.querySelector("#jog_btn_negX1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negY1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negZ1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negA1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negX2").innerHTML = "<div>" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negY2").innerHTML = "<div>" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negZ2").innerHTML = "<div>" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negA2").innerHTML = "<div>" + L2_neg + "</div>";
 
-            document.querySelector("#jog_btn_posX1").innerHTML = L1_pos;
-            document.querySelector("#jog_btn_posY1").innerHTML = L1_pos;
-            document.querySelector("#jog_btn_posZ1").innerHTML = L1_pos;
-            document.querySelector("#jog_btn_posA1").innerHTML = L1_pos;
-            document.querySelector("#jog_btn_posX2").innerHTML = L2_pos;
-            document.querySelector("#jog_btn_posY2").innerHTML = L2_pos;
-            document.querySelector("#jog_btn_posZ2").innerHTML = L2_pos;
-            document.querySelector("#jog_btn_posA2").innerHTML = L2_pos;
+            document.querySelector("#jog_btn_posX1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posY1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posZ1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posA1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posX2").innerHTML = "<div>" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posY2").innerHTML = "<div>" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posZ2").innerHTML = "<div>" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posA2").innerHTML = "<div>" + L2_pos + "</div>";
 
-            document.querySelector("#jog_btn_negX1_negY1").innerHTML = "X" + L1_neg + "<br />" + "Y" + L1_neg;
-            document.querySelector("#jog_btn_negX2_negY1").innerHTML = "X" + L2_neg + "<br />" + "Y" + L1_neg;
-            document.querySelector("#jog_btn_negX1_negY2").innerHTML = "X" + L1_neg + "<br />" + "Y" + L2_neg;
-            document.querySelector("#jog_btn_negX2_negY2").innerHTML = "X" + L2_neg + "<br />" + "Y" + L2_neg;
+            document.querySelector("#jog_btn_negX1_negY1").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negX2_negY1").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negX1_negY2").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negX2_negY2").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L2_neg + "</div>";
 
-            document.querySelector("#jog_btn_posX1_posY1").innerHTML = "X" + L1_pos + "<br />" + "Y" + L1_pos;
-            document.querySelector("#jog_btn_posX2_posY1").innerHTML = "X" + L2_pos + "<br />" + "Y" + L1_pos;
-            document.querySelector("#jog_btn_posX1_posY2").innerHTML = "X" + L1_pos + "<br />" + "Y" + L2_pos;
-            document.querySelector("#jog_btn_posX2_posY2").innerHTML = "X" + L2_pos + "<br />" + "Y" + L2_pos;
+            document.querySelector("#jog_btn_posX1_posY1").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posX2_posY1").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posX1_posY2").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posX2_posY2").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L2_pos + "</div>";
 
-            document.querySelector("#jog_btn_negX1_posY1").innerHTML = "X" + L1_neg + "<br />" + "Y" + L1_pos;
-            document.querySelector("#jog_btn_negX2_posY1").innerHTML = "X" + L2_neg + "<br />" + "Y" + L1_pos;
-            document.querySelector("#jog_btn_negX1_posY2").innerHTML = "X" + L1_neg + "<br />" + "Y" + L2_pos;
-            document.querySelector("#jog_btn_negX2_posY2").innerHTML = "X" + L2_neg + "<br />" + "Y" + L2_pos;
+            document.querySelector("#jog_btn_negX1_posY1").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_negX2_posY1").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_negX1_posY2").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_negX2_posY2").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L2_pos + "</div>";
 
-            document.querySelector("#jog_btn_posX1_negY1").innerHTML = "X" + L1_pos + "<br />" + "Y" + L1_neg;
-            document.querySelector("#jog_btn_posX2_negY1").innerHTML = "X" + L2_pos + "<br />" + "Y" + L1_neg;
-            document.querySelector("#jog_btn_posX1_negY2").innerHTML = "X" + L1_pos + "<br />" + "Y" + L2_neg;
-            document.querySelector("#jog_btn_posX2_negY2").innerHTML = "X" + L2_pos + "<br />" + "Y" + L2_neg;
+            document.querySelector("#jog_btn_posX1_negY1").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_posX2_negY1").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_posX1_negY2").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_posX2_negY2").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L2_neg + "</div>";
     }
 }
 
