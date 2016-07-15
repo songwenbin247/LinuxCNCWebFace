@@ -15,6 +15,7 @@ var lng_local_dic =
     { en:"GO", ru:"ЕДЕМ" },
     { en:"TO", ru:"В" },
     { en:"HOME", ru:"ДОМОЙ" },
+    { en:"STOP", ru:"СТОП" },
     { en:"ALL", ru:"ВСЕ" },
 ];
 
@@ -216,7 +217,10 @@ jog.check_sockets = function()
 // here is a good place to send command text to the LinuxCNC controller
 jog.exec_mdi = function ( outcmd )
 {
-    if ( !jog.lcncsock_open ) return;
+    if ( !jog.lcncsock_open ) {
+        log.add("[JOG] LCNC socket isn't available","red");
+        return;
+    }
     if ( typeof(outcmd) == "string" ) outcmd = [outcmd];
 
     var mdi = "";
@@ -225,16 +229,31 @@ jog.exec_mdi = function ( outcmd )
     }
 
     if ( mdi == "" ) return;
-    if ( jog.lcncsock_open ) {
-        jog.lcncsock.send(
-            "set enable " + linuxcncrsh_enable_password + "\r\n" +
-            "set mode mdi\r\n" +
-            mdi +
-            "set enable off\r\n"
-        );
-        log.add("[JOG] " + outcmd.join(" "));
-    } else
+
+    jog.lcncsock.send(
+        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        "set mode mdi\r\n" +
+        mdi +
+        "set enable off\r\n"
+    );
+
+    log.add("[JOG] " + outcmd.join(" "));
+}
+jog.exec = function ( outcmd )
+{
+    if ( !jog.lcncsock_open ) {
         log.add("[JOG] LCNC socket isn't available","red");
+        return;
+    }
+    if ( outcmd.trim() == "" ) return;
+
+    jog.lcncsock.send(
+        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        outcmd +
+        "set enable off\r\n"
+    );
+
+    log.add("[JOG] lcnc " + outcmd);
 }
 
 
@@ -274,19 +293,27 @@ jog.inputs_changed = function ( event )
             document.querySelector("#jog_btn_negY1").innerHTML = "<div>" + L1_neg + "</div>";
             document.querySelector("#jog_btn_negZ1").innerHTML = "<div>" + L1_neg + "</div>";
             document.querySelector("#jog_btn_negA1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negB1").innerHTML = "<div>" + L1_neg + "</div>";
+            document.querySelector("#jog_btn_negC1").innerHTML = "<div>" + L1_neg + "</div>";
             document.querySelector("#jog_btn_negX2").innerHTML = "<div>" + L2_neg + "</div>";
             document.querySelector("#jog_btn_negY2").innerHTML = "<div>" + L2_neg + "</div>";
             document.querySelector("#jog_btn_negZ2").innerHTML = "<div>" + L2_neg + "</div>";
             document.querySelector("#jog_btn_negA2").innerHTML = "<div>" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negB2").innerHTML = "<div>" + L2_neg + "</div>";
+            document.querySelector("#jog_btn_negC2").innerHTML = "<div>" + L2_neg + "</div>";
 
             document.querySelector("#jog_btn_posX1").innerHTML = "<div>" + L1_pos + "</div>";
             document.querySelector("#jog_btn_posY1").innerHTML = "<div>" + L1_pos + "</div>";
             document.querySelector("#jog_btn_posZ1").innerHTML = "<div>" + L1_pos + "</div>";
             document.querySelector("#jog_btn_posA1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posB1").innerHTML = "<div>" + L1_pos + "</div>";
+            document.querySelector("#jog_btn_posC1").innerHTML = "<div>" + L1_pos + "</div>";
             document.querySelector("#jog_btn_posX2").innerHTML = "<div>" + L2_pos + "</div>";
             document.querySelector("#jog_btn_posY2").innerHTML = "<div>" + L2_pos + "</div>";
             document.querySelector("#jog_btn_posZ2").innerHTML = "<div>" + L2_pos + "</div>";
             document.querySelector("#jog_btn_posA2").innerHTML = "<div>" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posB2").innerHTML = "<div>" + L2_pos + "</div>";
+            document.querySelector("#jog_btn_posC2").innerHTML = "<div>" + L2_pos + "</div>";
 
             document.querySelector("#jog_btn_negX1_negY1").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L1_neg + "</div>";
             document.querySelector("#jog_btn_negX2_negY1").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L1_neg + "</div>";
@@ -321,6 +348,11 @@ jog.btn_clicked = function ( event )
 
     // visual click effect
     jog.simpleClickAnimation(id);
+    
+    if ( id == "jog_btn_stopALL" ) {
+        jog.exec("set abort\r\n");
+        return;
+    }
 
     var before  = document.querySelector("#jog_inputs_before").value;
     var cmd     = document.querySelector("#jog_inputs_cmd").value;
@@ -345,6 +377,12 @@ jog.btn_clicked = function ( event )
         case "jog_btn_homeA":
             before = "G90"; after = "";
             outcmd = cmd + " A0 F" + feed; break;
+        case "jog_btn_homeB":
+            before = "G90"; after = "";
+            outcmd = cmd + " B0 F" + feed; break;
+        case "jog_btn_homeC":
+            before = "G90"; after = "";
+            outcmd = cmd + " C0 F" + feed; break;
 
         // move buttons
         case "jog_btn_posX1":
@@ -382,6 +420,24 @@ jog.btn_clicked = function ( event )
             outcmd = cmd + " A" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negA2":
             outcmd = cmd + " A" + (-1*L2) + " F" + feed; break;
+
+        case "jog_btn_posB1":
+            outcmd = cmd + " B" + L1 + " F" + feed; break;
+        case "jog_btn_posB2":
+            outcmd = cmd + " B" + L2 + " F" + feed; break;
+        case "jog_btn_negB1":
+            outcmd = cmd + " B" + (-1*L1) + " F" + feed; break;
+        case "jog_btn_negB2":
+            outcmd = cmd + " B" + (-1*L2) + " F" + feed; break;
+
+        case "jog_btn_posC1":
+            outcmd = cmd + " C" + L1 + " F" + feed; break;
+        case "jog_btn_posC2":
+            outcmd = cmd + " C" + L2 + " F" + feed; break;
+        case "jog_btn_negC1":
+            outcmd = cmd + " C" + (-1*L1) + " F" + feed; break;
+        case "jog_btn_negC2":
+            outcmd = cmd + " C" + (-1*L2) + " F" + feed; break;
 
         // multiple axes move buttons
         case "jog_btn_posX1_posY1":

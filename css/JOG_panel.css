@@ -20,6 +20,9 @@
     text-align:         left;
     margin-top:         8px;
 }
+.JOG > .row.strong {
+    height:             40px; 
+}
 .JOG > .row:first-child {
     margin-top:         0;
 }
@@ -30,7 +33,7 @@
     align-items:        center;
     padding:            0;
     margin:             0 0 0 8px;
-    vertical-align:     middle;
+    vertical-align:     top;
     overflow:           hidden;
     border-radius:      3px;
     border:             1px solid rgba(0,0,0,0.1);
@@ -76,6 +79,13 @@
 .JOG > .row > .cell.home_b { background: rgba(0,255,255,0.3); }
 .JOG > .row > .cell.home_c { background: rgba(255,0,255,0.3); }
 .JOG > .row > .cell.home_all { background: rgba(192,128,0,0.3); }
+.JOG > .row > .cell.stop_all { 
+    position:       relative;
+    top:            calc(-40px - 8px);
+    height:         calc(2*40px + 8px);
+    background:     rgba(255,128,0,0.5);
+    font-weight:    bold;
+}
 
 
 
