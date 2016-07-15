@@ -175,6 +175,7 @@ pos.lcncsock_onclose = function(e)
 
 pos.check_sockets = function()
 {
+    if ( !parent.location.protocol.match("http") ) return;
     if ( !pos.halsock_open ) {
         pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
     }
@@ -354,8 +355,10 @@ pos.js_init = function()
     document.querySelector("#pos_coord_sys_select").addEventListener("change", pos.on_coord_sys_change);
 
     // create sockets to talk with LCNC
-    pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
-    pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
+    if ( parent.location.protocol.match("http") ) {
+        pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
+        pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
+    }
     // create check timer for these sockets
     setInterval(pos.check_sockets, pos.sock_check_interval);
 }

@@ -147,6 +147,7 @@ cmd.lcncsock_onclose = function(e)
 
 cmd.check_sockets = function()
 {
+    if ( !parent.location.protocol.match("http") ) return;
     if ( !cmd.halsock_open ) {
         cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
     }
@@ -216,8 +217,10 @@ cmd.js_init = function()
     document.querySelector("#command_send").addEventListener("click", cmd.on_cmd_send);
     
     // create sockets to talk with LCNC
-    cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
-    cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+    if ( parent.location.protocol.match("http") ) {
+        cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
+        cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+    }
 
     // create check timer for these sockets
     setInterval(cmd.check_sockets, cmd.sock_check_interval);
