@@ -118,46 +118,51 @@ pos.lcncsock_onopen = function(e)
 }
 pos.lcncsock_onmessage = function(e)
 {
-    if ( e.data.match(/^\s*\w+_pos/i) ) { // position values
-        var params = e.data.match(/[\-\.0-9]+/g);
-        for ( var a = 0; a < pos.axes.length && params && params[a]; a++ ) {
-            if ( !pos[pos.axes[a]+"_axis_value_focused"] ) {
-                document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
+    var lines = e.data.match(/[^\r\n]+[\r\n]+/igm);
+
+    for ( var n = 0; n < lines.length; n++ ) 
+    {
+        if ( lines[n].match(/^\s*\w+_pos/i) ) { // position values
+            var params = lines[n].match(/[\-\.0-9]+/g);
+            for ( var a = 0; a < pos.axes.length && params && params[a]; a++ ) {
+                if ( !pos[pos.axes[a]+"_axis_value_focused"] ) {
+                    document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
+                }
             }
-        }
-    } else if ( e.data.match(/^program_codes/i) ) { // program current G codes
-        var coord_sys_code = e.data.match(/G5[3-9](\.[1-3])?/i);
-        document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
-    } else if ( e.data.match(/^\s*joint_limit/i) ) { // limits values
-        var params = e.data.match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
-        for ( var a = 0, max, min; a < pos.axes.length && params && params[a]; a++ ) {
-            min = document.querySelector("#"+pos.axes[a]+"_axis_limit_min");
-            max = document.querySelector("#"+pos.axes[a]+"_axis_limit_max");
-            switch ( params[a].toLowerCase() ) {
-                case "ok":
-                    min.classList.remove("limit_hard","limit_soft");
-                    max.classList.remove("limit_hard","limit_soft");
-                    break;
-                case "minsoft":
-                    max.classList.remove("limit_hard","limit_soft");
-                    min.classList.remove("limit_hard");
-                    min.classList.add("limit_soft");
-                    break;
-                case "minhard":
-                    max.classList.remove("limit_hard","limit_soft");
-                    min.classList.remove("limit_soft");
-                    min.classList.add("limit_hard");
-                    break;
-                case "maxsoft":
-                    min.classList.remove("limit_hard","limit_soft");
-                    max.classList.remove("limit_hard");
-                    max.classList.add("limit_soft");
-                    break;
-                case "maxhard":
-                    min.classList.remove("limit_hard","limit_soft");
-                    max.classList.remove("limit_soft");
-                    max.classList.add("limit_hard");
-                    break;
+        } else if ( lines[n].match(/^program_codes/i) ) { // program current G codes
+            var coord_sys_code = lines[n].match(/G5[3-9](\.[1-3])?/i);
+            document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
+        } else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
+            var params = lines[n].match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
+            for ( var a = 0, max, min; a < pos.axes.length && params && params[a]; a++ ) {
+                min = document.querySelector("#"+pos.axes[a]+"_axis_limit_min");
+                max = document.querySelector("#"+pos.axes[a]+"_axis_limit_max");
+                switch ( params[a].toLowerCase() ) {
+                    case "ok":
+                        min.classList.remove("limit_hard","limit_soft");
+                        max.classList.remove("limit_hard","limit_soft");
+                        break;
+                    case "minsoft":
+                        max.classList.remove("limit_hard","limit_soft");
+                        min.classList.remove("limit_hard");
+                        min.classList.add("limit_soft");
+                        break;
+                    case "minhard":
+                        max.classList.remove("limit_hard","limit_soft");
+                        min.classList.remove("limit_soft");
+                        min.classList.add("limit_hard");
+                        break;
+                    case "maxsoft":
+                        min.classList.remove("limit_hard","limit_soft");
+                        max.classList.remove("limit_hard");
+                        max.classList.add("limit_soft");
+                        break;
+                    case "maxhard":
+                        min.classList.remove("limit_hard","limit_soft");
+                        max.classList.remove("limit_soft");
+                        max.classList.add("limit_hard");
+                        break;
+                }
             }
         }
     }
