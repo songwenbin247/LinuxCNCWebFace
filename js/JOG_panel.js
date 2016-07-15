@@ -28,6 +28,12 @@ var jog =
 {
     db: {},
 
+    lcncsock:               false,
+    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
+    lcncsock_open:          false,
+    sock_proto:             "telnet",
+    sock_check_interval:    5000,
+
     hotkeys:
     [
         // HOME buttons
@@ -180,16 +186,55 @@ jog.simpleButtonEffect = function ( id, success, text, code_after )
 
 
 
-// here is a good place to send command text to the LinuxCNC controller
-jog.execute_command = function ( outcmd )
+jog.lcncsock_onopen = function(e)
 {
-    if ( !lcnc_available || !parent.location.protocol.match("http") ) return;
+    if ( !jog.lcncsock_open ) log.add("[JOG] [LCNC] Socket is open","green");
+    jog.lcncsock_open = true;
+    // send hello with some passwords
+    jog.lcncsock.send("hello "+linuxcncrsh_hello_password+" joglcnc 1\r\n");
+}
+jog.lcncsock_onmessage = function(e)
+{
+}
+jog.lcncsock_onclose = function(e)
+{
+    if ( jog.lcncsock_open ) log.add("[JOG] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    jog.lcncsock_open = false;
+}
 
-    var xhr = new XMLHttpRequest();
-    xhr.open( "POST", "/command_silent", true );
-    xhr.send( outcmd + "\n" );
+jog.check_sockets = function()
+{
+    if ( !parent.location.protocol.match("http") ) return;
+    if ( !jog.lcncsock_open ) {
+        jog.lcncsock = websock.create(jog.lcncsock_url, jog.sock_proto, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
+    }
+}
 
-    log.add("[JOG] " + outcmd);
+
+
+
+// here is a good place to send command text to the LinuxCNC controller
+jog.exec_mdi = function ( outcmd )
+{
+    if ( !jog.lcncsock_open ) return;
+    if ( typeof(outcmd) == "string" ) outcmd = [outcmd];
+
+    var mdi = "";
+    for ( var i = 0; i < outcmd.length; i++ ) {
+        if ( outcmd[i].trim() != "" ) mdi += "set mdi " + outcmd[i] + "\r\n";
+    }
+
+    if ( mdi == "" ) return;
+    if ( jog.lcncsock_open ) {
+        jog.lcncsock.send(
+            "set enable " + linuxcncrsh_enable_password + "\r\n" +
+            "set mode mdi\r\n" +
+            mdi +
+            "set enable off\r\n"
+        );
+        log.add("[JOG] " + outcmd.join(" "));
+    } else
+        log.add("[JOG] LCNC socket isn't available","red");
 }
 
 
@@ -289,90 +334,94 @@ jog.btn_clicked = function ( event )
     {
         // home buttons
         case "jog_btn_homeALL":
-            outcmd = "G90 " + cmd + " X0 Y0 Z0 A0 F" + feed; break;
+            before = "G90"; after = "";
+            outcmd = cmd + " X0 Y0 Z0 A0 F" + feed; break;
         case "jog_btn_homeXY":
-            outcmd = "G90 " + cmd + " X0 Y0 F" + feed; break;
+            before = "G90"; after = "";
+            outcmd = cmd + " X0 Y0 F" + feed; break;
         case "jog_btn_homeZ":
-            outcmd = "G90 " + cmd + " Z0 F" + feed; break;
+            before = "G90"; after = "";
+            outcmd = cmd + " Z0 F" + feed; break;
         case "jog_btn_homeA":
-            outcmd = "G90 " + cmd + " A0 F" + feed; break;
+            before = "G90"; after = "";
+            outcmd = cmd + " A0 F" + feed; break;
 
         // move buttons
         case "jog_btn_posX1":
-            outcmd = before + " " + cmd + " X" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L1 + " F" + feed; break;
         case "jog_btn_posX2":
-            outcmd = before + " " + cmd + " X" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L2 + " F" + feed; break;
         case "jog_btn_negX1":
-            outcmd = before + " " + cmd + " X" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negX2":
-            outcmd = before + " " + cmd + " X" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L2) + " F" + feed; break;
 
         case "jog_btn_posY1":
-            outcmd = before + " " + cmd + " Y" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " Y" + L1 + " F" + feed; break;
         case "jog_btn_posY2":
-            outcmd = before + " " + cmd + " Y" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " Y" + L2 + " F" + feed; break;
         case "jog_btn_negY1":
-            outcmd = before + " " + cmd + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " Y" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negY2":
-            outcmd = before + " " + cmd + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " Y" + (-1*L2) + " F" + feed; break;
 
         case "jog_btn_posZ1":
-            outcmd = before + " " + cmd + " Z" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " Z" + L1 + " F" + feed; break;
         case "jog_btn_posZ2":
-            outcmd = before + " " + cmd + " Z" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " Z" + L2 + " F" + feed; break;
         case "jog_btn_negZ1":
-            outcmd = before + " " + cmd + " Z" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " Z" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negZ2":
-            outcmd = before + " " + cmd + " Z" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " Z" + (-1*L2) + " F" + feed; break;
 
         case "jog_btn_posA1":
-            outcmd = before + " " + cmd + " A" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " A" + L1 + " F" + feed; break;
         case "jog_btn_posA2":
-            outcmd = before + " " + cmd + " A" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " A" + L2 + " F" + feed; break;
         case "jog_btn_negA1":
-            outcmd = before + " " + cmd + " A" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " A" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negA2":
-            outcmd = before + " " + cmd + " A" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " A" + (-1*L2) + " F" + feed; break;
 
         // multiple axes move buttons
         case "jog_btn_posX1_posY1":
-            outcmd = before + " " + cmd + " X" + L1 + " Y" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L1 + " Y" + L1 + " F" + feed; break;
         case "jog_btn_posX2_posY1":
-            outcmd = before + " " + cmd + " X" + L2 + " Y" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L2 + " Y" + L1 + " F" + feed; break;
         case "jog_btn_posX1_posY2":
-            outcmd = before + " " + cmd + " X" + L1 + " Y" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L1 + " Y" + L2 + " F" + feed; break;
         case "jog_btn_posX2_posY2":
-            outcmd = before + " " + cmd + " X" + L2 + " Y" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L2 + " Y" + L2 + " F" + feed; break;
 
         case "jog_btn_negX1_negY1":
-            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L1) + " Y" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negX2_negY1":
-            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L2) + " Y" + (-1*L1) + " F" + feed; break;
         case "jog_btn_negX1_negY2":
-            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L1) + " Y" + (-1*L2) + " F" + feed; break;
         case "jog_btn_negX2_negY2":
-            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L2) + " Y" + (-1*L2) + " F" + feed; break;
 
         case "jog_btn_posX1_negY1":
-            outcmd = before + " " + cmd + " X" + L1 + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L1 + " Y" + (-1*L1) + " F" + feed; break;
         case "jog_btn_posX2_negY1":
-            outcmd = before + " " + cmd + " X" + L2 + " Y" + (-1*L1) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L2 + " Y" + (-1*L1) + " F" + feed; break;
         case "jog_btn_posX1_negY2":
-            outcmd = before + " " + cmd + " X" + L1 + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L1 + " Y" + (-1*L2) + " F" + feed; break;
         case "jog_btn_posX2_negY2":
-            outcmd = before + " " + cmd + " X" + L2 + " Y" + (-1*L2) + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + L2 + " Y" + (-1*L2) + " F" + feed; break;
 
         case "jog_btn_negX1_posY1":
-            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L1) + " Y" + L1 + " F" + feed; break;
         case "jog_btn_negX2_posY1":
-            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + L1 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L2) + " Y" + L1 + " F" + feed; break;
         case "jog_btn_negX1_posY2":
-            outcmd = before + " " + cmd + " X" + (-1*L1) + " Y" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L1) + " Y" + L2 + " F" + feed; break;
         case "jog_btn_negX2_posY2":
-            outcmd = before + " " + cmd + " X" + (-1*L2) + " Y" + L2 + " F" + feed + " " + after; break;
+            outcmd = cmd + " X" + (-1*L2) + " Y" + L2 + " F" + feed; break;
     }
 
-    if ( outcmd != "" ) jog.execute_command(outcmd);
+    if ( outcmd != "" ) jog.exec_mdi( [before, outcmd, after] );
 }
 
 
@@ -636,6 +685,13 @@ jog.js_init = function()
 
     // add hotkeys tab to general settings
     jog.add_hotkeys_tab_to_settings();
+
+    // create sockets to talk with LCNC
+    if ( parent.location.protocol.match("http") ) {
+        jog.lcncsock = websock.create(jog.lcncsock_url, jog.sock_proto, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
+    }
+    // create check timer for these sockets
+    setInterval(jog.check_sockets, jog.sock_check_interval);
 }
 
 
