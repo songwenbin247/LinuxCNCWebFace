@@ -7,7 +7,12 @@
 var halrmt_hello_password       = "EMC",
     halrmt_enable_password      = "EMCTOO",
     linuxcncrsh_hello_password  = "EMC",
-    linuxcncrsh_enable_password = "EMCTOO";
+    linuxcncrsh_enable_password = "EMCTOO",
+    halsock_url                 = "ws://"+parent.location.hostname+"/halrmt",
+    lcncsock_url                = "ws://"+parent.location.hostname+"/linuxcncrsh",
+    sock_proto                  = "telnet",
+    sock_check_interval         = 5000,
+    axes                        = ["x","y","z","a","b","c"];
 
 
 
