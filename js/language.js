@@ -94,6 +94,10 @@ lng.change = function ( from, to )
     lng.db["lng"] = to;
 }
 
+lng.update = function() {
+    if ( lng.db["lng"] != lng.list[0] ) lng.change( lng.list[0], lng.db["lng"] );
+}
+
 
 
 
@@ -114,11 +118,9 @@ lng.js_init = function()
     if ( lng.list.length > 1 )
     {
         // save default language to DB if not exists
-        if ( ! lng.db["lng"] || ! lng.dic[0][ lng.db["lng"] ] )
-            lng.db["lng"] = lng.list[0];
-
-        // if current language code (from DB) differs from default language code
-        if ( lng.db["lng"] != lng.list[0] ) lng.change( lng.list[0], lng.db["lng"] );
+        if ( ! lng.db["lng"] || ! lng.dic[0][ lng.db["lng"] ] ) lng.db["lng"] = lng.list[0];
+        // and change current language if needed
+        lng.update();
     }
 
     //test

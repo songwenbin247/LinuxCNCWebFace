@@ -729,6 +729,9 @@ jog.jog_table_init = function()
     for ( var i = 0, size = list.length; i < size; i++ ) {
         list[i].addEventListener("keyup", jog.on_input_keyup);
     }
+    
+    // update language strings
+    lng.update();
 }
 
 
