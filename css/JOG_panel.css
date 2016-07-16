@@ -74,12 +74,49 @@
 
 .JOG > .row > .cell.home { border: 3px solid rgba(0,0,0,0.5); }
 .JOG > .row > .cell.home_xy { background: rgba(0,255,255,0.2); }
+.JOG > .row > .cell.home_xa { background: rgba(128,255,0,0.2); }
+.JOG > .row > .cell.home_by { background: rgba(0,128,255,0.2); }
+.JOG > .row > .cell.home_zx { background: rgba(192,192,0,0.2); }
 .JOG > .row > .cell.home_z { background: rgba(255,0,0,0.3); }
 .JOG > .row > .cell.home_a { background: rgba(255,255,0,0.3) }
 .JOG > .row > .cell.home_b { background: rgba(0,255,255,0.3); }
 .JOG > .row > .cell.home_c { background: rgba(255,0,255,0.3); }
-.JOG > .row > .cell.home_all { background: rgba(192,128,0,0.3); }
 
+.JOG > .row > .cell.home_all { background: rgba(192,128,0,0.3); }
+.JOG > .row > .cell.home_all_xy { 
+    height:         calc(2*40px + 8px);
+    background:     rgba(192,128,0,0.3); 
+}
+.JOG > .row > .cell.home_all_xyz { 
+    background:     rgba(192,128,0,0.3); 
+    width:          calc( 2*40px + 50px + 2*8px );
+    height:         26px;
+}
+.JOG > .row > .cell.stop_all { 
+    background:     rgba(255,128,0,0.5); 
+    font-weight:    bold;
+}
+.JOG > .row > .cell.stop_all_xy { 
+    position:       relative;
+    top:            calc(-40px - 50px - 2*8px);
+    height:         calc(2*40px + 50px + 2*8px);
+    background:     rgba(255,128,0,0.5);
+    font-weight:    bold;
+}
+.JOG > .row > .cell.stop_all_xyz { 
+    background:     rgba(255,128,0,0.5); 
+    font-weight:    bold;
+    width:          calc( 2*40px + 50px + 2*8px );
+    height:         26px;
+}
+.JOG > .row > .cell.stop_all_xyza,
+.JOG > .row > .cell.stop_all_xyzb
+{ 
+    width:          calc( 4*40px + 2*50px + 5*8px );
+    height:         26px;
+    font-weight:    bold;
+    background:     rgba(255,128,0,0.5); 
+}
 .JOG > .row > .cell.stop_all_xyzabc { 
     position:       relative;
     top:            calc(-40px - 8px);

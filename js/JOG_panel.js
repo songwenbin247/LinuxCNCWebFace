@@ -224,16 +224,23 @@ jog.halsock_onmessage = function(e)
 
         switch ( jog.axes_used.join("") ) {
             case "xy": // laser, plasma
+                loadto( "html/JOG_table_xy.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xz": // lathe
+                loadto( "html/JOG_table_xz.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xyz": // router
+                loadto( "html/JOG_table_xyz.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xza": // rotary axis A along X
-            case "xzb": // rotary axis B along Y
+                loadto( "html/JOG_table_xza.html", 1, "#JOG_table", jog.jog_table_init ); break;
+            case "yzb": // rotary axis B along Y
+                loadto( "html/JOG_table_yzb.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xyza": // with rotary axis A along X
+                loadto( "html/JOG_table_xyza.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xyzb": // with rotary axis B along Y
+                loadto( "html/JOG_table_xyzb.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xyzab": // with rotate table
+                loadto( "html/JOG_table_xyzab.html", 1, "#JOG_table", jog.jog_table_init ); break;
             case "xyzac": // with rotate head
-            case "xyzabc": // 6 AXES
-
+                loadto( "html/JOG_table_xyzac.html", 1, "#JOG_table", jog.jog_table_init ); break;
             default:
                 loadto( "html/JOG_table_xyzabc.html", 1, "#JOG_table", jog.jog_table_init );
         }
@@ -390,21 +397,69 @@ jog.inputs_changed = function ( event )
             jog.set_html( "#jog_btn_negX2_negY1", "X" + L2_neg + "<br />" + "Y" + L1_neg, "div" );
             jog.set_html( "#jog_btn_negX1_negY2", "X" + L1_neg + "<br />" + "Y" + L2_neg, "div" );
             jog.set_html( "#jog_btn_negX2_negY2", "X" + L2_neg + "<br />" + "Y" + L2_neg, "div" );
-
             jog.set_html( "#jog_btn_posX1_posY1", "X" + L1_pos + "<br />" + "Y" + L1_pos, "div" );
             jog.set_html( "#jog_btn_posX2_posY1", "X" + L2_pos + "<br />" + "Y" + L1_pos, "div" );
             jog.set_html( "#jog_btn_posX1_posY2", "X" + L1_pos + "<br />" + "Y" + L2_pos, "div" );
             jog.set_html( "#jog_btn_posX2_posY2", "X" + L2_pos + "<br />" + "Y" + L2_pos, "div" );
-
             jog.set_html( "#jog_btn_negX1_posY1", "X" + L1_neg + "<br />" + "Y" + L1_pos, "div" );
             jog.set_html( "#jog_btn_negX2_posY1", "X" + L2_neg + "<br />" + "Y" + L1_pos, "div" );
             jog.set_html( "#jog_btn_negX1_posY2", "X" + L1_neg + "<br />" + "Y" + L2_pos, "div" );
             jog.set_html( "#jog_btn_negX2_posY2", "X" + L2_neg + "<br />" + "Y" + L2_pos, "div" );
-
             jog.set_html( "#jog_btn_posX1_negY1", "X" + L1_pos + "<br />" + "Y" + L1_neg, "div" );
             jog.set_html( "#jog_btn_posX2_negY1", "X" + L2_pos + "<br />" + "Y" + L1_neg, "div" );
             jog.set_html( "#jog_btn_posX1_negY2", "X" + L1_pos + "<br />" + "Y" + L2_neg, "div" );
             jog.set_html( "#jog_btn_posX2_negY2", "X" + L2_pos + "<br />" + "Y" + L2_neg, "div" );
+
+            jog.set_html( "#jog_btn_negX1_negA1", "X" + L1_neg + "<br />" + "A" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negX2_negA1", "X" + L2_neg + "<br />" + "A" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negX1_negA2", "X" + L1_neg + "<br />" + "A" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_negX2_negA2", "X" + L2_neg + "<br />" + "A" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posX1_posA1", "X" + L1_pos + "<br />" + "A" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posX2_posA1", "X" + L2_pos + "<br />" + "A" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posX1_posA2", "X" + L1_pos + "<br />" + "A" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posX2_posA2", "X" + L2_pos + "<br />" + "A" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negX1_posA1", "X" + L1_neg + "<br />" + "A" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negX2_posA1", "X" + L2_neg + "<br />" + "A" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negX1_posA2", "X" + L1_neg + "<br />" + "A" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negX2_posA2", "X" + L2_neg + "<br />" + "A" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posX1_negA1", "X" + L1_pos + "<br />" + "A" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posX2_negA1", "X" + L2_pos + "<br />" + "A" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posX1_negA2", "X" + L1_pos + "<br />" + "A" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posX2_negA2", "X" + L2_pos + "<br />" + "A" + L2_neg, "div" );
+
+            jog.set_html( "#jog_btn_negB1_negY1", "B" + L1_neg + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negB2_negY1", "B" + L2_neg + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negB1_negY2", "B" + L1_neg + "<br />" + "Y" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_negB2_negY2", "B" + L2_neg + "<br />" + "Y" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posB1_posY1", "B" + L1_pos + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posB2_posY1", "B" + L2_pos + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posB1_posY2", "B" + L1_pos + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posB2_posY2", "B" + L2_pos + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negB1_posY1", "B" + L1_neg + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negB2_posY1", "B" + L2_neg + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negB1_posY2", "B" + L1_neg + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negB2_posY2", "B" + L2_neg + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posB1_negY1", "B" + L1_pos + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posB2_negY1", "B" + L2_pos + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posB1_negY2", "B" + L1_pos + "<br />" + "Y" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posB2_negY2", "B" + L2_pos + "<br />" + "Y" + L2_neg, "div" );
+
+            jog.set_html( "#jog_btn_negZ1_negX1", "Z" + L1_neg + "<br />" + "X" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negZ2_negX1", "Z" + L2_neg + "<br />" + "X" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negZ1_negX2", "Z" + L1_neg + "<br />" + "X" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_negZ2_negX2", "Z" + L2_neg + "<br />" + "X" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posZ1_posX1", "Z" + L1_pos + "<br />" + "X" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posZ2_posX1", "Z" + L2_pos + "<br />" + "X" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posZ1_posX2", "Z" + L1_pos + "<br />" + "X" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posZ2_posX2", "Z" + L2_pos + "<br />" + "X" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negZ1_posX1", "Z" + L1_neg + "<br />" + "X" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negZ2_posX1", "Z" + L2_neg + "<br />" + "X" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negZ1_posX2", "Z" + L1_neg + "<br />" + "X" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negZ2_posX2", "Z" + L2_neg + "<br />" + "X" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posZ1_negX1", "Z" + L1_pos + "<br />" + "X" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posZ2_negX1", "Z" + L2_pos + "<br />" + "X" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posZ1_negX2", "Z" + L1_pos + "<br />" + "X" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posZ2_negX2", "Z" + L2_pos + "<br />" + "X" + L2_neg, "div" );
     }
 }
 
