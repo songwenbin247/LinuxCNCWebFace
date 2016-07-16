@@ -20,9 +20,7 @@ var pos =
     
     update_interval:            200,
     limits_update_interval:     500,
-    coord_sys_update_interval:  500,
-
-    axes: ["x","y","z","a","b","c"]
+    coord_sys_update_interval:  500
 };
 
 // local strings to translate
@@ -70,7 +68,7 @@ pos.halsock_onopen = function(e)
     setTimeout(
         function() {
             var msg = "";
-            for ( var a = 0; a < pos.axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
+            for ( var a = 0; a < axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
             pos.halsock.send(msg);
         },
         200
@@ -88,8 +86,8 @@ pos.halsock_onmessage = function(e)
 
             if ( n(params[1]) <= 0 ) hide = true;
 
-            if ( params[0] >= 0 && params[0] < pos.axes.length ) {
-                id      = pos.axes[params[0]]+"_axis_pos_box";
+            if ( params[0] >= 0 && params[0] < axes.length ) {
+                id      = axes[params[0]]+"_axis_pos_box";
                 elem    = document.querySelector("#"+id);
                 if ( hide && elem.style.display != "none" ) pos.simpleHideAnimation(id);
                 else if ( !hide && elem.style.display == "none" ) pos.simpleShowAnimation(id);
@@ -124,9 +122,9 @@ pos.lcncsock_onmessage = function(e)
     {
         if ( lines[n].match(/^\s*\w+_pos/i) ) { // position values
             var params = lines[n].match(/[\-\.0-9]+/g);
-            for ( var a = 0; a < pos.axes.length && params && params[a]; a++ ) {
-                if ( !pos[pos.axes[a]+"_axis_value_focused"] ) {
-                    document.querySelector("#"+pos.axes[a]+"_axis_value").value = params[a];
+            for ( var a = 0; a < axes.length && params && params[a]; a++ ) {
+                if ( !pos[axes[a]+"_axis_value_focused"] ) {
+                    document.querySelector("#"+axes[a]+"_axis_value").value = params[a];
                 }
             }
         } else if ( lines[n].match(/^program_codes/i) ) { // program current G codes
@@ -134,9 +132,9 @@ pos.lcncsock_onmessage = function(e)
             document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
         } else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
             var params = lines[n].match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
-            for ( var a = 0, max, min; a < pos.axes.length && params && params[a]; a++ ) {
-                min = document.querySelector("#"+pos.axes[a]+"_axis_limit_min");
-                max = document.querySelector("#"+pos.axes[a]+"_axis_limit_max");
+            for ( var a = 0, max, min; a < axes.length && params && params[a]; a++ ) {
+                min = document.querySelector("#"+axes[a]+"_axis_limit_min");
+                max = document.querySelector("#"+axes[a]+"_axis_limit_max");
                 switch ( params[a].toLowerCase() ) {
                     case "ok":
                         min.classList.remove("limit_hard","limit_soft");
@@ -342,11 +340,11 @@ pos.js_init = function()
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
-    for ( var a = 0; a < pos.axes.length; a++ ) {
-        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
-        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
-        document.querySelector("#"+pos.axes[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
-        document.querySelector("#"+pos.axes[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
+    for ( var a = 0; a < axes.length; a++ ) {
+        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
+        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
+        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
+        document.querySelector("#"+axes[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
     }
 
     // catch position type changes
