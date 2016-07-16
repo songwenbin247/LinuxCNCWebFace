@@ -259,6 +259,19 @@ jog.exec = function ( outcmd )
 
 
 
+jog.set_html = function ( element, content, wrapper )
+{
+    if ( typeof(element) == "string" ) element = document.querySelector(element);
+    if ( !element ) return;
+    
+    element.innerHTML = wrapper ? 
+    "<"+wrapper+">" + content + "</"+wrapper+">":
+    content;
+}
+
+
+
+
 // any of inputs was changed
 jog.inputs_changed = function ( event )
 {
@@ -289,51 +302,51 @@ jog.inputs_changed = function ( event )
             var L2_neg  = -1 * L2_pos;
 
             // changing buttons texts
-            document.querySelector("#jog_btn_negX1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negY1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negZ1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negA1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negB1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negC1").innerHTML = "<div>" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negX2").innerHTML = "<div>" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negY2").innerHTML = "<div>" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negZ2").innerHTML = "<div>" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negA2").innerHTML = "<div>" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negB2").innerHTML = "<div>" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negC2").innerHTML = "<div>" + L2_neg + "</div>";
+            jog.set_html( "#jog_btn_negX1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negY1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negZ1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negA1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negB1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negC1", L1_neg, "div" );
+            jog.set_html( "#jog_btn_negX2", L2_neg, "div" );
+            jog.set_html( "#jog_btn_negY2", L2_neg, "div" );
+            jog.set_html( "#jog_btn_negZ2", L2_neg, "div" );
+            jog.set_html( "#jog_btn_negA2", L2_neg, "div" );
+            jog.set_html( "#jog_btn_negB2", L2_neg, "div" );
+            jog.set_html( "#jog_btn_negC2", L2_neg, "div" );
 
-            document.querySelector("#jog_btn_posX1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posY1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posZ1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posA1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posB1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posC1").innerHTML = "<div>" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posX2").innerHTML = "<div>" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posY2").innerHTML = "<div>" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posZ2").innerHTML = "<div>" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posA2").innerHTML = "<div>" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posB2").innerHTML = "<div>" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posC2").innerHTML = "<div>" + L2_pos + "</div>";
+            jog.set_html( "#jog_btn_posX1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posY1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posZ1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posA1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posB1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posC1", L1_pos, "div" );
+            jog.set_html( "#jog_btn_posX2", L2_pos, "div" );
+            jog.set_html( "#jog_btn_posY2", L2_pos, "div" );
+            jog.set_html( "#jog_btn_posZ2", L2_pos, "div" );
+            jog.set_html( "#jog_btn_posA2", L2_pos, "div" );
+            jog.set_html( "#jog_btn_posB2", L2_pos, "div" );
+            jog.set_html( "#jog_btn_posC2", L2_pos, "div" );
 
-            document.querySelector("#jog_btn_negX1_negY1").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negX2_negY1").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_negX1_negY2").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_negX2_negY2").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L2_neg + "</div>";
+            jog.set_html( "#jog_btn_negX1_negY1", "X" + L1_neg + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negX2_negY1", "X" + L2_neg + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_negX1_negY2", "X" + L1_neg + "<br />" + "Y" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_negX2_negY2", "X" + L2_neg + "<br />" + "Y" + L2_neg, "div" );
 
-            document.querySelector("#jog_btn_posX1_posY1").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posX2_posY1").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_posX1_posY2").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_posX2_posY2").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L2_pos + "</div>";
+            jog.set_html( "#jog_btn_posX1_posY1", "X" + L1_pos + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posX2_posY1", "X" + L2_pos + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_posX1_posY2", "X" + L1_pos + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_posX2_posY2", "X" + L2_pos + "<br />" + "Y" + L2_pos, "div" );
 
-            document.querySelector("#jog_btn_negX1_posY1").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_negX2_posY1").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L1_pos + "</div>";
-            document.querySelector("#jog_btn_negX1_posY2").innerHTML = "<div>" + "X" + L1_neg + "<br />" + "Y" + L2_pos + "</div>";
-            document.querySelector("#jog_btn_negX2_posY2").innerHTML = "<div>" + "X" + L2_neg + "<br />" + "Y" + L2_pos + "</div>";
+            jog.set_html( "#jog_btn_negX1_posY1", "X" + L1_neg + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negX2_posY1", "X" + L2_neg + "<br />" + "Y" + L1_pos, "div" );
+            jog.set_html( "#jog_btn_negX1_posY2", "X" + L1_neg + "<br />" + "Y" + L2_pos, "div" );
+            jog.set_html( "#jog_btn_negX2_posY2", "X" + L2_neg + "<br />" + "Y" + L2_pos, "div" );
 
-            document.querySelector("#jog_btn_posX1_negY1").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_posX2_negY1").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L1_neg + "</div>";
-            document.querySelector("#jog_btn_posX1_negY2").innerHTML = "<div>" + "X" + L1_pos + "<br />" + "Y" + L2_neg + "</div>";
-            document.querySelector("#jog_btn_posX2_negY2").innerHTML = "<div>" + "X" + L2_pos + "<br />" + "Y" + L2_neg + "</div>";
+            jog.set_html( "#jog_btn_posX1_negY1", "X" + L1_pos + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posX2_negY1", "X" + L2_pos + "<br />" + "Y" + L1_neg, "div" );
+            jog.set_html( "#jog_btn_posX1_negY2", "X" + L1_pos + "<br />" + "Y" + L2_neg, "div" );
+            jog.set_html( "#jog_btn_posX2_negY2", "X" + L2_pos + "<br />" + "Y" + L2_neg, "div" );
     }
 }
 
@@ -689,16 +702,8 @@ jog.on_settings_hotkeys_state_change = function()
 
 
 // do it when window is fully loaded
-jog.js_init = function()
+jog.jog_table_init = function()
 {
-    console.log("jog.js_init()");
-
-    // repeat start of this function if settings is not loaded
-    if ( !set || !document.querySelector("#jog_inputs_before") ) return setTimeout(jog.js_init, 3000);
-
-    if ( jog.js_initialized ) return;
-    else jog.js_initialized = true;
-
     // put saved values into the input fields
     if ( jog.db["jog.before"] != null ) document.querySelector("#jog_inputs_before").value = jog.db["jog.before"] ;
     if ( jog.db["jog.cmd"] != null )    document.querySelector("#jog_inputs_cmd").value = jog.db["jog.cmd"] ;
@@ -708,8 +713,7 @@ jog.js_init = function()
     if ( jog.db["jog.after"] != null )  document.querySelector("#jog_inputs_after").value = jog.db["jog.after"] ;
 
     // update buttons text if L1 or L2 was changed
-    if ( jog.db["jog.L1"] != null || jog.db["jog.L1"] != null )
-    {
+    if ( jog.db["jog.L1"] != null || jog.db["jog.L2"] != null ) {
         jog.inputs_changed( { target: { id: "jog_inputs_L1" } } );
     }
 
@@ -719,28 +723,32 @@ jog.js_init = function()
     // add event listener for buttons clicks
     document.querySelector("#JOG_table").addEventListener("click", jog.btn_clicked);
 
+    // add event listeners for any input fields of the JOG panel
+    // it needs to blur any input element on keyboard ENTER key
+    list = document.querySelectorAll("#JOG_table input");
+    for ( var i = 0, size = list.length; i < size; i++ ) {
+        list[i].addEventListener("keyup", jog.on_input_keyup);
+    }
+}
+
+
+
+
+// do it when window is fully loaded
+jog.js_init = function()
+{
+    console.log("jog.js_init()");
+
     // add event listeners for any input fields focus states
     // it helps to prevent HOTKEYS action while some input is active
     var list = document.querySelectorAll("textarea, input");
-    for ( var i = 0, size = list.length; i < size; i++ )
-    {
+    for ( var i = 0, size = list.length; i < size; i++ ) {
         list[i].addEventListener("focus", jog.on_input_focus_in);
         list[i].addEventListener("blur", jog.on_input_focus_out);
     }
 
-    // add event listeners for any input fields of the JOG panel
-    // it needs to blur any input element on keyboard ENTER key
-    list = document.querySelectorAll("#JOG_table input");
-    for ( var i = 0, size = list.length; i < size; i++ )
-    {
-        list[i].addEventListener("keyup", jog.on_input_keyup);
-    }
-
     // add event listener for any keyboard keys
     document.querySelector("body").addEventListener("keyup", jog.on_keyboard_key);
-
-    // add hotkeys tab to general settings
-    jog.add_hotkeys_tab_to_settings();
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
@@ -748,6 +756,9 @@ jog.js_init = function()
     }
     // create check timer for these sockets
     setInterval(jog.check_sockets, jog.sock_check_interval);
+
+    // load jog table content;
+    loadto( "html/JOG_table_6_axes.html", 1, "#JOG_table", jog.jog_table_init );
 }
 
 
