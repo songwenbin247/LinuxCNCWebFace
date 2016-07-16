@@ -4,9 +4,7 @@
     GENERAL
 */
 
-var lcnc_available              = false,
-    hal_available               = false,
-    halrmt_hello_password       = "EMC",
+var halrmt_hello_password       = "EMC",
     halrmt_enable_password      = "EMCTOO",
     linuxcncrsh_hello_password  = "EMC",
     linuxcncrsh_enable_password = "EMCTOO";
