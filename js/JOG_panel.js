@@ -30,13 +30,9 @@ var jog =
     db: {},
 
     halsock:                false,
-    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
     halsock_open:           false,
     lcncsock:               false,
-    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
-    sock_proto:             "telnet",
-    sock_check_interval:    5000,
     
     axes_used:  [],
 
@@ -196,13 +192,13 @@ jog.halsock_onopen = function(e)
 {
     jog.halsock_open = true;
     // send hello with some passwords
-    jog.halsock.send("hello "+halrmt_hello_password+" joghal 1\r\n");
+    jog.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" joghal 1\r\n");
     // check axis count
     jog.axes_count_answers = 0;
     setTimeout(
         function() {
             var msg = "";
-            for ( var a = 0; a < axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
+            for ( var a = 0; a < AXES.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
             jog.halsock.send(msg);
         },
         200
@@ -217,12 +213,12 @@ jog.halsock_onmessage = function(e)
             p       = strings[s].match(/\-?[0-9](\.?[0-9]+)?/g);
             p[0]    = n(p[0]);
 
-            if ( n(p[1]) > 0 && p[0] >= 0 && p[0] < axes.length )
-                jog.axes_used[ jog.axes_used.length ] = axes[ p[0] ];
+            if ( n(p[1]) > 0 && p[0] >= 0 && p[0] < AXES.length )
+                jog.axes_used[ jog.axes_used.length ] = AXES[ p[0] ];
         }
     }
     
-    if ( jog.axes_count_answers >= axes.length ) {
+    if ( jog.axes_count_answers >= AXES.length ) {
         delete jog.axes_count_answers;
         jog.halsock.send("quit\r\n");
 
@@ -236,7 +232,8 @@ jog.halsock_onmessage = function(e)
             case "xyzb": // with rotary axis B along Y
             case "xyzab": // with rotate table
             case "xyzac": // with rotate head
-            case "xyzabc": // 6 axes
+            case "xyzabc": // 6 AXES
+
             default:
                 loadto( "html/JOG_table_xyzabc.html", 1, "#JOG_table", jog.jog_table_init );
         }
@@ -253,7 +250,7 @@ jog.lcncsock_onopen = function(e)
     if ( !jog.lcncsock_open ) log.add("[JOG] [LCNC] Socket is open","green");
     jog.lcncsock_open = true;
     // send hello with some passwords
-    jog.lcncsock.send("hello "+linuxcncrsh_hello_password+" joglcnc 1\r\n");
+    jog.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" joglcnc 1\r\n");
 }
 jog.lcncsock_onmessage = function(e)
 {
@@ -268,7 +265,7 @@ jog.check_sockets = function()
 {
     if ( !parent.location.protocol.match("http") ) return;
     if ( !jog.lcncsock_open ) {
-        jog.lcncsock = websock.create(jog.lcncsock_url, jog.sock_proto, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
+        jog.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
     }
 }
 
@@ -292,7 +289,7 @@ jog.exec_mdi = function ( outcmd )
     if ( mdi == "" ) return;
 
     jog.lcncsock.send(
-        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        "set enable " + LINUXCNCRSH_ENABLE_PASSWORD + "\r\n" +
         "set mode mdi\r\n" +
         mdi +
         "set enable off\r\n"
@@ -309,7 +306,7 @@ jog.exec = function ( outcmd )
     if ( outcmd.trim() == "" ) return;
 
     jog.lcncsock.send(
-        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        "set enable " + LINUXCNCRSH_ENABLE_PASSWORD + "\r\n" +
         outcmd +
         "set enable off\r\n"
     );
@@ -513,7 +510,7 @@ jog.btn_clicked = function ( event )
         case "jog_btn_negC2":
             outcmd = cmd + " C" + (-1*L2) + " F" + feed; break;
 
-        // multiple axes move buttons
+        // multip AXES s move buttons
         case "jog_btn_posX1_posY1":
             outcmd = cmd + " X" + L1 + " Y" + L1 + " F" + feed; break;
         case "jog_btn_posX2_posY1":
@@ -816,11 +813,11 @@ jog.js_init = function()
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
-        jog.halsock = websock.create(jog.halsock_url, jog.sock_proto, jog.halsock_onopen, jog.halsock_onmessage, jog.halsock_onclose);
-        jog.lcncsock = websock.create(jog.lcncsock_url, jog.sock_proto, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
+        jog.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, jog.halsock_onopen, jog.halsock_onmessage, jog.halsock_onclose);
+        jog.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
     }
     // create check timer for these sockets
-    setInterval(jog.check_sockets, jog.sock_check_interval);
+    setInterval(jog.check_sockets, SOCK_CHECK_INTERVAL);
 }
 
 

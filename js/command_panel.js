@@ -10,13 +10,9 @@ var cmd =
     db: {},
 
     halsock:                false,
-    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
     halsock_open:           false,
     lcncsock:               false,
-    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
-    sock_proto:             "telnet",
-    sock_check_interval:    5000,
     
     historyMaxItems:        100
 };
@@ -50,7 +46,7 @@ cmd.exec = function ( cmd_text )
     var hal = cmd_text.match(/^hal\s+/i) ? true : false;
     var mdi = !cmd_text.match(/^(lcnc|hal)\s+/i) ? true : false;
     var enable = mdi || cmd_text.match(/^(lcnc|hal)\s+set\s+/i) ? true : false;
-    var outcmd = enable ? "set enable " + (hal ? halrmt_enable_password : linuxcncrsh_enable_password) + "\r\n" : "";
+    var outcmd = enable ? "set enable " + (hal ? HALRMT_ENABLE_PASSWORD : LINUXCNCRSH_ENABLE_PASSWORD) + "\r\n" : "";
     
     outcmd += mdi ? "set mode mdi\r\nset mdi " : "";
     outcmd += cmd_text.replace(/^(hal|lcnc)\s+/i, "");
@@ -102,10 +98,10 @@ cmd.halsock_onopen = function(e)
     if ( !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
     cmd.halsock_open = true;
     // send hello with some passwords
-    cmd.halsock.send("hello "+halrmt_hello_password+" cmdhal 1\r\n");
+    cmd.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" cmdhal 1\r\n");
     // disable echo in answers
     cmd.halsock.send(
-        "set enable "+halrmt_enable_password+"\r\n"+
+        "set enable "+HALRMT_ENABLE_PASSWORD+"\r\n"+
         "set echo off\r\n"+
         "set enable off\r\n"
     );
@@ -126,10 +122,10 @@ cmd.lcncsock_onopen = function(e)
     if ( !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
     cmd.lcncsock_open = true;
     // send hello with some passwords
-    cmd.lcncsock.send("hello "+linuxcncrsh_hello_password+" cmdlcnc 1\r\n");
+    cmd.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" cmdlcnc 1\r\n");
     // disable echo in answers
     cmd.lcncsock.send(
-        "set enable "+linuxcncrsh_enable_password+"\r\n"+
+        "set enable "+LINUXCNCRSH_ENABLE_PASSWORD+"\r\n"+
         "set echo off\r\n"+
         "set enable off\r\n"
     );
@@ -149,10 +145,10 @@ cmd.check_sockets = function()
 {
     if ( !parent.location.protocol.match("http") ) return;
     if ( !cmd.halsock_open ) {
-        cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
+        cmd.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
     }
     if ( !cmd.lcncsock_open ) {
-        cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+        cmd.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
     }
 }
 
@@ -218,12 +214,12 @@ cmd.js_init = function()
     
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
-        cmd.halsock = websock.create(cmd.halsock_url, cmd.sock_proto, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
-        cmd.lcncsock = websock.create(cmd.lcncsock_url, cmd.sock_proto, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
+        cmd.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, cmd.halsock_onopen, cmd.halsock_onmessage, cmd.halsock_onclose);
+        cmd.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, cmd.lcncsock_onopen, cmd.lcncsock_onmessage, cmd.lcncsock_onclose);
     }
 
     // create check timer for these sockets
-    setInterval(cmd.check_sockets, cmd.sock_check_interval);
+    setInterval(cmd.check_sockets, SOCK_CHECK_INTERVAL);
     
     cmd.get_history();
 }

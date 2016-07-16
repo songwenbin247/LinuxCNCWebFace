@@ -4,15 +4,15 @@
     GENERAL
 */
 
-var halrmt_hello_password       = "EMC",
-    halrmt_enable_password      = "EMCTOO",
-    linuxcncrsh_hello_password  = "EMC",
-    linuxcncrsh_enable_password = "EMCTOO",
-    halsock_url                 = "ws://"+parent.location.hostname+"/halrmt",
-    lcncsock_url                = "ws://"+parent.location.hostname+"/linuxcncrsh",
-    sock_proto                  = "telnet",
-    sock_check_interval         = 5000,
-    axes                        = ["x","y","z","a","b","c"];
+var HALRMT_HELLO_PASSWORD       = "EMC",
+    HALRMT_ENABLE_PASSWORD      = "EMCTOO",
+    LINUXCNCRSH_HELLO_PASSWORD  = "EMC",
+    LINUXCNCRSH_ENABLE_PASSWORD = "EMCTOO",
+    HALSOCK_URL                 = "ws://"+parent.location.hostname+"/halrmt",
+    LCNCSOCK_URL                = "ws://"+parent.location.hostname+"/linuxcncrsh",
+    SOCK_PROTO                  = "telnet",
+    SOCK_CHECK_INTERVAL         = 5000,
+    AXES                        = ["x","y","z","a","b","c"];
 
 
 

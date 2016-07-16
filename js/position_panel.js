@@ -10,13 +10,9 @@ var pos =
     db: {},
 
     halsock:                false,
-    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
     halsock_open:           false,
     lcncsock:               false,
-    lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
-    sock_proto:             "telnet",
-    sock_check_interval:    5000,
     
     update_interval:            200,
     limits_update_interval:     500,
@@ -57,10 +53,10 @@ pos.halsock_onopen = function(e)
     if ( !pos.halsock_open ) log.add("[POS] [HAL] Socket is open","green");
     pos.halsock_open = true;
     // send hello with some passwords
-    pos.halsock.send("hello "+halrmt_hello_password+" poshal 1\r\n");
+    pos.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" poshal 1\r\n");
     // disable echo in answers
     pos.halsock.send(
-        "set enable "+halrmt_enable_password+"\r\n"+
+        "set enable "+HALRMT_ENABLE_PASSWORD+"\r\n"+
         "set echo off\r\n"+
         "set enable off\r\n"
     );
@@ -68,7 +64,7 @@ pos.halsock_onopen = function(e)
     setTimeout(
         function() {
             var msg = "";
-            for ( var a = 0; a < axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
+            for ( var a = 0; a < AXES.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
             pos.halsock.send(msg);
         },
         200
@@ -86,8 +82,8 @@ pos.halsock_onmessage = function(e)
 
             if ( n(params[1]) <= 0 ) hide = true;
 
-            if ( params[0] >= 0 && params[0] < axes.length ) {
-                id      = axes[params[0]]+"_axis_pos_box";
+            if ( params[0] >= 0 && params[0] < AXES.length ) {
+                id      = AXES[params[0]]+"_axis_pos_box";
                 elem    = document.querySelector("#"+id);
                 if ( hide && elem.style.display != "none" ) pos.simpleHideAnimation(id);
                 else if ( !hide && elem.style.display == "none" ) pos.simpleShowAnimation(id);
@@ -106,10 +102,10 @@ pos.lcncsock_onopen = function(e)
     if ( !pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is open","green");
     pos.lcncsock_open = true;
     // send hello with some passwords
-    pos.lcncsock.send("hello "+linuxcncrsh_hello_password+" poslcnc 1\r\n");
+    pos.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" poslcnc 1\r\n");
     // disable echo in answers
     pos.lcncsock.send(
-        "set enable "+linuxcncrsh_enable_password+"\r\n"+
+        "set enable "+LINUXCNCRSH_ENABLE_PASSWORD+"\r\n"+
         "set echo off\r\n"+
         "set enable off\r\n"
     );
@@ -122,9 +118,9 @@ pos.lcncsock_onmessage = function(e)
     {
         if ( lines[n].match(/^\s*\w+_pos/i) ) { // position values
             var params = lines[n].match(/[\-\.0-9]+/g);
-            for ( var a = 0; a < axes.length && params && params[a]; a++ ) {
-                if ( !pos[axes[a]+"_axis_value_focused"] ) {
-                    document.querySelector("#"+axes[a]+"_axis_value").value = params[a];
+            for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
+                if ( !pos[AXES[a]+"_axis_value_focused"] ) {
+                    document.querySelector("#"+AXES[a]+"_axis_value").value = params[a];
                 }
             }
         } else if ( lines[n].match(/^program_codes/i) ) { // program current G codes
@@ -132,9 +128,9 @@ pos.lcncsock_onmessage = function(e)
             document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
         } else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
             var params = lines[n].match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
-            for ( var a = 0, max, min; a < axes.length && params && params[a]; a++ ) {
-                min = document.querySelector("#"+axes[a]+"_axis_limit_min");
-                max = document.querySelector("#"+axes[a]+"_axis_limit_max");
+            for ( var a = 0, max, min; a < AXES.length && params && params[a]; a++ ) {
+                min = document.querySelector("#"+AXES[a]+"_axis_limit_min");
+                max = document.querySelector("#"+AXES[a]+"_axis_limit_max");
                 switch ( params[a].toLowerCase() ) {
                     case "ok":
                         min.classList.remove("limit_hard","limit_soft");
@@ -175,10 +171,10 @@ pos.check_sockets = function()
 {
     if ( !parent.location.protocol.match("http") ) return;
     if ( !pos.halsock_open ) {
-        pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
+        pos.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
     }
     if ( !pos.lcncsock_open ) {
-        pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
+        pos.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
     }
 }
 
@@ -218,7 +214,7 @@ pos.exec_mdi = function ( outcmd )
     if ( !pos.lcncsock_open ) return;
 
     pos.lcncsock.send(
-        "set enable " + linuxcncrsh_enable_password + "\r\n" +
+        "set enable " + LINUXCNCRSH_ENABLE_PASSWORD + "\r\n" +
         "set mode mdi\r\n" + 
         "set mdi " + outcmd + "\r\n" +
         "set enable off\r\n"
@@ -340,11 +336,11 @@ pos.js_init = function()
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
-    for ( var a = 0; a < axes.length; a++ ) {
-        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
-        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
-        document.querySelector("#"+axes[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
-        document.querySelector("#"+axes[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
+    for ( var a = 0; a < AXES.length; a++ ) {
+        document.querySelector("#"+AXES[a]+"_axis_value").addEventListener("keyup", pos.on_input_keyup);
+        document.querySelector("#"+AXES[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
+        document.querySelector("#"+AXES[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
+        document.querySelector("#"+AXES[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
     }
 
     // catch position type changes
@@ -354,11 +350,11 @@ pos.js_init = function()
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
-        pos.halsock = websock.create(pos.halsock_url, pos.sock_proto, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
-        pos.lcncsock = websock.create(pos.lcncsock_url, pos.sock_proto, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
+        pos.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, pos.halsock_onopen, pos.halsock_onmessage, pos.halsock_onclose);
+        pos.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, pos.lcncsock_onopen, pos.lcncsock_onmessage, pos.lcncsock_onclose);
     }
     // create check timer for these sockets
-    setInterval(pos.check_sockets, pos.sock_check_interval);
+    setInterval(pos.check_sockets, SOCK_CHECK_INTERVAL);
 }
 
 
