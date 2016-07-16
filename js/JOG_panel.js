@@ -29,11 +29,16 @@ var jog =
 {
     db: {},
 
+    halsock:                false,
+    halsock_url:            "ws://"+parent.location.hostname+"/halrmt",
+    halsock_open:           false,
     lcncsock:               false,
     lcncsock_url:           "ws://"+parent.location.hostname+"/linuxcncrsh",
     lcncsock_open:          false,
     sock_proto:             "telnet",
     sock_check_interval:    5000,
+    
+    axes_used:  [],
 
     hotkeys:
     [
@@ -186,6 +191,62 @@ jog.simpleButtonEffect = function ( id, success, text, code_after )
 
 
 
+
+jog.halsock_onopen = function(e)
+{
+    jog.halsock_open = true;
+    // send hello with some passwords
+    jog.halsock.send("hello "+halrmt_hello_password+" joghal 1\r\n");
+    // check axis count
+    jog.axes_count_answers = 0;
+    setTimeout(
+        function() {
+            var msg = "";
+            for ( var a = 0; a < axes.length; a++ ) msg += "get pinval ini."+a+".max_acceleration\r\n";
+            jog.halsock.send(msg);
+        },
+        200
+    );
+}
+jog.halsock_onmessage = function(e)
+{
+    if ( e.data.match(/^PINVAL/i) ) {
+        var strings = e.data.match(/PINVAL[\ \t]+ini\.[0-9]+\.max_acceleration[\ \t]+[\-\.0-9]+/igm);
+        jog.axes_count_answers += strings.length;
+        for ( var s = 0, p; s < strings.length; s++ ) {
+            p       = strings[s].match(/\-?[0-9](\.?[0-9]+)?/g);
+            p[0]    = n(p[0]);
+
+            if ( n(p[1]) > 0 && p[0] >= 0 && p[0] < axes.length )
+                jog.axes_used[ jog.axes_used.length ] = axes[ p[0] ];
+        }
+    }
+    
+    if ( jog.axes_count_answers >= axes.length ) {
+        delete jog.axes_count_answers;
+        jog.halsock.send("quit\r\n");
+
+        switch ( jog.axes_used.join("") ) {
+            case "xy": // laser, plasma
+            case "xz": // lathe
+            case "xyz": // router
+            case "xza": // rotary axis A along X
+            case "xzb": // rotary axis B along Y
+            case "xyza": // with rotary axis A along X
+            case "xyzb": // with rotary axis B along Y
+            case "xyzab": // with rotate table
+            case "xyzac": // with rotate head
+            case "xyzabc": // 6 axes
+            default:
+                loadto( "html/JOG_table_xyzabc.html", 1, "#JOG_table", jog.jog_table_init );
+        }
+    }
+
+}
+jog.halsock_onclose = function(e)
+{
+    jog.halsock_open = false;
+}
 
 jog.lcncsock_onopen = function(e)
 {
@@ -755,13 +816,11 @@ jog.js_init = function()
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
+        jog.halsock = websock.create(jog.halsock_url, jog.sock_proto, jog.halsock_onopen, jog.halsock_onmessage, jog.halsock_onclose);
         jog.lcncsock = websock.create(jog.lcncsock_url, jog.sock_proto, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
     }
     // create check timer for these sockets
     setInterval(jog.check_sockets, jog.sock_check_interval);
-
-    // load jog table content;
-    loadto( "html/JOG_table_6_axes.html", 1, "#JOG_table", jog.jog_table_init );
 }
 
 
