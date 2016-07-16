@@ -80,7 +80,7 @@
 .JOG > .row > .cell.home_c { background: rgba(255,0,255,0.3); }
 .JOG > .row > .cell.home_all { background: rgba(192,128,0,0.3); }
 
-.JOG > .row > .cell.stop_all_6_axes { 
+.JOG > .row > .cell.stop_all_xyzabc { 
     position:       relative;
     top:            calc(-40px - 8px);
     height:         calc(2*40px + 8px);
