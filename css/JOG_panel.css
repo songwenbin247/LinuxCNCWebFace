@@ -10,6 +10,7 @@
     display:            inline-block;
     min-width:          calc( 4*40px + 2*50px + 5*8px );
     margin:             10px;
+    opacity:            0;
 }
 
 
