@@ -206,18 +206,19 @@ jog.halsock_onopen = function(e)
 }
 jog.halsock_onmessage = function(e)
 {
-    if ( e.data.match(/^PINVAL/i) ) {
-        var strings = e.data.match(/PINVAL[\ \t]+ini\.[0-9]+\.max_acceleration[\ \t]+[\-\.0-9]+/igm);
-        jog.axes_count_answers += strings.length;
-        for ( var s = 0, p; s < strings.length; s++ ) {
-            p       = strings[s].match(/\-?[0-9](\.?[0-9]+)?/g);
+    var answers = e.data.match(/PINVAL[\ \t]+ini\.[0-9]+\.max_acceleration[\ \t]+[\-\.0-9]+/igm);
+
+    if ( answers ) {
+        jog.axes_count_answers += answers.length;
+        for ( var s = 0, p; s < answers.length; s++ ) {
+            p       = answers[s].match(/\-?[0-9](\.?[0-9]+)?/g);
             p[0]    = n(p[0]);
 
             if ( n(p[1]) > 0 && p[0] >= 0 && p[0] < AXES.length )
                 jog.axes_used[ jog.axes_used.length ] = AXES[ p[0] ];
         }
     }
-    
+
     if ( jog.axes_count_answers >= AXES.length ) {
         delete jog.axes_count_answers;
         jog.halsock.send("quit\r\n");
