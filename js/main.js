@@ -32,7 +32,7 @@ function n ( value )
 
 
 // load file into element
-function loadto ( file, replace, element, code )
+function loadto ( file, loadmode, element, code )
 {
     if ( !parent.location.protocol.match("http") ) return;
     if ( loadto.busy ) return setTimeout( loadto, 200, file, element, code );
@@ -42,7 +42,7 @@ function loadto ( file, replace, element, code )
     loadto.busy                     = true;
     loadto.xhr                      = loadto.xhr ? loadto.xhr : new XMLHttpRequest();
     loadto.xhr.open('GET', file, true);
-    loadto.xhr.replace              = replace;
+    loadto.xhr.loadmode             = loadmode;
     loadto.xhr.destElement          = element;
     loadto.xhr.evalCode             = code;
     loadto.xhr.onreadystatechange   = loadto.xhr.onreadystatechange ? loadto.xhr.onreadystatechange :
@@ -51,9 +51,25 @@ function loadto ( file, replace, element, code )
             if ( this.readyState != 4 || !this.destElement ) return;
 
             this.destElement.style.opacity = 0;
-            this.destElement.innerHTML = 
-                ( this.replace ? "" : this.destElement.innerHTML ) +
-                ( this.status == 200 ? this.responseText : this.status + ': ' + this.statusText );
+            
+            switch ( this.loadmode ) {
+                case "p":
+                case "prepend":
+                case "before":
+                    this.destElement.innerHTML = 
+                        (this.status == 200 ? this.responseText : this.status + ': ' + this.statusText) +
+                        this.destElement.innerHTML;
+                    break;
+                case "a":
+                case "append":
+                case "after":
+                    this.destElement.innerHTML = 
+                        this.destElement.innerHTML +
+                        (this.status == 200 ? this.responseText : this.status + ': ' + this.statusText);
+                    break;
+                default:
+                    this.destElement.innerHTML = this.status == 200 ? this.responseText : this.status + ': ' + this.statusText;
+            }
 
             setTimeout( 
                 function(e) {

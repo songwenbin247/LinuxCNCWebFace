@@ -225,25 +225,25 @@ jog.halsock_onmessage = function(e)
 
         switch ( jog.axes_used.join("") ) {
             case "xy": // laser, plasma
-                loadto( "html/JOG_table_xy.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xy.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xz": // lathe
-                loadto( "html/JOG_table_xz.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xz.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyz": // router
-                loadto( "html/JOG_table_xyz.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xyz.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xza": // rotary axis A along X
-                loadto( "html/JOG_table_xza.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xza.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "yzb": // rotary axis B along Y
-                loadto( "html/JOG_table_yzb.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_yzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyza": // with rotary axis A along X
-                loadto( "html/JOG_table_xyza.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xyza.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzb": // with rotary axis B along Y
-                loadto( "html/JOG_table_xyzb.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xyzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzab": // with rotate table
-                loadto( "html/JOG_table_xyzab.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xyzab.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzac": // with rotate head
-                loadto( "html/JOG_table_xyzac.html", 1, "#JOG_table", jog.jog_table_init ); break;
+                loadto( "html/JOG_table_xyzac.html", "before", "#JOG_table", jog.jog_table_init ); break;
             default:
-                loadto( "html/JOG_table_xyzabc.html", 1, "#JOG_table", jog.jog_table_init );
+                loadto( "html/JOG_table_xyzabc.html", "before", "#JOG_table", jog.jog_table_init );
         }
     }
 
