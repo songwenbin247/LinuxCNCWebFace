@@ -30,8 +30,9 @@ var lng_local_dic =
     { en:"Set", ru:"Выставить" },
     { en:"Click - Edit, ESC - Cancel, ENTER - Set", ru:"Клик - Изменить, ESC - Отмета, ENTER - Применить" },
     { en:"Coordinates type", ru:"Тип координат" },
-    { en:"endstop (max) status", ru:"концевик (макс)" },
-    { en:"endstop (min) status", ru:"концевик (мин)" },
+    { en:"Coordinate System", ru:"Система координат" },
+    { en:"limit (max) status", ru:"лимит (макс)" },
+    { en:"limit (min) status", ru:"лимит (мин)" },
 ];
 
 // add local strings to translate to the global translate list
