@@ -2,7 +2,7 @@
 
 .position
 {
-    min-width:      250px;
+    min-width:      282px;
     margin:         10px;
 }
 .position > .position_box
@@ -58,6 +58,11 @@
     font-family:    inherit;
     text-align:     left;
     background:     rgba(0,0,0,0.02);
+    color:          rgba(192,0,0,1);
+}
+.position > .position_box > .axis_homed
+{
+    color:          rgba(0,192,0,1);
 }
 .position > .position_box > .axis_reset
 {
@@ -79,6 +84,26 @@
     color:          rgba(255,0,0,0.8);
     cursor:         pointer;
 }
+.position > .position_box > .axis_home
+{
+    display:        inline-block;
+    min-width:      20px;
+    padding:        3px;
+    font-weight:    bold;
+    font-size:      150%;
+    border:         1px solid rgba(0, 0, 0, 0.2);
+    border-radius:  3px;
+    text-align:     center;
+    text-transform: uppercase;
+    color:          rgba(0,0,0,0.2);
+    transition:     all 200ms linear;
+}
+.position > .position_box > .axis_home:hover
+{
+    border:         1px solid rgba(0, 0, 0, 0.8);
+    color:          rgba(64,192,64,0.8);
+    cursor:         pointer;
+}
 
 .position > .position_type_box
 {
@@ -87,7 +112,7 @@
 .position > .position_type_box > .pos_type_select
 {
     display:        inline-block;
-    width:          172px;
+    width:          192px;
     padding:        3px 5px 3px 5px;
     font-family:    inherit;
     border-radius:  3px;
@@ -95,7 +120,7 @@
 .position > .position_type_box > .pos_coord_sys_select
 {
     display:        inline-block;
-    width:          70px;
+    width:          85px;
     padding:        3px 5px 3px 5px;
     font-family:    inherit;
     border-radius:  3px;

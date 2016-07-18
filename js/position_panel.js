@@ -14,9 +14,10 @@ var pos =
     lcncsock:               false,
     lcncsock_open:          false,
     
-    update_interval:            200,
-    limits_update_interval:     500,
-    coord_sys_update_interval:  500
+    update_interval:                200,
+    limits_update_interval:         500,
+    coord_sys_update_interval:      500,
+    homed_states_update_interval:   1000
 };
 
 // local strings to translate
@@ -33,6 +34,8 @@ var lng_local_dic =
     { en:"Coordinate System", ru:"Система координат" },
     { en:"limit (max) status", ru:"лимит (макс)" },
     { en:"limit (min) status", ru:"лимит (мин)" },
+    { en:"Home", ru:"Дом для" },
+    { en:"H", ru:"Д" },
 ];
 
 // add local strings to translate to the global translate list
@@ -159,6 +162,15 @@ pos.lcncsock_onmessage = function(e)
                         break;
                 }
             }
+        } else if ( lines[n].match(/^\s*joint_homed/i) ) { // homed states
+            var params = lines[n].match(/(yes|no)/ig);
+            for ( var a = 0, input; a < AXES.length && params && params[a]; a++ ) {
+                input = document.querySelector("#"+AXES[a]+"_axis_value");
+                switch ( params[a].toLowerCase() ) {
+                    case "yes": input.classList.add("axis_homed"); break;
+                    default:    input.classList.remove("axis_homed");
+                }
+            }
         }
     }
 }
@@ -206,6 +218,12 @@ pos.coord_sys_update = function()
 
     pos.lcncsock.send("get program_codes\r\n");
 }
+pos.homed_states_update = function()
+{
+    if ( !pos.lcncsock_open ) return;
+
+    pos.lcncsock.send("get joint_homed\r\n");
+}
 
 
 
@@ -222,6 +240,22 @@ pos.exec_mdi = function ( outcmd )
     );
 
     log.add("[POS] " + outcmd);
+}
+pos.exec = function ( outcmd )
+{
+    if ( !pos.lcncsock_open ) {
+        log.add("[POS] LCNC socket isn't available","red");
+        return;
+    }
+    if ( outcmd.trim() == "" ) return;
+
+    pos.lcncsock.send(
+        "set enable " + LINUXCNCRSH_ENABLE_PASSWORD + "\r\n" +
+        outcmd +
+        "set enable off\r\n"
+    );
+
+    log.add("[POS] lcnc " + outcmd);
 }
 
 
@@ -308,6 +342,15 @@ pos.on_axis_reset_click = function ( event )
     pos.exec_mdi("G92 " + event.target.id.match(/^[xyzabc]/i)[0].toUpperCase() + "0");
 }
 
+pos.on_axis_home_click = function ( event )
+{
+    pos.simpleClickAnimation(event.target.id);
+    pos.exec(
+        "set mode manual\r\n" +
+        "set home " + AXES.indexOf(event.target.id.match(/^[xyzabc]/i)[0]) + "\r\n"
+    );
+}
+
 
 
 
@@ -334,6 +377,8 @@ pos.js_init = function()
     pos.update_timer = setInterval( pos.update, pos.update_interval, pos.db["pos.type"] );
     // start coordinate system update process
     pos.coord_sys_update_timer = setInterval( pos.coord_sys_update, pos.coord_sys_update_interval );
+    // start homed states update process
+    pos.homed_states_update_timer = setInterval( pos.homed_states_update, pos.homed_states_update_interval );
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
@@ -342,6 +387,7 @@ pos.js_init = function()
         document.querySelector("#"+AXES[a]+"_axis_value").addEventListener("focus", pos.on_input_focus);
         document.querySelector("#"+AXES[a]+"_axis_value").addEventListener("blur", pos.on_input_blur);
         document.querySelector("#"+AXES[a]+"_axis_reset").addEventListener("click", pos.on_axis_reset_click);
+        document.querySelector("#"+AXES[a]+"_axis_home").addEventListener("click", pos.on_axis_home_click);
     }
 
     // catch position type changes
