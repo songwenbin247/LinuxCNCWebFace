@@ -17,7 +17,13 @@ var pos =
     update_interval:                200,
     limits_update_interval:         500,
     coord_sys_update_interval:      500,
-    homed_states_update_interval:   1000
+    homed_states_update_interval:   500,
+    units_update_interval:          1000,
+    
+    program_linear_units:   "MM",
+    program_angular_units:  "DEG",
+    joint_units:            ["MM","MM","MM","DEG","DEG","DEG"],
+    joint_type:             ["LINEAR","LINEAR","LINEAR","ANGULAR","ANGULAR","ANGULAR"]
 };
 
 // local strings to translate
@@ -36,6 +42,17 @@ var lng_local_dic =
     { en:"limit (min) status", ru:"лимит (мин)" },
     { en:"Home", ru:"Дом для" },
     { en:"H", ru:"Д" },
+    { en:"Linear Units", ru:"Линейные единицы измерения" },
+    { en:"Angular Units", ru:"Угловые единицы измерения" },
+    { en:"auto", ru:"авто" },
+    { en:"millimeters", ru:"миллиметры" },
+    { en:"centimeters", ru:"сантиметры" },
+    { en:"inches", ru:"дюймы" },
+    { en:"degrees", ru:"градусы" },
+    { en:"radians", ru:"радианы" },
+    { en:"gradians", ru:"грады" },
+    { en:"none", ru:"отсутствуют" },
+    { en:"custom", ru:"собственные" },
 ];
 
 // add local strings to translate to the global translate list
@@ -127,10 +144,40 @@ pos.lcncsock_onmessage = function(e)
                     document.querySelector("#"+AXES[a]+"_axis_value").value = params[a];
                 }
             }
-        } else if ( lines[n].match(/^program_codes/i) ) { // program current G codes
+        } 
+        else if ( lines[n].match(/^program_codes/i) ) { // program current G codes
             var coord_sys_code = lines[n].match(/G5[3-9](\.[1-3])?/i);
             document.querySelector("#pos_coord_sys_select").value = coord_sys_code[0].toUpperCase();
-        } else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
+        } 
+        else if ( lines[n].match(/^linear_unit_conversion/i) ) { // current linear units
+            var units = lines[n].match(/^linear_unit_conversion\s+(auto|mm|cm|inch)/i);
+            document.querySelector("#linear_units_select").value = units[1].toUpperCase();
+        } 
+        else if ( lines[n].match(/^angular_unit_conversion/i) ) { // current angular units
+            var units = lines[n].match(/^angular_unit_conversion\s+(auto|deg|grad|rad)/i);
+            document.querySelector("#angular_units_select").value = units[1].toUpperCase();
+        } 
+        else if ( lines[n].match(/^program_units/i) ) {
+            var units = lines[n].match(/^program_units\s+(none|mm|cm|inch)/i);
+            pos.program_linear_units = units[1].toUpperCase();
+        } 
+        else if ( lines[n].match(/^program_angular_units/i) ) {
+            var units = lines[n].match(/^program_angular_units\s+(none|deg|grad|rad)/i);
+            pos.program_angular_units = units[1].toUpperCase();
+        } 
+        else if ( lines[n].match(/^joint_type/i) ) {
+            var params = lines[n].match(/(linear|angular|custom)/ig);
+            for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
+                pos.joint_type[a] = params[a].toUpperCase();
+            }
+        } 
+        else if ( lines[n].match(/^joint_units/i) ) {
+            var params = lines[n].match(/\ (grad|deg|rad|custom)/ig);
+            for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
+                pos.joint_type[a] = params[a].trim().toUpperCase();
+            }
+        } 
+        else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
             var params = lines[n].match(/(ok|minsoft|maxsoft|minhard|maxhard)/ig);
             for ( var a = 0, max, min; a < AXES.length && params && params[a]; a++ ) {
                 min = document.querySelector("#"+AXES[a]+"_axis_limit_min");
@@ -162,7 +209,8 @@ pos.lcncsock_onmessage = function(e)
                         break;
                 }
             }
-        } else if ( lines[n].match(/^\s*joint_homed/i) ) { // homed states
+        } 
+        else if ( lines[n].match(/^\s*joint_homed/i) ) { // homed states
             var params = lines[n].match(/(yes|no)/ig);
             for ( var a = 0, input; a < AXES.length && params && params[a]; a++ ) {
                 input = document.querySelector("#"+AXES[a]+"_axis_value");
@@ -223,6 +271,19 @@ pos.homed_states_update = function()
     if ( !pos.lcncsock_open ) return;
 
     pos.lcncsock.send("get joint_homed\r\n");
+}
+pos.units_update = function()
+{
+    if ( !pos.lcncsock_open ) return;
+
+    pos.lcncsock.send(
+        "get linear_unit_conversion\r\n" +
+        "get angular_unit_conversion\r\n" +
+        "get program_units\r\n" +
+        "get program_angular_units\r\n" +
+        "get joint_type\r\n" +
+        "get joint_units\r\n"
+    );
 }
 
 
@@ -308,6 +369,20 @@ pos.on_coord_sys_change = function ( event )
     pos.exec_mdi(event.target.value);
 }
 
+pos.on_linear_units_change = function ( event )
+{
+    if ( !event.target.value.match(/^(auto|mm|cm|inch)/i) ) return;
+
+    pos.exec("set linear_unit_conversion " + event.target.value.toLowerCase() + "\r\n");
+}
+
+pos.on_angular_units_change = function ( event )
+{
+    if ( !event.target.value.match(/^(auto|deg|rad|grad)/i) ) return;
+
+    pos.exec("set angular_unit_conversion " + event.target.value.toLowerCase() + "\r\n");
+}
+
 
 
 
@@ -379,6 +454,8 @@ pos.js_init = function()
     pos.coord_sys_update_timer = setInterval( pos.coord_sys_update, pos.coord_sys_update_interval );
     // start homed states update process
     pos.homed_states_update_timer = setInterval( pos.homed_states_update, pos.homed_states_update_interval );
+    // start units update process
+    pos.units_update_timer = setInterval( pos.units_update, pos.units_update_interval );
     
     // add focus/blur/keyup handlers to all inputs to catch a new input values
     // add click handlers to all axis reset buttons
@@ -394,6 +471,10 @@ pos.js_init = function()
     document.querySelector("#pos_type_select").addEventListener("change", pos.on_pos_type_change);
     // catch coordinate system changes
     document.querySelector("#pos_coord_sys_select").addEventListener("change", pos.on_coord_sys_change);
+    // catch linear units changes
+    document.querySelector("#linear_units_select").addEventListener("change", pos.on_linear_units_change);
+    // catch angular units changes
+    document.querySelector("#angular_units_select").addEventListener("change", pos.on_angular_units_change);
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {

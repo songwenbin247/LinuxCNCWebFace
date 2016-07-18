@@ -125,6 +125,26 @@
     font-family:    inherit;
     border-radius:  3px;
 }
+.position > .units_box
+{
+    margin-bottom:  3px;
+}
+.position > .units_box > .linear_units_select
+{
+    display:        inline-block;
+    width:          139px;
+    padding:        3px 5px 3px 5px;
+    font-family:    inherit;
+    border-radius:  3px;
+}
+.position > .units_box > .angular_units_select
+{
+    display:        inline-block;
+    width:          138px;
+    padding:        3px 5px 3px 5px;
+    font-family:    inherit;
+    border-radius:  3px;
+}
 
 .position > .position_box > .axis_limits_box
 {
