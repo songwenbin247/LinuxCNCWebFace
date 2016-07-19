@@ -28,6 +28,32 @@ function n ( value )
     return isNaN(out) || out == undefined ? 0 : out;
 }
 
+// units conversion
+function u2u ( value, type, fixed )
+{
+    value   = Number(value);
+    type    = String(type).toUpperCase();
+
+    switch ( type ) {
+        // linear
+        case "MM:CM":   value /= 10; break;
+        case "MM:INCH": value /= 25.4; break;
+        case "CM:MM":   value *= 10; break;
+        case "CM:INCH": value /= 2.54; break;
+        case "INCH:MM": value *= 25.4; break;
+        case "INCH:CM": value *= 2.54; break;
+        // angular
+        case "DEG:RAD": value *= Math.PI/180; break;
+        case "DEG:GRAD": value *= 400/360; break;
+        case "RAD:DEG": value /= Math.PI/180; break;
+        case "RAD:GRAD": value *= 200/Math.PI; break;
+        case "GRAD:DEG": value /= Math.PI/180; break;
+        case "GRAD:RAD": value /= 200/Math.PI; break;
+    }
+    
+    return value.toFixed( Number(fixed) );
+}
+
 
 
 
