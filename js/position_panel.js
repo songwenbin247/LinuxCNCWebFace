@@ -20,8 +20,12 @@ var pos =
     homed_states_update_interval:   500,
     units_update_interval:          1000,
     
+    fixed_numbers: 6,
+
     program_linear_units:   "MM",
     program_angular_units:  "DEG",
+    display_linear_units:   "MM",
+    display_angular_units:  "DEG",
     joint_units:            ["MM","MM","MM","DEG","DEG","DEG"],
     joint_type:             ["LINEAR","LINEAR","LINEAR","ANGULAR","ANGULAR","ANGULAR"]
 };
@@ -141,7 +145,11 @@ pos.lcncsock_onmessage = function(e)
             var params = lines[n].match(/[\-\.0-9]+/g);
             for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
                 if ( !pos[AXES[a]+"_axis_value_focused"] ) {
-                    document.querySelector("#"+AXES[a]+"_axis_value").value = params[a];
+                    document.querySelector("#"+AXES[a]+"_axis_value").value = u2u(
+                        params[a],
+                        pos.joint_units[a] + ":" + (pos.joint_type[a] == "LINEAR" ? pos.display_linear_units : pos.display_angular_units),
+                        pos.fixed_numbers
+                    );
                 }
             }
         } 
@@ -151,30 +159,32 @@ pos.lcncsock_onmessage = function(e)
         } 
         else if ( lines[n].match(/^linear_unit_conversion/i) ) { // current linear units
             var units = lines[n].match(/^linear_unit_conversion\s+(auto|mm|cm|inch)/i);
+            pos.display_linear_units = units[1].match(/auto/i) ? pos.program_linear_units : units[1].toUpperCase();
             document.querySelector("#linear_units_select").value = units[1].toUpperCase();
         } 
         else if ( lines[n].match(/^angular_unit_conversion/i) ) { // current angular units
             var units = lines[n].match(/^angular_unit_conversion\s+(auto|deg|grad|rad)/i);
+            pos.display_angular_units = units[1].match(/auto/i) ? pos.program_angular_units : units[1].toUpperCase();
             document.querySelector("#angular_units_select").value = units[1].toUpperCase();
         } 
         else if ( lines[n].match(/^program_units/i) ) {
-            var units = lines[n].match(/^program_units\s+(none|mm|cm|inch)/i);
+            var units = lines[n].match(/^program_units\s+(mm|cm|inch)/i);
             pos.program_linear_units = units[1].toUpperCase();
         } 
         else if ( lines[n].match(/^program_angular_units/i) ) {
-            var units = lines[n].match(/^program_angular_units\s+(none|deg|grad|rad)/i);
+            var units = lines[n].match(/^program_angular_units\s+(deg|grad|rad)/i);
             pos.program_angular_units = units[1].toUpperCase();
         } 
         else if ( lines[n].match(/^joint_type/i) ) {
             var params = lines[n].match(/(linear|angular|custom)/ig);
             for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
-                pos.joint_type[a] = params[a].toUpperCase();
+                pos.joint_type[a] =  params[a].match(/custom/i) ? "LINEAR" : params[a].toUpperCase();
             }
         } 
         else if ( lines[n].match(/^joint_units/i) ) {
-            var params = lines[n].match(/\ (grad|deg|rad|custom)/ig);
+            var params = lines[n].match(/\ (mm|cm|inch|grad|deg|rad|custom)/ig);
             for ( var a = 0; a < AXES.length && params && params[a]; a++ ) {
-                pos.joint_type[a] = params[a].trim().toUpperCase();
+                pos.joint_units[a] = params[a].match(/custom/i) ? "MM" : params[a].trim().toUpperCase();
             }
         } 
         else if ( lines[n].match(/^\s*joint_limit/i) ) { // limits values
