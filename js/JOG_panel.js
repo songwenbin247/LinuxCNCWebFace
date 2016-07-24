@@ -9,7 +9,7 @@ var lng_local_dic =
 [
     { en:"Feed", ru:"Подача" },
     { en:"Movements type", ru:"Режим движения" },
-    { en:"strict", ru:"строгий" },
+    { en:"auto", ru:"авто" },
     { en:"manual", ru:"ручной" },
     { en:"GOTO", ru:"ЕДЕМ" },
     { en:"GO", ru:"ЕДЕМ" },
@@ -475,7 +475,7 @@ jog.btn_clicked = function ( event )
 
     var jog_type = document.querySelector("#jog_type").value;
     
-    if ( jog_type == "strict" || /^jog_btn_(home|stop)/.test(id) ) { // strict mode or GOTO/STOpALL btns
+    if ( jog_type == "auto" || /^jog_btn_(home|stop)/.test(id) ) { // auto mode or GOTO/STOpALL btns
         if ( event.type == "mouseup" ) return;
         jog.simpleClickAnimation(id);
     } else { // manual mode
