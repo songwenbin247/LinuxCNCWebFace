@@ -475,14 +475,14 @@ jog.btn_clicked = function ( event )
 
     var jog_type = document.querySelector("#jog_type").value;
     
-    if ( jog_type == "strict" || /^jog_btn_(home|stop)/.test(id) ) {
+    if ( jog_type == "strict" || /^jog_btn_(home|stop)/.test(id) ) { // strict mode or GOTO/STOpALL btns
         if ( event.type == "mouseup" ) return;
         jog.simpleClickAnimation(id);
-    } else {
-        if ( event.type == "mousedown" ) {
+    } else { // manual mode
+        if ( event.type == "mousedown" ) { // btn pressed
             jog.btn_pressed_id = id;
             jog.simplePressedAnimation(id);
-        } else {
+        } else { // btn released
             jog.btn_pressed_id = false;
             jog.simpleUnpressedAnimation(id);
             jog.exec_mdi("G4 P0.01"); // stop any movements
@@ -490,135 +490,46 @@ jog.btn_clicked = function ( event )
         }
     }
     
+    // stop all movements
     if ( id == "jog_btn_stopALL" ) {
-        jog.exec("set abort\r\n");
+        jog.exec_mdi("G4 P0.01");
         return;
     }
 
-    var before  = "G91";
-    var cmd     = "G0";
-    var L1      = n( document.querySelector("#jog_inputs_L1").value );
-    var L2      = n( document.querySelector("#jog_inputs_L2").value );
-    var feed    = n( document.querySelector("#jog_inputs_feed").value );
-    var after   = "G90";
-    var outcmd  = "";
+    var feed = n( document.querySelector("#jog_inputs_feed").value );
 
-    switch ( id )
-    {
-        // home buttons
-        case "jog_btn_homeALL":
-            before = "G90"; after = "";
-            outcmd = cmd + " X0 Y0 Z0 A0 F" + feed; break;
-        case "jog_btn_homeXY":
-            before = "G90"; after = "";
-            outcmd = cmd + " X0 Y0 F" + feed; break;
-        case "jog_btn_homeZ":
-            before = "G90"; after = "";
-            outcmd = cmd + " Z0 F" + feed; break;
-        case "jog_btn_homeA":
-            before = "G90"; after = "";
-            outcmd = cmd + " A0 F" + feed; break;
-        case "jog_btn_homeB":
-            before = "G90"; after = "";
-            outcmd = cmd + " B0 F" + feed; break;
-        case "jog_btn_homeC":
-            before = "G90"; after = "";
-            outcmd = cmd + " C0 F" + feed; break;
-
-        // move buttons
-        case "jog_btn_posX1":
-            outcmd = cmd + " X" + L1 + " F" + feed; break;
-        case "jog_btn_posX2":
-            outcmd = cmd + " X" + L2 + " F" + feed; break;
-        case "jog_btn_negX1":
-            outcmd = cmd + " X" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negX2":
-            outcmd = cmd + " X" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posY1":
-            outcmd = cmd + " Y" + L1 + " F" + feed; break;
-        case "jog_btn_posY2":
-            outcmd = cmd + " Y" + L2 + " F" + feed; break;
-        case "jog_btn_negY1":
-            outcmd = cmd + " Y" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negY2":
-            outcmd = cmd + " Y" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posZ1":
-            outcmd = cmd + " Z" + L1 + " F" + feed; break;
-        case "jog_btn_posZ2":
-            outcmd = cmd + " Z" + L2 + " F" + feed; break;
-        case "jog_btn_negZ1":
-            outcmd = cmd + " Z" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negZ2":
-            outcmd = cmd + " Z" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posA1":
-            outcmd = cmd + " A" + L1 + " F" + feed; break;
-        case "jog_btn_posA2":
-            outcmd = cmd + " A" + L2 + " F" + feed; break;
-        case "jog_btn_negA1":
-            outcmd = cmd + " A" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negA2":
-            outcmd = cmd + " A" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posB1":
-            outcmd = cmd + " B" + L1 + " F" + feed; break;
-        case "jog_btn_posB2":
-            outcmd = cmd + " B" + L2 + " F" + feed; break;
-        case "jog_btn_negB1":
-            outcmd = cmd + " B" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negB2":
-            outcmd = cmd + " B" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posC1":
-            outcmd = cmd + " C" + L1 + " F" + feed; break;
-        case "jog_btn_posC2":
-            outcmd = cmd + " C" + L2 + " F" + feed; break;
-        case "jog_btn_negC1":
-            outcmd = cmd + " C" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negC2":
-            outcmd = cmd + " C" + (-1*L2) + " F" + feed; break;
-
-        // multip AXES s move buttons
-        case "jog_btn_posX1_posY1":
-            outcmd = cmd + " X" + L1 + " Y" + L1 + " F" + feed; break;
-        case "jog_btn_posX2_posY1":
-            outcmd = cmd + " X" + L2 + " Y" + L1 + " F" + feed; break;
-        case "jog_btn_posX1_posY2":
-            outcmd = cmd + " X" + L1 + " Y" + L2 + " F" + feed; break;
-        case "jog_btn_posX2_posY2":
-            outcmd = cmd + " X" + L2 + " Y" + L2 + " F" + feed; break;
-
-        case "jog_btn_negX1_negY1":
-            outcmd = cmd + " X" + (-1*L1) + " Y" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negX2_negY1":
-            outcmd = cmd + " X" + (-1*L2) + " Y" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_negX1_negY2":
-            outcmd = cmd + " X" + (-1*L1) + " Y" + (-1*L2) + " F" + feed; break;
-        case "jog_btn_negX2_negY2":
-            outcmd = cmd + " X" + (-1*L2) + " Y" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_posX1_negY1":
-            outcmd = cmd + " X" + L1 + " Y" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_posX2_negY1":
-            outcmd = cmd + " X" + L2 + " Y" + (-1*L1) + " F" + feed; break;
-        case "jog_btn_posX1_negY2":
-            outcmd = cmd + " X" + L1 + " Y" + (-1*L2) + " F" + feed; break;
-        case "jog_btn_posX2_negY2":
-            outcmd = cmd + " X" + L2 + " Y" + (-1*L2) + " F" + feed; break;
-
-        case "jog_btn_negX1_posY1":
-            outcmd = cmd + " X" + (-1*L1) + " Y" + L1 + " F" + feed; break;
-        case "jog_btn_negX2_posY1":
-            outcmd = cmd + " X" + (-1*L2) + " Y" + L1 + " F" + feed; break;
-        case "jog_btn_negX1_posY2":
-            outcmd = cmd + " X" + (-1*L1) + " Y" + L2 + " F" + feed; break;
-        case "jog_btn_negX2_posY2":
-            outcmd = cmd + " X" + (-1*L2) + " Y" + L2 + " F" + feed; break;
+    // GOTO buttons
+    if ( /^jog_btn_home/.test(id) ) {
+        if ( /home[XYZABC]$/.test(id) ) { // single axis
+            jog.exec_mdi( ["G90", "G0 " + id.match(/([XYZABC])$/i)[0] + "0 F" + feed] );
+        } else if ( /home[XYZABC]{2}$/.test(id) ) { // double axes
+            var axes = id.match(/([XYZABC])([XYZABC])$/i); axes.shift();
+            jog.exec_mdi( ["G90", "G0 " + axes.join("0 ") + "0 F" + feed] );
+        } else { // all axes
+            jog.exec_mdi( ["G90", "G0 " + jog.axes_used.join("0 ").toUpperCase() + "0 F" + feed] );
+        }
+        return;
     }
 
-    if ( outcmd != "" ) jog.exec_mdi( [before, outcmd, after] );
+    var L1 = n( document.querySelector("#jog_inputs_L1").value );
+    var L2 = n( document.querySelector("#jog_inputs_L2").value );
+
+    if ( /btn_(pos|neg)([XYZABC])([0-9])$/.test(id) ) { // +/- of single axis
+        var p = id.match( /(pos|neg)([XYZABC])([0-9])$/ );
+        jog.exec_mdi( [
+            "G91", 
+            "G0 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + " F" + feed,
+            "G90"
+        ] );
+    } else if ( /btn_(pos|neg)([XYZABC])([0-9])_(pos|neg)([XYZABC])([0-9])$/.test(id) ) { // +/- of double  axes
+        var p = id.match( /(pos|neg)([XYZABC])([0-9])_(pos|neg)([XYZABC])([0-9])$/ );
+        jog.exec_mdi( [
+            "G91", 
+            "G0 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + 
+            " "   + p[5] + (p[4] == "neg" ? "-" : "") + Math.abs(p[6] == "1" ? L1 : L2) + " F" + feed,
+            "G90"
+        ] );
+    }
 }
 
 
