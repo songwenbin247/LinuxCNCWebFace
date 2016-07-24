@@ -149,13 +149,20 @@
 }
 
 /* input cells width */
-.JOG .inputs > .input1 { width: 15%; } /* BEFORE */
-.JOG .inputs > .input2 { width: 15%; } /* CMD */
-.JOG .inputs > .input3 { width: 13%; } /* L1 */
-.JOG .inputs > .input4 { width: 17%; } /* L2 */
+.JOG .inputs > .jog_type { width: 40%; } /* jog type */
+.JOG .inputs > .input3 { width: 17%; } /* L1 */
+.JOG .inputs > .input4 { width: 20%; } /* L2 */
 .JOG .inputs > .input5 { width: 20%; } /* FEED */
-.JOG .inputs > .input6 { width: 15%; } /* AFTER */
 
+/* select elements */
+.JOG .inputs > .jog_type
+{
+    display:        inline-block;
+    padding:        3px 5px 3px 5px;
+    font-family:    inherit;
+    border-radius:  3px;
+    vertical-align: top;
+}
 /* input elements */
 .JOG .inputs > div > input
 {
@@ -167,7 +174,6 @@
     font-size:      120%;
     border:         1px solid rgba(0,0,0,0.5);
     border-radius:  3px;
-    background:     rgba(255,128,0,0.1);
     box-sizing:     border-box;
     font-weight:    bold;
     text-transform: uppercase;

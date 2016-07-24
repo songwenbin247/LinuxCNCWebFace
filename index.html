@@ -152,14 +152,10 @@
                     <style type="text/css">@import "css/JOG_panel.css";</style>
                     <div class="JOG" id="JOG_table">
                         <div class="inputs" id="JOG_inputs_table">
-                            <div class="input1">
-                                <input type="text" value="G91" size="1" id="jog_inputs_before" tabindex="21" />
-                                <span class="desc">&#x2009;Before&#x2009;</span>
-                            </div
-                            ><div class="input2">
-                                <input type="text" value="G0" size="1" id="jog_inputs_cmd" tabindex="22" />
-                                <span class="desc">&#x2009;cmd&#x2009;</span>
-                            </div
+                            <select id="jog_type" class="jog_type" tabindex="20" title="&#x2009;Movements type&#x2009;">
+                                <option value="strict">&#x2009;strict&#x2009;</option>
+                                <option value="manual">&#x2009;manual&#x2009;</option>
+                            </select
                             ><div class="input3">
                                 <input type="text" value="1" size="1" id="jog_inputs_L1" tabindex="23" />
                                 <span class="desc">L1</span>
@@ -171,10 +167,6 @@
                             ><div class="input5">
                                 <input type="text" value="500" size="1" id="jog_inputs_feed" tabindex="25" />
                                 <span class="desc">&#x2009;Feed&#x2009;</span>
-                            </div
-                            ><div class="input6">
-                                <input type="text" value="G90" size="1" id="jog_inputs_after" tabindex="26" />
-                                <span class="desc">&#x2009;After&#x2009;</span>
                             </div>
                         </div>
                     </div>

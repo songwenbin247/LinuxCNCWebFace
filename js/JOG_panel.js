@@ -7,10 +7,10 @@
 // local strings to translate
 var lng_local_dic =
 [
-    { en:"Before", ru:"До" },
-    { en:"cmd", ru:"код" },
     { en:"Feed", ru:"Подача" },
-    { en:"After", ru:"После" },
+    { en:"Movements type", ru:"Режим движения" },
+    { en:"strict", ru:"строгий" },
+    { en:"manual", ru:"ручной" },
     { en:"GOTO", ru:"ЕДЕМ" },
     { en:"GO", ru:"ЕДЕМ" },
     { en:"TO", ru:"В" },
@@ -157,6 +157,14 @@ jog.simpleClickAnimation = function ( id )
 {
     document.querySelector("#"+id).style.opacity = "0";
     setTimeout( 'document.querySelector("#'+id+'").style.opacity = "1";', 200 );
+}
+jog.simplePressedAnimation = function ( id )
+{
+    document.querySelector("#"+id).style.opacity = "0.2";
+}
+jog.simpleUnpressedAnimation = function ( id )
+{
+    document.querySelector("#"+id).style.opacity = "1";
 }
 // simple Button Action Effect
 jog.simpleButtonEffect = function ( id, success, text, code_after )
@@ -343,17 +351,11 @@ jog.inputs_changed = function ( event )
 {
     switch ( event.target.id )
     {
-        case "jog_inputs_before":
-            jog.db["jog.before"] = document.querySelector("#" + event.target.id).value; break;
-
-        case "jog_inputs_cmd":
-            jog.db["jog.cmd"] = document.querySelector("#" + event.target.id).value; break;
+        case "jog_type":
+            jog.db["jog.type"] = document.querySelector("#" + event.target.id).value; break;
 
         case "jog_inputs_feed":
             jog.db["jog.feed"] = document.querySelector("#" + event.target.id).value; break;
-
-        case "jog_inputs_after":
-            jog.db["jog.after"] = document.querySelector("#" + event.target.id).value; break;
 
         case "jog_inputs_L1":
         case "jog_inputs_L2":
@@ -455,6 +457,13 @@ jog.inputs_changed = function ( event )
     }
 }
 
+jog.on_mouseup = function ( event )
+{
+    if ( !jog.btn_pressed_id ) return;
+
+    jog.btn_clicked( { target: { id: jog.btn_pressed_id }, type: "mouseup" } );
+}
+
 // some of the move buttons was clicked
 jog.btn_clicked = function ( event )
 {
@@ -464,20 +473,34 @@ jog.btn_clicked = function ( event )
     else if ( /^jog_btn_/.test(event.target.parentElement.id) ) id = event.target.parentElement.id;
     else return;
 
-    // visual click effect
-    jog.simpleClickAnimation(id);
+    var jog_type = document.querySelector("#jog_type").value;
+    
+    if ( jog_type == "strict" || /^jog_btn_(home|stop)/.test(id) ) {
+        if ( event.type == "mouseup" ) return;
+        jog.simpleClickAnimation(id);
+    } else {
+        if ( event.type == "mousedown" ) {
+            jog.btn_pressed_id = id;
+            jog.simplePressedAnimation(id);
+        } else {
+            jog.btn_pressed_id = false;
+            jog.simpleUnpressedAnimation(id);
+            jog.exec_mdi("G4 P0.01"); // stop any movements
+            return;
+        }
+    }
     
     if ( id == "jog_btn_stopALL" ) {
         jog.exec("set abort\r\n");
         return;
     }
 
-    var before  = document.querySelector("#jog_inputs_before").value;
-    var cmd     = document.querySelector("#jog_inputs_cmd").value;
+    var before  = "G91";
+    var cmd     = "G0";
     var L1      = n( document.querySelector("#jog_inputs_L1").value );
     var L2      = n( document.querySelector("#jog_inputs_L2").value );
     var feed    = n( document.querySelector("#jog_inputs_feed").value );
-    var after   = document.querySelector("#jog_inputs_after").value;
+    var after   = "G90";
     var outcmd  = "";
 
     switch ( id )
@@ -809,13 +832,24 @@ jog.on_settings_hotkeys_state_change = function()
 // do it when window is fully loaded
 jog.jog_table_init = function()
 {
+    // add event listeners for any input fields focus states
+    // it helps to prevent HOTKEYS action while some input is active
+    var list = document.querySelectorAll("textarea, input");
+    for ( var i = 0, size = list.length; i < size; i++ ) {
+        list[i].addEventListener("focus", jog.on_input_focus_in);
+        list[i].addEventListener("blur", jog.on_input_focus_out);
+    }
+
+    // add event listener for any keyboard keys
+    document.querySelector("body").addEventListener("keyup", jog.on_keyboard_key);
+    // add event listener for any mouse up
+    document.querySelector("body").addEventListener("mouseup", jog.on_mouseup);
+
     // put saved values into the input fields
-    if ( jog.db["jog.before"] != null ) document.querySelector("#jog_inputs_before").value = jog.db["jog.before"] ;
-    if ( jog.db["jog.cmd"] != null )    document.querySelector("#jog_inputs_cmd").value = jog.db["jog.cmd"] ;
+    if ( jog.db["jog.type"] != null )   document.querySelector("#jog_type").value = jog.db["jog.type"] ;
     if ( jog.db["jog.L1"] != null )     document.querySelector("#jog_inputs_L1").value = jog.db["jog.L1"] ;
     if ( jog.db["jog.L2"] != null )     document.querySelector("#jog_inputs_L2").value = jog.db["jog.L2"] ;
     if ( jog.db["jog.feed"] != null )   document.querySelector("#jog_inputs_feed").value = jog.db["jog.feed"] ;
-    if ( jog.db["jog.after"] != null )  document.querySelector("#jog_inputs_after").value = jog.db["jog.after"] ;
 
     // update buttons text if L1 or L2 was changed
     if ( jog.db["jog.L1"] != null || jog.db["jog.L2"] != null ) {
@@ -825,8 +859,11 @@ jog.jog_table_init = function()
     // add event listener for the input fields changes
     document.querySelector("#JOG_inputs_table").addEventListener("keyup", jog.inputs_changed);
 
+    // add event listener for the jog type selector changes
+    document.querySelector("#jog_type").addEventListener("change", jog.inputs_changed);
+
     // add event listener for buttons clicks
-    document.querySelector("#JOG_table").addEventListener("click", jog.btn_clicked);
+    document.querySelector("#JOG_table").addEventListener("mousedown", jog.btn_clicked);
 
     // add event listeners for any input fields of the JOG panel
     // it needs to blur any input element on keyboard ENTER key
@@ -846,17 +883,6 @@ jog.jog_table_init = function()
 jog.js_init = function()
 {
     console.log("jog.js_init()");
-
-    // add event listeners for any input fields focus states
-    // it helps to prevent HOTKEYS action while some input is active
-    var list = document.querySelectorAll("textarea, input");
-    for ( var i = 0, size = list.length; i < size; i++ ) {
-        list[i].addEventListener("focus", jog.on_input_focus_in);
-        list[i].addEventListener("blur", jog.on_input_focus_out);
-    }
-
-    // add event listener for any keyboard keys
-    document.querySelector("body").addEventListener("keyup", jog.on_keyboard_key);
 
     // create sockets to talk with LCNC
     if ( parent.location.protocol.match("http") ) {
