@@ -501,12 +501,12 @@ jog.btn_clicked = function ( event )
     // GOTO buttons
     if ( /^jog_btn_home/.test(id) ) {
         if ( /home[XYZABC]$/.test(id) ) { // single axis
-            jog.exec_mdi( ["G90", "G0 " + id.match(/([XYZABC])$/i)[0] + "0 F" + feed] );
+            jog.exec_mdi( ["G90", "G1 " + id.match(/([XYZABC])$/i)[0] + "0 F" + feed] );
         } else if ( /home[XYZABC]{2}$/.test(id) ) { // double axes
             var axes = id.match(/([XYZABC])([XYZABC])$/i); axes.shift();
-            jog.exec_mdi( ["G90", "G0 " + axes.join("0 ") + "0 F" + feed] );
+            jog.exec_mdi( ["G90", "G1 " + axes.join("0 ") + "0 F" + feed] );
         } else { // all axes
-            jog.exec_mdi( ["G90", "G0 " + jog.axes_used.join("0 ").toUpperCase() + "0 F" + feed] );
+            jog.exec_mdi( ["G90", "G1 " + jog.axes_used.join("0 ").toUpperCase() + "0 F" + feed] );
         }
         return;
     }
@@ -518,14 +518,14 @@ jog.btn_clicked = function ( event )
         var p = id.match( /(pos|neg)([XYZABC])([0-9])$/ );
         jog.exec_mdi( [
             "G91", 
-            "G0 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + " F" + feed,
+            "G1 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + " F" + feed,
             "G90"
         ] );
     } else if ( /btn_(pos|neg)([XYZABC])([0-9])_(pos|neg)([XYZABC])([0-9])$/.test(id) ) { // +/- of double  axes
         var p = id.match( /(pos|neg)([XYZABC])([0-9])_(pos|neg)([XYZABC])([0-9])$/ );
         jog.exec_mdi( [
             "G91", 
-            "G0 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + 
+            "G1 " + p[2] + (p[1] == "neg" ? "-" : "") + Math.abs(p[3] == "1" ? L1 : L2) + 
             " "   + p[5] + (p[4] == "neg" ? "-" : "") + Math.abs(p[6] == "1" ? L1 : L2) + " F" + feed,
             "G90"
         ] );
