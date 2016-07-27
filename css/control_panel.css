@@ -5,8 +5,11 @@
 }
 .control_panel > div:hover
 {
-    color:              rgba(0, 0, 0, 1);
-    border-color:       rgba(0,0,0,1);
+    color:              rgba(0, 0, 0, 1) !important;
+    border-color:       rgba(0,0,0,1) !important;
+    border-style:       solid !important;
+    opacity:            1 !important;
+    transform:          rotate(0deg);
 }
 .control_panel > .machine_estop
 {
@@ -19,12 +22,23 @@
     overflow:           hidden;
     vertical-align:     middle;
     border-radius:      80px;
-    border:             3px solid rgba(0,0,0,0.3);
+    border:             3px dotted rgba(0,0,0,0.4);
     background:         rgba(255,0,0,0.7);
     cursor:             pointer;
     transition:         all 200ms linear;
     box-sizing:         border-box;
     color:              white;
+}
+.control_panel > .machine_estop.enabled
+{
+    animation: estop_rot 5s ease-in-out infinite;
+}
+@keyframes estop_rot {
+    0% { transform: rotate(0deg);}   
+    30% { transform: rotate(-45deg); color: black }   
+    50% { transform: rotate(0deg);  color: white}   
+    80% { transform: rotate(45deg); color: black }   
+    100% { transform: rotate(0deg); }   
 }
 .control_panel > .machine_estop > *
 {
@@ -56,18 +70,38 @@
 .control_panel > .machine_off,
 .control_panel > .machine_on
 {
+    transform:          rotate(-25deg);
     border-color:       rgba(0,0,0,0.2);
-    color:              rgba(0, 0, 0, 0.5);
-    font-size:          110%;
+    color:              rgba(0, 0, 0, 0.8);
+    font-size:          80%;
 }
 .control_panel > .machine_off
 {
+    opacity:            0.4;
     background:         rgba(255,0,0,0.3);
 }
 .control_panel > .machine_on
 {
+    opacity:            0.4;
     margin-left:        4px;
     background:         rgba(0,255,0,0.3);
+}
+.control_panel > .machine_off.enabled
+{
+    opacity:            1;
+    background:         rgba(255,0,0,0.8);
+    animation:          mOFF_anim 2s ease-in-out infinite;
+}
+@keyframes mOFF_anim {
+    0% { opacity: 0.4 }   
+    50% { opacity: 1 }   
+    100% { opacity: 0.4 }   
+}
+.control_panel > .machine_on.enabled
+{
+    opacity:            1;
+    border-color:       rgba(0,128,0,0.5);
+    background:         rgba(0,255,0,0.8);
 }
 .control_panel > .program_play,
 .control_panel > .program_pause,
@@ -100,7 +134,7 @@
 .control_panel > .program_pause > *,
 .control_panel > .program_abort > *
 {
-    width:              99%; 
+    width:              110%; 
     font-weight:        bold;
     text-align:         center;
 }
