@@ -90,12 +90,7 @@
 {
     opacity:            1;
     background:         rgba(255,0,0,0.8);
-    animation:          mOFF_anim 2s ease-in-out infinite;
-}
-@keyframes mOFF_anim {
-    0% { opacity: 0.4 }   
-    50% { opacity: 1 }   
-    100% { opacity: 0.4 }   
+    animation:          opacity_anim 2s ease-in-out infinite;
 }
 .control_panel > .machine_on.enabled
 {
@@ -107,6 +102,7 @@
 .control_panel > .program_pause,
 .control_panel > .program_abort
 {
+    opacity:            0.4;
     background:         rgba(0,0,0,0.05);
     color:              rgba(0, 0, 0, 0.3);
 }
@@ -127,6 +123,20 @@
     margin-left:        3px;
     font-size:          250%;
     padding-bottom:     3%;
+}
+.control_panel > .program_play.enabled,
+.control_panel > .program_pause.enabled,
+.control_panel > .program_abort.enabled
+{
+    opacity:            1;
+    border:             2px dotted rgba(0,0,0,0.8);
+    color:              rgba(0, 0, 0, 0.6);
+    animation:          opacity_anim 2s ease-in-out infinite;
+}
+@keyframes opacity_anim {
+    0% { opacity: 0.4 }   
+    50% { opacity: 1 }   
+    100% { opacity: 0.4 }   
 }
 .control_panel > .machine_off > *,
 .control_panel > .machine_on > *,
