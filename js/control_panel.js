@@ -14,6 +14,10 @@ var ctrl =
     lcncsock_open:      false,
 
     update_interval:    500,
+    
+    machine_estop:      true,
+    machine_on:         false,
+    program_status:     "idle"
 };
 
 // local strings to translate
@@ -65,43 +69,48 @@ ctrl.lcncsock_onmessage = function(e)
     {
         if ( lines[n].match(/^program_status/i) ) {
             var state = lines[n].match(/program_status\s+(idle|running|paused)/i)[1].toLowerCase();
+            ctrl.program_status = state;
             switch (state) {
                 case "running":
-                    document.querySelector("#program_play").classList.add("enabled");
-                    document.querySelector("#program_pause").classList.remove("enabled");
-                    document.querySelector("#program_abort").classList.remove("enabled");
+                    ctrl.toggle_btn("program_play", true);
+                    ctrl.toggle_btn("program_pause", false);
+                    ctrl.toggle_btn("program_abort", false);
                     break;
                 case "paused":
-                    document.querySelector("#program_play").classList.remove("enabled");
-                    document.querySelector("#program_pause").classList.add("enabled");
-                    document.querySelector("#program_abort").classList.remove("enabled");
+                    ctrl.toggle_btn("program_play", false);
+                    ctrl.toggle_btn("program_pause", true);
+                    ctrl.toggle_btn("program_abort", false);
                     break;
                 default: // idle
-                    document.querySelector("#program_play").classList.remove("enabled");
-                    document.querySelector("#program_pause").classList.remove("enabled");
-                    document.querySelector("#program_abort").classList.add("enabled");
+                    ctrl.toggle_btn("program_play", false);
+                    ctrl.toggle_btn("program_pause", false);
+                    ctrl.toggle_btn("program_abort", true);
             }
         }
         else if ( lines[n].match(/^estop/i) ) {
             var state = lines[n].match(/estop\s+(on|off)/i)[1].toLowerCase();
             switch (state) {
                 case "on":
-                    document.querySelector("#machine_estop").classList.add("enabled");
+                    ctrl.machine_estop = true;
+                    ctrl.toggle_btn("machine_estop", true);
                     break;
                 default: // off
-                    document.querySelector("#machine_estop").classList.remove("enabled");
+                    ctrl.machine_estop = false;
+                    ctrl.toggle_btn("machine_estop", false);
             }
         }
         else if ( lines[n].match(/^machine/i) ) {
             var state = lines[n].match(/machine\s+(on|off)/i)[1].toLowerCase();
             switch (state) {
                 case "on":
-                    document.querySelector("#machine_on").classList.add("enabled");
-                    document.querySelector("#machine_off").classList.remove("enabled");
+                    ctrl.machine_on = true;
+                    ctrl.toggle_btn("machine_on", true);
+                    ctrl.toggle_btn("machine_off", false);
                     break;
                 default: // off
-                    document.querySelector("#machine_on").classList.remove("enabled");
-                    document.querySelector("#machine_off").classList.add("enabled");
+                    ctrl.machine_on = false;
+                    ctrl.toggle_btn("machine_on", false);
+                    ctrl.toggle_btn("machine_off", true);
             }
         }
     }
@@ -137,6 +146,104 @@ ctrl.update = function()
 
 
 
+ctrl.exec = function ( outcmd )
+{
+    if ( !ctrl.lcncsock_open ) {
+        log.add("[CTRL] LCNC socket isn't available","red");
+        return;
+    }
+    if ( outcmd.trim() == "" ) return;
+
+    ctrl.lcncsock.send(
+        "set enable " + LINUXCNCRSH_ENABLE_PASSWORD + "\r\n" +
+        outcmd +
+        "set enable off\r\n"
+    );
+
+    log.add("[CTRL] lcnc " + outcmd);
+}
+
+
+
+
+ctrl.simpleClickAnimation = function ( id )
+{
+    var element = document.querySelector("#"+id),
+        back    = element.style.backgroundColor;
+    element.style.backgroundColor = "rgba(0,0,0,0.5)";
+    setTimeout( 'document.querySelector("#'+id+'").style.backgroundColor = "'+back+'";', 200 );
+}
+
+ctrl.toggle_btn = function ( id, enable, animate ) {
+    var element = document.querySelector("#"+id);
+    if ( !element ) return;
+
+    if ( enable ) element.classList.add("enabled");
+    else element.classList.remove("enabled");
+
+    if ( animate ) ctrl.simpleClickAnimation(id);
+}
+
+
+
+
+ctrl.btn_clicked = function ( event )
+{
+    var id;
+
+    if ( /^(program|machine)_/.test(event.target.id) ) id = event.target.id;
+    else if ( /^(program|machine)_/.test(event.target.parentElement.id) ) id = event.target.parentElement.id;
+    else return;
+
+    switch (id) {
+        case "program_play": 
+            if ( !ctrl.machine_on || ctrl.machine_estop || ctrl.program_status == "running" ) break;
+            if ( ctrl.program_status == "paused" ) {
+                ctrl.exec("set resume\r\n");
+            } else {
+                if ( !typeof(prog) != "object" ) ctrl.exec("set mode auto\r\nset run\r\n");
+                else ctrl.exec("set mode auto\r\nset run " + prog.current_line + "\r\n");
+            }
+            ctrl.toggle_btn("program_play", true, true);
+            break;
+        case "program_pause": 
+            if ( !ctrl.machine_on || ctrl.machine_estop || ctrl.program_status == "idle" ) break;
+            if ( ctrl.program_status == "running" ) ctrl.exec("set pause\r\n");
+            else ctrl.exec("set resume\r\n");
+            ctrl.toggle_btn("program_pause", true, true);
+            break;
+        case "program_abort": 
+            if ( !ctrl.machine_on || ctrl.machine_estop ) break;
+            ctrl.exec("set abort\r\n");
+            ctrl.toggle_btn("program_abort", true, true);
+            break;
+        case "machine_estop": 
+            if ( ctrl.machine_estop ) {
+                ctrl.toggle_btn("machine_estop", false, true);
+                ctrl.exec("set estop off\r\n");
+            } else {
+                ctrl.toggle_btn("machine_estop", true, true);
+                ctrl.exec("set estop on\r\n");
+            }
+            break;
+        case "machine_on": 
+            if ( ctrl.machine_on || ctrl.machine_estop ) break;
+            ctrl.toggle_btn("machine_on", true, true);
+            ctrl.toggle_btn("machine_off", false);
+            ctrl.exec("set machine on\r\n");
+            break;
+        case "machine_off": 
+            if ( !ctrl.machine_on || ctrl.machine_estop ) break;
+            ctrl.toggle_btn("machine_off", true, true);
+            ctrl.toggle_btn("machine_on", false);
+            ctrl.exec("set machine off\r\n");
+            break;
+    }
+}
+
+
+
+
 // do it when window is fully loaded
 ctrl.js_init = function()
 {
@@ -151,6 +258,9 @@ ctrl.js_init = function()
 
     // start units update process
     ctrl.update_timer = setInterval( ctrl.update, ctrl.update_interval );
+
+    // add event listener for buttons clicks
+    document.querySelector("#control_panel").addEventListener("click", ctrl.btn_clicked);
 }
 
 
