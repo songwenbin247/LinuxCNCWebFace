@@ -12,6 +12,12 @@
     margin:             10px;
     opacity:            0;
 }
+@media only all and (orientation: portrait) {
+    .JOG
+    {
+        margin: 0;
+    }
+}
 
 
 
