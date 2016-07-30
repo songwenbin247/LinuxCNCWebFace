@@ -73,6 +73,8 @@ tabs.add = function ( tab_title, tab_content, index, active )
     if ( active || titles.children.length <= 1 ) tabs.activate(index);
 
     document.querySelector("#tabs_panel").style.display = "block";
+    
+    return content;
 }
 
 tabs.remove = function ( index )
