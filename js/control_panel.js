@@ -201,7 +201,7 @@ ctrl.btn_clicked = function ( event )
             if ( ctrl.program_status == "paused" ) {
                 ctrl.exec("set resume\r\n");
             } else {
-                if ( !typeof(prog) != "object" ) ctrl.exec("set mode auto\r\nset run\r\n");
+                if ( typeof(prog) != "object" ) ctrl.exec("set mode auto\r\nset run\r\n");
                 else ctrl.exec("set mode auto\r\nset run " + prog.current_line + "\r\n");
             }
             ctrl.toggle_btn("program_play", true, true);
