@@ -1,8 +1,9 @@
 .log_panel
 {
     position:       absolute;
+    left:           10px;
+    right:          10px;
     bottom:         10px;
-    width:          99%;
     height:         100px;
     border:         1px solid rgba(0, 0, 0, 0.5);
     overflow:       auto;

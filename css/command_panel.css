@@ -1,8 +1,9 @@
 .command
 {
     position:       absolute;
+    left:           10px;
+    right:          10px;
     bottom:         120px;
-    width:          99.3%;
     text-align:     center;
 }
 .command > .command_text
