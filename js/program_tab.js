@@ -8,6 +8,8 @@
 var prog =
 {
     db: {},
+    
+    current_line: 0
 };
 
 // local strings to translate
