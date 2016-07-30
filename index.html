@@ -12,16 +12,6 @@
         </script>
     </head>
     <body>
-        <!-- Settings panel -->
-        <style type="text/css">@import "css/settings_panel.css";</style>
-        <div class="settings" id="settings">
-            <h3>&#x2009;Settings&#x2009;</h3>
-            <div class="settings_close" id="settings_close">x</div>
-            <div class="settings_tabs" id="settings_tabs"></div>
-            <div class="settings_tabs_content" id="settings_tabs_content"></div>
-        </div>
-        <script type="text/javascript" src="js/settings_panel.js"></script>
-
         <!-- Main table -->
         <table class="main" id="main" cellpadding="0" cellspacing="0" border="0">
             <tr>
@@ -132,6 +122,14 @@
                     <script type="text/javascript" src="js/position_panel.js"></script>
                 </td>
                 <td class="center">
+                    <!-- tabs panel -->
+                    <style type="text/css">@import "css/tabs_panel.css";</style>
+                    <div class="tabs_panel" id="tabs_panel">
+                        <div class="tabs_titles" id="tabs_titles"></div>
+                        <div class="tabs_contents" id="tabs_contents"></div>
+                    </div>
+                    <script type="text/javascript" src="js/tabs_panel.js"></script>
+
                     <!-- command panel -->
                     <style type="text/css">@import "css/command_panel.css";</style>
                     <div class="command">
