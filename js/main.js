@@ -61,7 +61,7 @@ function u2u ( value, type, fixed )
 function loadto ( file, loadmode, element, code )
 {
     if ( !parent.location.protocol.match("http") ) return;
-    if ( loadto.busy ) return setTimeout( loadto, 200, file, element, code );
+    if ( loadto.busy ) return setTimeout( loadto, 200, file, loadmode, element, code );
     if ( typeof(element) == "string" ) element = document.querySelector(element);
     if ( ! element ) return;
 
