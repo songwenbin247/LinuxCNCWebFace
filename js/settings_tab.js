@@ -42,18 +42,7 @@ set.js_init = function()
         return;
     }
     
-    // create TMP element
-    set.tab_content = document.createElement("div");
-    set.tab_content.style.display = "none";
-    document.querySelector("body").appendChild(set.tab_content);
-    
-    // and load into it tab's content
-    loadto("html/settings_tab.html", "a", set.tab_content, 
-        function() {
-            set.tab = tabs.add("&#x2009;Settings&#x2009;", set.tab_content.innerHTML );
-            document.querySelector("body").removeChild(set.tab_content);
-        }
-    );
+    set.tab = tabs.add("&#x2009;Settings&#x2009;", "");
 }
 
 
