@@ -13,6 +13,7 @@ var log =
 // local strings to translate
 var lng_local_dic =
 [
+    { en:"LOG panel", ru:"LOG панель" },
     { en:"Clear LOG", ru:"Очистить LOG" }
 ];
 
@@ -80,6 +81,22 @@ log.js_init = function()
     console.log("log.js_init()");
 
     document.querySelector("#log_panel > .clear").addEventListener( "click", log.clear );
+
+    // add panel settings to the Settings tab
+    if ( typeof(tabs) == "object" && typeof(set) == "object" ) {
+        // create TMP element
+        log.tmp_settings_block = document.createElement("div");
+        log.tmp_settings_block.style.display = "none";
+        document.querySelector("body").appendChild(log.tmp_settings_block);
+
+        loadto("html/log_settings_block.html", "a", log.tmp_settings_block, 
+            function() {
+                log.settings_block = set.add("&#x2009;LOG panel&#x2009;", log.tmp_settings_block.innerHTML);
+                document.querySelector("body").removeChild(log.tmp_settings_block);
+                lng.update();
+            }
+        );
+    }
 }
 
 

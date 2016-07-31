@@ -7,6 +7,7 @@
 // local strings to translate
 var lng_local_dic =
 [
+    { en:"JOG panel", ru:"JOG панель" },
     { en:"Feed", ru:"Подача" },
     { en:"Movements type", ru:"Режим движения" },
     { en:"auto", ru:"авто" },
@@ -802,6 +803,22 @@ jog.js_init = function()
     }
     // create check timer for these sockets
     setInterval(jog.check_sockets, SOCK_CHECK_INTERVAL);
+
+    // add panel settings to the Settings tab
+    if ( typeof(tabs) == "object" && typeof(set) == "object" ) {
+        // create TMP element
+        jog.tmp_settings_block = document.createElement("div");
+        jog.tmp_settings_block.style.display = "none";
+        document.querySelector("body").appendChild(jog.tmp_settings_block);
+
+        loadto("html/JOG_settings_block.html", "a", jog.tmp_settings_block, 
+            function() {
+                jog.settings_block = set.add("&#x2009;JOG panel&#x2009;", jog.tmp_settings_block.innerHTML);
+                document.querySelector("body").removeChild(jog.tmp_settings_block);
+                lng.update();
+            }
+        );
+    }
 }
 
 

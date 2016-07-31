@@ -33,6 +33,7 @@ var pos =
 // local strings to translate
 var lng_local_dic =
 [
+    { en:"Position panel", ru:"Панель координат" },
     { en:"work, actual", ru:"рабочие, текущие" },
     { en:"machine, actual", ru:"машинные, текущие" },
     { en:"work, commanded", ru:"рабочие, последние" },
@@ -493,6 +494,22 @@ pos.js_init = function()
     }
     // create check timer for these sockets
     setInterval(pos.check_sockets, SOCK_CHECK_INTERVAL);
+
+    // add panel settings to the Settings tab
+    if ( typeof(tabs) == "object" && typeof(set) == "object" ) {
+        // create TMP element
+        pos.tmp_settings_block = document.createElement("div");
+        pos.tmp_settings_block.style.display = "none";
+        document.querySelector("body").appendChild(pos.tmp_settings_block);
+
+        loadto("html/pos_settings_block.html", "a", pos.tmp_settings_block, 
+            function() {
+                pos.settings_block = set.add("&#x2009;Position panel&#x2009;", pos.tmp_settings_block.innerHTML);
+                document.querySelector("body").removeChild(pos.tmp_settings_block);
+                lng.update();
+            }
+        );
+    }
 }
 
 

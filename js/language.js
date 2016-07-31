@@ -4,9 +4,16 @@
     Language
 */
 
-// settings vars and functions
+// local strings to translate
+var lng_local_dic =
+[
+    { en:"Language", ru:"Язык интерфейса" },
+];
+
+// add local strings to translate to the global translate list
 if ( !lng ) lng = {};
 if ( !lng.dic ) lng.dic = [];
+lng.dic = lng.dic.concat(lng_local_dic);
 
 
 
@@ -121,6 +128,22 @@ lng.js_init = function()
         if ( ! lng.db["lng"] || ! lng.dic[0][ lng.db["lng"] ] ) lng.db["lng"] = lng.list[0];
         // and change current language if needed
         lng.update();
+    }
+
+    // add panel settings to the Settings tab
+    if ( typeof(tabs) == "object" && typeof(set) == "object" ) {
+        // create TMP element
+        lng.tmp_settings_block = document.createElement("div");
+        lng.tmp_settings_block.style.display = "none";
+        document.querySelector("body").appendChild(lng.tmp_settings_block);
+
+        loadto("html/lng_settings_block.html", "a", lng.tmp_settings_block, 
+            function() {
+                lng.settings_block = set.add("&#x2009;Language&#x2009;", lng.tmp_settings_block.innerHTML);
+                document.querySelector("body").removeChild(lng.tmp_settings_block);
+                lng.update();
+            }
+        );
     }
 
     //test
