@@ -32,6 +32,24 @@ if ( window.localStorage ) set.db = window.localStorage;
 
 
 
+set.add = function ( title, html, className, id )
+{
+    if ( !("tab" in set) ) return;
+
+    var fieldset = document.createElement("fieldset");
+
+    fieldset.classList.add("settings_block");
+    fieldset.innerHTML = "<legend>" + String(title) + "</legend>" + String(html);
+    if ( typeof(className) == "string" ) fieldset.classList.add(className);
+    if ( typeof(id) == "string" ) fieldset.id = id;
+
+    set.tab.appendChild(fieldset);
+    
+    return fieldset;
+}
+
+
+
 // do it when window is fully loaded
 set.js_init = function()
 {
