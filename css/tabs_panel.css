@@ -61,3 +61,23 @@
 {
     display:        none;
 }
+
+
+
+
+/* fieldset styles */
+.tabs_panel > .tabs_contents > div fieldset
+{
+    border:         1px dotted rgba(0,0,0,0.3);
+    margin-bottom:  10px;
+    background:     rgba(0,0,0,0.02);
+}
+.tabs_panel > .tabs_contents > div fieldset > legend
+{
+    font-weight:    bold;
+    padding:        1px 10px 3px 10px;
+    border:         1px dotted rgba(0,0,0,0.6);
+    border-radius:  4px;
+    background:     rgba(0,0,0,0.05);
+    color:          #400000;
+}
