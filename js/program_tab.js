@@ -16,6 +16,13 @@ var prog =
 var lng_local_dic =
 [
     { en:"Program", ru:"Программа" },
+    { en:"OPEN", ru:"ОТКРЫТЬ" },
+    { en:"SAVE", ru:"СОХРАНИТЬ" },
+    { en:"UPLOAD", ru:"ЗАГРУЗКА" },
+    { en:"RUN", ru:"ПУСК" },
+    { en:"PAUSE", ru:"ПАУЗА" },
+    { en:"STEP", ru:"ШАГ" },
+    { en:"ABORT", ru:"СТОП" },
 ];
 
 // add local strings to translate to the global translate list

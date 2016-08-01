@@ -1,1 +1,59 @@
 @charset "utf-8";
+
+.program_tools 
+{
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+.program_tools > .icon_group
+{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 10px 5px 0;
+}
+.program_tools > .icon_group > .icon
+{
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    padding: 3px;
+    font-size: 100%;
+    transition: all 200ms linear;
+    cursor: pointer;
+}
+.program_tools > .icon_group > .icon:hover
+{
+    border-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.program_tools > .icon_group > .icon.open_file
+{
+    background: rgba(255, 255, 0, 0.2);
+}
+.program_tools > .icon_group > .icon.save_file
+{
+    background: rgba(0, 0, 255, 0.2);
+}
+.program_tools > .icon_group > .icon.upload_file
+{
+    background: rgba(255, 0, 255, 0.2);
+}
+
+.program_tools > .icon_group > .icon.play_program
+{
+    background: rgba(64, 255, 64, 0.2);
+}
+.program_tools > .icon_group > .icon.pause_program
+{
+    background: rgba(128, 0, 128, 0.2);
+}
+.program_tools > .icon_group > .icon.step_program
+{
+    background: rgba(32, 0, 255, 0.2);
+}
+.program_tools > .icon_group > .icon.abort_program
+{
+    background: rgba(255, 0, 0, 0.2);
+}
