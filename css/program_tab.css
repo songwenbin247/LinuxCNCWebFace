@@ -3,7 +3,7 @@
 .program_tools 
 {
     box-sizing: border-box;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 .program_tools > .icon_group
 {
@@ -56,4 +56,51 @@
 .program_tools > .icon_group > .icon.abort_program
 {
     background: rgba(255, 0, 0, 0.2);
+}
+
+
+
+
+.program_box
+{
+    position: absolute;
+    top: 45px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    padding: 3px;
+    overflow: auto;
+}
+
+.program_box > .program_text_box
+{
+    font-size: 100%;
+}
+.program_box > .program_text_box td
+{
+    font-family: "DejaVu Sans Mono", "Courier New", monospace;
+    font-size: 100%;
+    white-space: pre;
+    vertical-align: top;
+
+}
+.program_box > .program_text_box .program_line_numbers
+{
+    width: 1%;
+    padding: 5px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.1);
+}
+.program_box > .program_text_box .program_text
+{
+    padding: 5px;
+}
+
+.program_box > .program_explorer
+{
+    display: none;
+    font-size: 100%;
 }

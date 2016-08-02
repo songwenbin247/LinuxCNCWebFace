@@ -9,7 +9,9 @@ var prog =
 {
     db: {},
     
-    current_line: 0
+    current_line: 0,
+    current_file: false,
+    current_dir: false
 };
 
 // local strings to translate
@@ -61,13 +63,17 @@ prog.btn_clicked = function ( event )
 
     switch (id) {
         case "open_file": 
+            log.add("[PROG] Open file on the host PC");
             break;
         case "save_file": 
+            log.add("[PROG] File saved");
             break;
         case "upload_file": 
+            log.add("[PROG] Upload file to the host PC");
             break;
 
         case "play_program": 
+            log.add("[PROG] Run current program");
 /*            if ( !ctrl.machine_on || ctrl.machine_estop || ctrl.program_status == "running" ) break;
             if ( ctrl.program_status == "paused" ) {
                 ctrl.exec("set resume\r\n");
@@ -77,13 +83,16 @@ prog.btn_clicked = function ( event )
             }
 */            break;
         case "pause_program": 
+            log.add("[PROG] Pause current program");
 /*            if ( !ctrl.machine_on || ctrl.machine_estop || ctrl.program_status == "idle" ) break;
             if ( ctrl.program_status == "running" ) ctrl.exec("set pause\r\n");
             else ctrl.exec("set resume\r\n");
 */            break;
         case "step_program": 
+            log.add("[PROG] Run one line of current program");
             break;
         case "abort_program": 
+            log.add("[PROG] Abort current program");
 /*            if ( !ctrl.machine_on || ctrl.machine_estop ) break;
             ctrl.exec("set abort\r\n");
 */            break;
