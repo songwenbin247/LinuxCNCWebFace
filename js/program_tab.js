@@ -102,6 +102,21 @@ prog.btn_clicked = function ( event )
 
 
 
+prog.setSelectedLine = function () {
+    var sel             = window.getSelection();
+    var text            = document.querySelector("#program_text");
+    var line            = document.querySelector("#current_line");
+    var current_pos     = Math.min(sel.anchorOffset, sel.focusOffset);
+    var newlines        = text.innerHTML.substr(0,current_pos).match(/\r?\n/gm);
+    var current_line    = newlines ? newlines.length + 1 : 0
+
+    log.add( "current_line " + current_line );
+    
+    prog.current_line = current_line;
+}
+
+
+
 // do it when window is fully loaded
 prog.js_init = function()
 {
@@ -124,6 +139,8 @@ prog.js_init = function()
             document.querySelector("body").removeChild(prog.tab_content);
             // catch btns clicks
             document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
+            document.querySelector("#program_text").addEventListener("click", prog.setSelectedLine );
+            document.querySelector("#program_text").addEventListener("keyup", prog.setSelectedLine );
         }
     );
 }

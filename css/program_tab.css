@@ -75,6 +75,16 @@
     overflow: auto;
 }
 
+.program_box > .current_line
+{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 16px;
+    background: rgba(0, 255, 0, 0.1);
+}
+
 .program_box > .program_text_box
 {
     font-size: 100%;
@@ -90,13 +100,13 @@
 .program_box > .program_text_box .program_line_numbers
 {
     width: 1%;
-    padding: 5px;
+    padding: 0 5px 0 5px;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.1);
 }
 .program_box > .program_text_box .program_text
 {
-    padding: 5px;
+    padding: 0 5px 0 5px;
 }
 
 .program_box > .program_explorer
