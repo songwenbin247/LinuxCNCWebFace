@@ -34,7 +34,7 @@ if ( window.localStorage ) log.db = window.localStorage;
 // add a new log message to the top
 log.add = function ( msg, color )
 {
-    if ( !msg ) return;
+    if ( typeof(msg) != "string" ) msg = String(msg);
 
     var t       = new Date(),
         block   = document.createElement("div"),
