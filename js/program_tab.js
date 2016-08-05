@@ -25,6 +25,8 @@ var lng_local_dic =
     { en:"PAUSE", ru:"ПАУЗА" },
     { en:"STEP", ru:"ШАГ" },
     { en:"ABORT", ru:"СТОП" },
+    { en:"Current line", ru:"Текущая строка" },
+    { en:"Current text position", ru:"Текущая позиция в тексте" },
 ];
 
 // add local strings to translate to the global translate list
@@ -102,17 +104,19 @@ prog.btn_clicked = function ( event )
 
 
 
-prog.setSelectedLine = function () {
-    var sel             = window.getSelection();
-    var text            = document.querySelector("#program_text");
-    var line            = document.querySelector("#current_line");
-    var current_pos     = Math.min(sel.anchorOffset, sel.focusOffset);
-    var newlines        = text.innerHTML.substr(0,current_pos).match(/\r?\n/gm);
-    var current_line    = newlines ? newlines.length + 1 : 0
+prog.editor_update = function(event)
+{
+    var text        = typeof(prog.text_node) == "undefined" ? document.querySelector("#program_text") : prog.text_node;
+    var line        = typeof(prog.line_node) == "undefined" ? document.querySelector("#current_line") : prog.line_node;
+    var position    = typeof(prog.position_node) == "undefined" ? document.querySelector("#current_pos") : prog.position_node;
 
-    log.add( "current_line " + current_line );
-    
+    var current_pos     = text.selectionDirection == "forward" ? text.selectionStart : text.selectionEnd;
+    var current_line    = (text.value.substr(0,current_pos).match(/\n/gm) || []).length + 1;
+
     prog.current_line = current_line;
+
+    position.innerHTML  = "" + current_pos; 
+    line.innerHTML      = "" + current_line; 
 }
 
 
@@ -139,8 +143,9 @@ prog.js_init = function()
             document.querySelector("body").removeChild(prog.tab_content);
             // catch btns clicks
             document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
-            document.querySelector("#program_text").addEventListener("click", prog.setSelectedLine );
-            document.querySelector("#program_text").addEventListener("keyup", prog.setSelectedLine );
+            document.querySelector("#program_text").addEventListener("click", prog.editor_update );
+            document.querySelector("#program_text").addEventListener("keyup", prog.editor_update );
+            lng.update();
         }
     );
 }

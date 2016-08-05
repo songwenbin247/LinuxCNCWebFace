@@ -12,24 +12,9 @@
     </div>
 </div>
 <div class="program_box" id="program_box">
-    <div class="current_line" id="current_line"></div>
-    <table class="program_text_box" id="program_text_box">
-        <tr>
-            <td class="program_line_numbers" id="program_line_numbers">1
-2
-3
-4
-5
-6
-7
-</td><td class="program_text" id="program_text" contenteditable="true">%
-G21
-G0 Z20
-M3 F21000
-G1 X3 Y4 Z5 A6 F1700
-X1 Y2
-X2 Y3</td>
-        </tr>
-    </table>
+    <textarea class="program_text" id="program_text" placeholder="G code"></textarea>
     <div class="program_explorer" id="program_explorer"></div>
+    <div class="state_line" id="state_line" title="&#x2009;Current line&#x2009; : &#x2009;Current text position&#x2009;">
+        <span class="current_line" id="current_line">1</span> : <span id="current_pos">0</span>
+    </div>
 </div>

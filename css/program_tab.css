@@ -71,46 +71,51 @@
     box-sizing: border-box;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 3px;
-    padding: 3px;
+    padding: 0;
     overflow: auto;
 }
 
-.program_box > .current_line
+.program_box > .state_line
 {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    height: 16px;
-    background: rgba(0, 255, 0, 0.1);
-}
-
-.program_box > .program_text_box
-{
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    overflow: hidden;
     font-size: 100%;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 3px 5px 2px 5px;
+    border-top: 1px solid rgba(0, 0, 0, 0.3); 
 }
-.program_box > .program_text_box td
+.program_box > .state_line > .current_line
 {
-    font-family: "DejaVu Sans Mono", "Courier New", monospace;
-    font-size: 100%;
-    white-space: pre;
-    vertical-align: top;
-
-}
-.program_box > .program_text_box .program_line_numbers
-{
-    width: 1%;
-    padding: 0 5px 0 5px;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.1);
 }
-.program_box > .program_text_box .program_text
+
+.program_box > .program_text
 {
-    padding: 0 5px 0 5px;
+    border: 0px solid;
+    border-radius: 3px; 
+    font-family: "DejaVu Sans Mono", "Courier New", monospace;
+    white-space: pre;
+    font-size: 100%;
+    background: rgba(255, 255, 255, 0);
+    padding: 5px;
+    margin: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    bottom: 25px;
 }
 
 .program_box > .program_explorer
 {
     display: none;
-    font-size: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
