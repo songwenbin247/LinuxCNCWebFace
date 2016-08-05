@@ -121,6 +121,37 @@ prog.editor_update = function(event)
 
 
 
+
+prog.editor_goto_line = function ( number, select )
+{
+    number      = Number(number).toFixed(0);
+    var text    = typeof(prog.text_node) == "undefined" ? document.querySelector("#program_text") : prog.text_node;
+    var lines   = text.value.match(/[^\n]*\n/gm);
+
+    if ( !lines || number <= 1 ) {
+        if ( select ) text.setSelectionRange(0, text.value.search(/(\n|$)/), "forward");
+        return;
+    } else if ( number > (lines.length + 1) ) {
+        text.setSelectionRange( text.value.search(/\n[^\n]*$/) + 1, text.value.length, "forward" );
+        text.scrollTop = text.scrollHeight;
+        text.scrollLeft = 0;
+        return;
+    }
+
+    var startPos = 0;
+    for ( var n = 0, max = number - 1; n < max; n++ ) startPos += lines[n].length;
+    
+    var endPos = select ? startPos + lines[number - 1].length - 1 : startPos;
+    var line_height = text.scrollHeight / (lines.length + 1);
+
+    text.setSelectionRange(startPos, endPos, "forward");
+    text.scrollTop = line_height * (number - 1) - text.clientHeight/2;
+    text.scrollLeft = 0;
+    
+    prog.editor_update();
+}
+
+
 // do it when window is fully loaded
 prog.js_init = function()
 {
