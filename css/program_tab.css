@@ -109,6 +109,10 @@
     width: 100%;
     bottom: 25px;
 }
+.program_box > .program_text::selection
+{
+    background-color: rgba(0, 0, 128, 0.3);
+}
 
 .program_box > .program_explorer
 {
