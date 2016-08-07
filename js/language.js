@@ -37,8 +37,6 @@ lng.change = function ( from, to )
         return;
     }
 
-//    log.add("[LNG] " + from.toUpperCase() + " -> " + to.toUpperCase());
-
     // find all elements with innerText contains special char (\u2009)
     var with_text = document.evaluate (
         "//*[contains(text(), '\u2009')]", document,
@@ -103,6 +101,11 @@ lng.change = function ( from, to )
 
 lng.update = function() {
     if ( lng.db["lng"] != lng.list[0] ) lng.change( lng.list[0], lng.db["lng"] );
+
+    // save new language code to the cookie
+    var t = new Date();
+    t.setTime( t.getTime() + 60*60*24*365 );
+    document.cookie = "lng=" + lng.db["lng"] + "; expires=" + t.toUTCString();
 }
 
 
@@ -145,9 +148,6 @@ lng.js_init = function()
             }
         );
     }
-
-    //test
-    //lng.change("en","ru");
 }
 
 
