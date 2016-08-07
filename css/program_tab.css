@@ -21,6 +21,10 @@
     font-size: 100%;
     transition: all 200ms linear;
     cursor: pointer;
+    min-width: 24px;
+    min-height: 24px;
+    text-align: center;
+    overflow: hidden;
 }
 .program_tools > .icon_group > .icon:hover
 {
@@ -55,6 +59,7 @@
 }
 .program_tools > .icon_group > .icon.abort_program
 {
+    font-size: 90%;
     background: rgba(255, 0, 0, 0.2);
 }
 
@@ -81,12 +86,13 @@
     bottom: 0px;
     left: 0;
     right: 0;
-    height: 20px;
+    height: 24px;
     overflow: hidden;
     font-size: 100%;
     color: rgba(0, 0, 0, 0.6);
     padding: 3px 5px 2px 5px;
     border-top: 1px solid rgba(0, 0, 0, 0.3); 
+    box-sizing: border-box;
 }
 .program_box > .state_line > .current_line
 {
@@ -101,25 +107,14 @@
     white-space: pre;
     font-size: 100%;
     background: rgba(255, 255, 255, 0);
-    padding: 5px;
+    padding: 0px;
     margin: 0;
-    position: absolute;
-    top: 0px;
-    left: 0px;
     width: 100%;
-    bottom: 25px;
+    height: calc(100% - 24px);
+    box-sizing: border-box;
 }
-.program_box > .program_text::selection
+.program_box > .program_text body
 {
-    background-color: rgba(0, 0, 128, 0.3);
-}
-
-.program_box > .program_explorer
-{
-    display: none;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
+    padding: 0;
+    margin: 0;
 }
