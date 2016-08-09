@@ -32,6 +32,10 @@ th {
 td {
     padding-right: 14px;
 }
+td:first-child {
+    word-wrap: break-word;
+    max-width: 200px;
+}
 td.s, th.s {
     text-align: right;
 }
