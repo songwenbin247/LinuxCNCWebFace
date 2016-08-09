@@ -1,14 +1,3 @@
-a, a:active {
-    text-decoration: none;
-    color: blue;
-}
-a:visited {
-    color: #48468F;
-}
-a:hover, a:focus {
-    text-decoration: underline;
-    color: red;
-}
 body {
     background-color: #F5F5F5;
 }
@@ -18,26 +7,46 @@ h2 {
 table {
     margin-left: 12px;
 }
+a {
+    text-decoration: none;
+}
+a:hover {
+    color: rgba(255, 0, 0, 0.9) !important;
+    text-decoration: underline;
+}
 th, td {
     font-family: "DejaVu Sans Mono", "Courier New", monospace;
     font-size: 10pt;
-    text-align: left;
     color: rgba(0, 0, 0, 0.5);
 }
 th {
     font-weight: bold;
     padding-right: 14px;
     padding-bottom: 3px;
+    text-align: right;
+}
+th a {
+    color: rgba(128, 0, 0, 1);
+}
+th:first-child, th:last-child {
+    text-align: left;
 }
 td {
     padding-right: 14px;
+    text-align: left;
 }
 td:first-child {
     word-wrap: break-word;
-    max-width: 200px;
+    max-width: 250px;
 }
 td.s, th.s {
     text-align: right;
+}
+td.n a.folder {
+    color: rgba(200, 200, 0, 1);
+}
+td.n a.file {
+    color: rgba(0, 0, 255, 1);
 }
 div.list {
     background-color: white;
