@@ -1,5 +1,15 @@
 <?php
 
+if ( $_SERVER['REQUEST_URI'] == '/' && !isset($_SERVER['HTTP_REFERER']) ) {
+    if ( is_file('index.html') ) {
+        print file_get_contents("index.html");
+        exit;
+    }
+}
+
+
+
+
 // language settings and strings
 $lng = isset($_COOKIE) && isset($_COOKIE['lng']) ? $_COOKIE['lng'] : 'en'; 
 $dic = array(
