@@ -296,7 +296,7 @@ print "<tr><td colspan='4' style='height:7px;'></td></tr>";
 
 // Print file information
 foreach($filelist as $file) {
-	print "<tr><td class='n'><a class='file' href='" . addslashes($file['name']). "'>" .htmlentities($file['name']). "</a></td>";
+	print "<tr><td class='n'><a class='file' ".(stripos($file['name'], '.html') ? 'target="_blank"' : '')." href='" . addslashes($file['name']). "'>" .htmlentities($file['name']). "</a></td>";
 	print "<td class='m' title='" . date('H:i:s', $file['modtime']) . "'>" . date('d.m.Y', $file['modtime'])   . "</td>";
 	print "<td class='s'>" . format_bytes($file['size'],0)           . "&nbsp;</td>";
 	print "<td class='t'>" . $file['file_type']                      . "</td></tr>";
