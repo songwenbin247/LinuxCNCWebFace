@@ -55,7 +55,13 @@ prog.simpleClickAnimation = function ( id )
 // some of the move buttons was clicked
 prog.path_btn_clicked = function ( event )
 {
-    prog.simpleClickAnimation(event.target.id);
+    var id = event.target.id;
+    prog.simpleClickAnimation(id);
+    
+    var path = event.target.getAttribute("data-path");
+    var text = document.querySelector("#program_text");
+    
+    text.src = path;
 }
 
 prog.btn_clicked = function ( event )
@@ -161,10 +167,10 @@ prog.editor_goto_line = function ( number, select )
 
 prog.tab_frame_load_end = function() 
 {
-    var text        = typeof(prog.text_node) == "undefined" ? document.querySelector("#program_text") : prog.text_node;
+    var text        = document.querySelector("#program_text");
     var frame_doc   = text.contentDocument;
     var frame_path  = frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1");
-    var is_file     = frame_doc.querySelector("script") == null;
+    var is_file     = frame_doc.contentType != "text/html";
     var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
     
     prog.current_file   = is_file ? frame_path : false;
@@ -178,15 +184,13 @@ prog.tab_frame_load_end = function()
         var group = document.createElement("div"); 
         group.classList.add("icon_group");
 
-        for ( var d = 0, elem; d < sub_paths.length; d++ ) {
+        for ( var d = 0, elem, path = ""; d < sub_paths.length; d++ ) {
+            path += sub_paths[d];
             elem = document.createElement("div");
             elem.classList.add("icon","dir");
-            elem.innerHTML = sub_paths[d]
-                                .replace(/^\/+([^\/])/gm, "$1")
-                                .replace(/&/gm, "&amp;")
-                                .replace(/</gm, "&lt;")
-                                .replace(/>/gm, "&gt;");
+            elem.innerHTML = toHTML( sub_paths[d].replace(/^\/([^\/])/igm,"$1") );
             elem.id = "path_part_"+d;
+            elem.setAttribute( "data-path", toHTML(path.replace(/^\/+/igm,"/")) );
             elem.addEventListener("click", prog.path_btn_clicked);
             group.appendChild(elem);
         }
@@ -196,8 +200,8 @@ prog.tab_frame_load_end = function()
         tools.appendChild(group);
     }
 
-    log.add("file: "+prog.current_file);
-    log.add("dir: "+prog.current_dir);
+//    log.add("file: "+prog.current_file);
+    log.add("type: "+frame_doc.contentType);
 }
 
 
