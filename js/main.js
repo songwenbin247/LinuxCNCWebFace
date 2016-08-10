@@ -28,6 +28,17 @@ function n ( value )
     return isNaN(out) || out == undefined ? 0 : out;
 }
 
+// like PHP's htmlspecialchars()
+function toHTML ( text ) 
+{
+    return text
+        .replace(/&/gm, "&amp;")
+        .replace(/</gm, "&lt;")
+        .replace(/>/gm, "&gt;")
+        .replace(/"/gm, "&quot;")
+        .replace(/'/gm, "&#039;");
+}
+
 // units conversion
 function u2u ( value, type, fixed )
 {
