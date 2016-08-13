@@ -170,20 +170,45 @@ prog.tab_frame_load_end = function()
     var text        = document.querySelector("#program_text");
     var frame_doc   = text.contentDocument;
     var frame_path  = frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1");
-    var is_file     = frame_doc.contentType != "text/html";
     var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
     
+    var is_file     = false;
+    var first_sript = frame_doc.querySelector("head script");
+    if (    
+        frame_doc.contentType != "text/html" ||
+        !first_sript ||
+        !first_sript.hasAttribute("src") || 
+        !first_sript.getAttribute("src").match(/explorer\.js/i) 
+    ) {
+        is_file = true;
+    }
+
     prog.current_file   = is_file ? frame_path : false;
     prog.current_dir    = is_file ? frame_path.replace(/\/[^\/]+$/im, "") : frame_path;
 
+    sub_paths.unshift("/");
+
+    var group = document.createElement("div"); 
+    group.classList.add("icon_group");
+
     if ( is_file ) {
-        
+        // last folder
+        var icon = document.createElement("div");
+        icon.classList.add("icon","dir");
+        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 2].replace(/^\/([^\/])/igm,"$1") );
+        icon.id = "path_part_" + (sub_paths.length - 2);
+        icon.setAttribute( "data-path", toHTML(frame_path.replace(/\/[^\/]+$/im, "")) );
+        icon.setAttribute( "title", icon.getAttribute("data-path") );
+        icon.addEventListener("click", prog.path_btn_clicked);
+        group.appendChild(icon);
+
+        // file name
+        icon = document.createElement("div");
+        icon.classList.add("icon","file");
+        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 1].replace(/^\/([^\/])/igm,"$1") );
+        icon.setAttribute( "title", icon.innerHTML );
+        group.appendChild(icon);
     } else {
-        sub_paths.unshift("/");
-
-        var group = document.createElement("div"); 
-        group.classList.add("icon_group");
-
         for ( var d = 0, elem, path = ""; d < sub_paths.length; d++ ) {
             path += sub_paths[d];
             elem = document.createElement("div");
@@ -191,17 +216,15 @@ prog.tab_frame_load_end = function()
             elem.innerHTML = toHTML( sub_paths[d].replace(/^\/([^\/])/igm,"$1") );
             elem.id = "path_part_"+d;
             elem.setAttribute( "data-path", toHTML(path.replace(/^\/+/igm,"/")) );
+            elem.setAttribute( "title", elem.getAttribute("data-path") );
             elem.addEventListener("click", prog.path_btn_clicked);
             group.appendChild(elem);
         }
-
-        var tools = document.querySelector("#program_tools");
-        tools.innerHTML = "";
-        tools.appendChild(group);
     }
 
-//    log.add("file: "+prog.current_file);
-    log.add("type: "+frame_doc.contentType);
+    var tools = document.querySelector("#program_tools");
+    tools.innerHTML = "";
+    tools.appendChild(group);
 }
 
 
