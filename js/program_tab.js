@@ -165,6 +165,12 @@ prog.editor_goto_line = function ( number, select )
 
 
 
+prog.tab_frame_unload_start = function() 
+{
+    var text = document.querySelector("#program_text");
+    text.style.visibility = "hidden";
+}
+
 prog.tab_frame_load_end = function() 
 {
     var text        = document.querySelector("#program_text");
@@ -172,6 +178,8 @@ prog.tab_frame_load_end = function()
     var frame_path  = frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1");
     var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
     
+    text.contentWindow.addEventListener("unload", prog.tab_frame_unload_start);
+
     var is_file     = false;
     var first_sript = frame_doc.querySelector("head script");
     if (    
@@ -192,6 +200,14 @@ prog.tab_frame_load_end = function()
     group.classList.add("icon_group");
 
     if ( is_file ) {
+        // add style for the program text
+        // <link rel='stylesheet' href='css/main.css' type='text/css' media='screen' />
+        var style = document.createElement("link");
+        style.setAttribute("rel","stylesheet");
+        style.setAttribute("href","/css/program_text.css");
+        style.setAttribute("type","text/css");
+        frame_doc.querySelector("head").appendChild(style);
+        
         // last folder
         var icon = document.createElement("div");
         icon.classList.add("icon","dir");
@@ -225,6 +241,8 @@ prog.tab_frame_load_end = function()
     var tools = document.querySelector("#program_tools");
     tools.innerHTML = "";
     tools.appendChild(group);
+
+    text.style.visibility = "visible";
 }
 
 
