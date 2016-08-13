@@ -24,7 +24,10 @@
     cursor: pointer;
     min-width: 24px;
     min-height: 24px;
+    max-width: 200px;
+    white-space: pre;
     text-align: center;
+    text-overflow: ellipsis;
     overflow: hidden;
 }
 .program_tools > .icon_group > .icon:hover
@@ -36,6 +39,10 @@
 .program_tools > .icon_group > .dir
 {
     background: rgba(255, 255, 0, 0.2);
+}
+.program_tools > .icon_group > .file
+{
+    background: rgba(0, 0, 255, 0.1);
 }
 .program_tools > .icon_group > .icon.open_file
 {
