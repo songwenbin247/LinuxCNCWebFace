@@ -173,7 +173,7 @@ print "<html>
         <script src='/js/explorer.js' type='text/javascript' ></script>
 	</head>
 	<body>
-	<h2>".lng("Index of")." /" . $vpath ."</h2>
+	<!--h2>".lng("Index of")." /" . $vpath ."</h2-->
 	<div class='list'>
 	<table summary='".lng("Directory Listing")."' cellpadding='0' cellspacing='0'>";
 
@@ -265,13 +265,14 @@ print "</tr></thead><tbody>";
 
 
 // Parent directory link
+/*
 if($path != "./") {
 	print "<tr><td class='n'><a href='..'>".lng("Parent Directory")."</a>/</td>";
 	print "<td class='m'>&nbsp;</td>";
 	print "<td class='s'>&nbsp;</td>";
 	print "<td class='t'>".lng("Directory")."</td></tr>";
 }
-
+*/
 
 
 // This simply creates an extra line for file/folder seperation
@@ -296,7 +297,7 @@ print "<tr><td colspan='4' style='height:7px;'></td></tr>";
 
 // Print file information
 foreach($filelist as $file) {
-	print "<tr><td class='n'><a class='file' ".(stripos($file['name'], '.html') ? 'target="_blank"' : '')." href='" . addslashes($file['name']). "'>" .htmlentities($file['name']). "</a></td>";
+	print "<tr><td class='n'><a class='file' ".(stripos($file['name'], '.htm') ? 'target="_blank"' : '')." href='" . addslashes($file['name']). "'>" .htmlentities($file['name']). "</a></td>";
 	print "<td class='m' title='" . date('H:i:s', $file['modtime']) . "'>" . date('d.m.Y', $file['modtime'])   . "</td>";
 	print "<td class='s'>" . format_bytes($file['size'],0)           . "&nbsp;</td>";
 	print "<td class='t'>" . $file['file_type']                      . "</td></tr>";
