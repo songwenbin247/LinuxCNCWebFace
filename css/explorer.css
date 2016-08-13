@@ -1,11 +1,11 @@
 body {
-    background-color: #F5F5F5;
+    background-color: rgba(255, 255, 255, 0);
 }
 h2 {
     margin-bottom: 12px;
 }
 table {
-    margin-left: 12px;
+    margin: 0;
 }
 a {
     text-decoration: none;
@@ -47,11 +47,4 @@ td.n a.folder {
 }
 td.n a.file {
     color: rgba(0, 0, 255, 1);
-}
-div.list {
-    background-color: white;
-    border-top: 1px solid #646464;
-    border-bottom: 1px solid #646464;
-    padding-top: 10px;
-    padding-bottom: 14px;
 }
