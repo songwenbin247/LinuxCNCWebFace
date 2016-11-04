@@ -199,6 +199,7 @@ jog.simpleButtonEffect = function ( id, success, text, code_after )
 
 jog.halsock_onopen = function(e)
 {
+    if ( !jog.halsock_open ) log.add("[JOG] [HAL] Socket is open","green");
     jog.halsock_open = true;
     // send hello with some passwords
     jog.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" joghal 1\r\n");
@@ -229,8 +230,8 @@ jog.halsock_onmessage = function(e)
     }
 
     if ( jog.axes_count_answers >= AXES.length ) {
-        delete jog.axes_count_answers;
-        jog.halsock.send("quit\r\n");
+//        delete jog.axes_count_answers;
+//        jog.halsock.send("quit\r\n");
 
         switch ( jog.axes_used.join("") ) {
             case "xy": // laser, plasma
@@ -259,6 +260,7 @@ jog.halsock_onmessage = function(e)
 }
 jog.halsock_onclose = function(e)
 {
+    if ( jog.halsock_open ) log.add("[JOG] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
     jog.halsock_open = false;
 }
 
@@ -281,6 +283,9 @@ jog.lcncsock_onclose = function(e)
 jog.check_sockets = function()
 {
     if ( !parent.location.protocol.match("http") ) return;
+    if ( !jog.halsock_open ) {
+        jog.halsock = websock.create(HALSOCK_URL, SOCK_PROTO, jog.halsock_onopen, jog.halsock_onmessage, jog.halsock_onclose);
+    }
     if ( !jog.lcncsock_open ) {
         jog.lcncsock = websock.create(LCNCSOCK_URL, SOCK_PROTO, jog.lcncsock_onopen, jog.lcncsock_onmessage, jog.lcncsock_onclose);
     }
