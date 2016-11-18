@@ -205,6 +205,7 @@ jog.halsock_onopen = function(e)
     jog.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" joghal 1\r\n");
     // check axis count
     jog.axes_count_answers = 0;
+    jog.axes_used = [];
     setTimeout(
         function() {
             var msg = "";
@@ -230,8 +231,10 @@ jog.halsock_onmessage = function(e)
     }
 
     if ( jog.axes_count_answers >= AXES.length ) {
-//        delete jog.axes_count_answers;
-//        jog.halsock.send("quit\r\n");
+        // remove current JOG rows before inserting something new
+        var children = document.querySelectorAll("#JOG_table div.row");
+        var jog_table = document.querySelector("#JOG_table");
+        for ( var i = 0; i < children.length; i++ ) jog_table.removeChild(children[i]);
 
         switch ( jog.axes_used.join("") ) {
             case "xy": // laser, plasma
