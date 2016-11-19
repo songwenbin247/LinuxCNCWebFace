@@ -175,7 +175,7 @@ prog.tab_frame_load_end = function()
 {
     var text        = document.querySelector("#program_text");
     var frame_doc   = text.contentDocument;
-    var frame_path  = frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1");
+    var frame_path  = decodeURI( frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1") );
     var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
     
     text.contentWindow.addEventListener("unload", prog.tab_frame_unload_start);
