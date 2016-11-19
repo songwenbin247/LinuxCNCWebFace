@@ -7,7 +7,8 @@
 // local strings to translate
 var lng_local_dic =
 [
-    { en:"Language", ru:"Язык интерфейса" },
+    { en:"Language", ru:"Язык" },
+    { en:"Current UI language", ru:"Текущий язык интерфейса" },
 ];
 
 // add local strings to translate to the global translate list
@@ -108,6 +109,29 @@ lng.update = function() {
     document.cookie = "lng=" + lng.db["lng"] + "; expires=" + t.toUTCString();
 }
 
+lng.createSelectorElement = function()
+{
+    var select = document.createElement("SELECT");
+
+    for ( var c = 0, option; c < lng.list.length; c++ )
+    {
+        option = document.createElement("OPTION");
+        option.value        = lng.list[c];
+        option.innerHTML    = lng.list[c].toUpperCase();
+        if ( lng.db["lng"] == lng.list[c] ) option.selected = "selected";
+        select.appendChild(option);
+    }
+
+    select.onchange = function()
+    {
+        if ( lng.db["lng"] == this.value ) return;
+        lng.change(lng.db["lng"], this.value);
+        lng.update();
+    };
+
+    return select;
+}
+
 
 
 
@@ -144,6 +168,7 @@ lng.js_init = function()
             function() {
                 lng.settings_block = set.add("&#x2009;Language&#x2009;", lng.tmp_settings_block.innerHTML);
                 document.querySelector("body").removeChild(lng.tmp_settings_block);
+                document.querySelector("#lng_select_box").appendChild( lng.createSelectorElement() );
                 lng.update();
             }
         );
