@@ -9,7 +9,7 @@ var lng_local_dic =
 [
     { en:"Command (MDI) panel", ru:"Коммандная (MDI) панель" },
     { en:"enter command here", ru:"введите команду" },
-    { en:"SEND", ru:"ПУСК" },
+    { en:"execute", ru:"выполнить" },
 ];
 
 // add local strings to translate to the global translate list

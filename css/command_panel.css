@@ -6,15 +6,27 @@
     bottom:         120px;
     text-align:     center;
 }
+
 .command > .command_text
 {
     width:          80%;
+    background:     rgba(0, 0, 0, 0.01);
 }
+
 .command > .command_send
 {
     width:          20%;
     min-width:      60px;
+    background:     rgba(0, 0, 255, 0.2);
+    border-left:    0px solid !important;
+    transition:     all 200ms linear;
+    cursor:         pointer;
 }
+.command > .command_send:hover
+{
+    background:     rgba(0, 0, 255, 0.4);
+}
+
 .command > .command_text,
 .command > .command_send
 {
@@ -22,4 +34,5 @@
     text-align:     center;
     font-weight:    bold;
     font-size:      120%;
+    border:         1px solid rgba(0, 0, 0, 1);
 }
