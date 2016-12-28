@@ -59,9 +59,9 @@ prog.path_btn_clicked = function ( event )
     prog.simpleClickAnimation(id);
     
     var path = event.target.getAttribute("data-path");
-    var text = document.querySelector("#program_text");
+    var expl = document.querySelector("#files_explorer");
     
-    text.src = path;
+    expl.src = path;
 }
 
 prog.btn_clicked = function ( event )
@@ -167,18 +167,18 @@ prog.editor_goto_line = function ( number, select )
 
 prog.tab_frame_unload_start = function() 
 {
-    var text = document.querySelector("#program_text");
-    text.style.visibility = "hidden";
+    var expl = document.querySelector("#files_explorer");
+    expl.style.visibility = "hidden";
 }
 
 prog.tab_frame_load_end = function() 
 {
-    var text        = document.querySelector("#program_text");
-    var frame_doc   = text.contentDocument;
+    var expl        = document.querySelector("#files_explorer");
+    var frame_doc   = expl.contentDocument;
     var frame_path  = decodeURI( frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1") );
     var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
     
-    text.contentWindow.addEventListener("unload", prog.tab_frame_unload_start);
+    expl.contentWindow.addEventListener("unload", prog.tab_frame_unload_start);
 
     var is_file     = false;
     var first_sript = frame_doc.querySelector("head script");
@@ -242,7 +242,7 @@ prog.tab_frame_load_end = function()
     tools.innerHTML = "";
     tools.appendChild(group);
 
-    text.style.visibility = "visible";
+    expl.style.visibility = "visible";
 }
 
 
@@ -273,7 +273,7 @@ prog.js_init = function()
 //            document.querySelector("#program_text").addEventListener("click", prog.editor_update );
 //            document.querySelector("#program_text").addEventListener("keyup", prog.editor_update );
             lng.update();
-            document.querySelector("#program_text").addEventListener("load", prog.tab_frame_load_end );
+            document.querySelector("#files_explorer").addEventListener("load", prog.tab_frame_load_end );
         }
     );
 }
