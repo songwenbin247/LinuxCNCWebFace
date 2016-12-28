@@ -464,7 +464,7 @@ pos.js_init = function()
         pos.tmp_settings_block.style.display = "none";
         document.querySelector("body").appendChild(pos.tmp_settings_block);
 
-        loadto("html/pos_settings_block.html", "a", pos.tmp_settings_block, 
+        loadto("web_files/module/position_panel/html/pos_settings_block.html", "a", pos.tmp_settings_block, 
             function() {
                 pos.settings_block = set.add("&#x2009;Position panel&#x2009;", pos.tmp_settings_block.innerHTML);
                 document.querySelector("body").removeChild(pos.tmp_settings_block);

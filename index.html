@@ -2,27 +2,27 @@
     <head>
         <meta charset="utf-8">
         <title>LinuxCNC Web Interface</title>
-        <link rel="shortcut icon" href="img/calendar2.gif" />
-        <link rel='stylesheet' href='css/main.css' type='text/css' media='screen' />
-        <script src="js/main.js" type="text/javascript" ></script>
-        <script src="js/websocket.js" type="text/javascript" ></script>
-        <script type="text/javascript" >
+        <link rel="shortcut icon" href="web_files/main/img/calendar2.gif" />
+        <link rel='stylesheet' href='web_files/main/css/main.css' type='text/css' media='screen' />
+        <script src="web_files/main/js/main.js" type="text/javascript"></script>
+        <script src="web_files/main/js/websocket.js" type="text/javascript"></script>
+        <script type="text/javascript">
             var lng,
                 log = { add: function(t,c){console.log(t);} };
         </script>
     </head>
     <body>
         <!-- settings tab -->
-        <style type="text/css">@import "css/settings_tab.css";</style>
-        <script type="text/javascript" src="js/lng/settings_tab.js"></script>
-        <script type="text/javascript" src="js/settings_tab.js"></script>
+        <style type="text/css">@import "web_files/module/settings_tab/css/main.css";</style>
+        <script type="text/javascript" src="web_files/module/settings_tab/js/lng.js"></script>
+        <script type="text/javascript" src="web_files/module/settings_tab/js/main.js"></script>
 
         <!-- Main table -->
         <table class="main" id="main" cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td class="left">
                     <!-- position panel -->
-                    <style type="text/css">@import "css/position_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/position_panel/css/main.css";</style>
                     <div class="position">
                         <div class="position_box" id="x_axis_pos_box">
                             <div class="axis_name x_axis_name">X</div>
@@ -124,43 +124,43 @@
                             </select>
                         </div>
                     </div>
-                    <script type="text/javascript" src="js/lng/position_panel.js"></script>
-                    <script type="text/javascript" src="js/position_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/position_panel/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/position_panel/js/main.js"></script>
                 </td>
                 <td class="center">
                     <!-- tabs panel -->
-                    <style type="text/css">@import "css/tabs_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/tabs_panel/css/main.css";</style>
                     <div class="tabs_panel" id="tabs_panel">
                         <div class="tabs_titles" id="tabs_titles"></div>
                         <div class="tabs_contents" id="tabs_contents"></div>
                     </div>
-                    <script type="text/javascript" src="js/tabs_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/tabs_panel/js/main.js"></script>
 
                     <!-- program tab -->
-                    <style type="text/css">@import "css/program_tab.css";</style>
-                    <script type="text/javascript" src="js/lng/program_tab.js"></script>
-                    <script type="text/javascript" src="js/program_tab.js"></script>
+                    <style type="text/css">@import "web_files/module/program_tab/css/main.css";</style>
+                    <script type="text/javascript" src="web_files/module/program_tab/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/program_tab/js/main.js"></script>
 
                     <!-- command panel -->
-                    <style type="text/css">@import "css/command_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/command_panel/css/main.css";</style>
                     <div class="command">
                         <input class="command_text" id="command_text" type="text" size="1" placeholder="&#x2009;enter command here&#x2009;" tabindex="11"
                         /><input class="command_send" id="command_send" type="button" value="&#x2009;execute&#x2009;" tabindex="12" />
                     </div>
-                    <script type="text/javascript" src="js/lng/command_panel.js"></script>
-                    <script type="text/javascript" src="js/command_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/command_panel/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/command_panel/js/main.js"></script>
 
                     <!-- log panel -->
-                    <style type="text/css">@import "css/log_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/log_panel/css/main.css";</style>
                     <div class="log_panel" id="log_panel">
                         <div class="clear" title="&#x2009;Clear LOG&#x2009;">X</div>
                     </div>
-                    <script type="text/javascript" src="js/lng/log_panel.js"></script>
-                    <script type="text/javascript" src="js/log_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/log_panel/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/log_panel/js/main.js"></script>
                 </div>
                 <td class="right">
                     <!-- control panel -->
-                    <style type="text/css">@import "css/control_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/control_panel/css/main.css";</style>
                     <div class="control_panel" id="control_panel">
                         <div class="program_play" id="program_play" title="&#x2009;Run opened program&#x2009;"><span>&#x25BA;</span></div
                         ><div class="program_pause" id="program_pause" title="&#x2009;Pause or resume program&#x2009;"><span>&#x2016;</span></div
@@ -169,11 +169,11 @@
                         ><div class="machine_off" id="machine_off" title="&#x2009;Machine OFF&#x2009;"><span>&#x2009;OFF&#x2009;</span></div
                         ><div class="machine_on enabled" id="machine_on" title="&#x2009;Machine ON&#x2009;"><span>&#x2009;ON&#x2009;</span></div>
                     </div>
-                    <script type="text/javascript" src="js/lng/control_panel.js"></script>
-                    <script type="text/javascript" src="js/control_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/control_panel/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/control_panel/js/main.js"></script>
 
                     <!-- JOG panel -->
-                    <style type="text/css">@import "css/JOG_panel.css";</style>
+                    <style type="text/css">@import "web_files/module/jog_panel/css/main.css";</style>
                     <div class="JOG" id="JOG_table">
                         <div class="inputs" id="JOG_inputs_table">
                             <select id="jog_type" class="jog_type" tabindex="20" title="&#x2009;Movements type&#x2009;">
@@ -194,14 +194,14 @@
                             </div>
                         </div>
                     </div>
-                    <script type="text/javascript" src="js/lng/JOG_panel.js"></script>
-                    <script type="text/javascript" src="js/JOG_panel.js"></script>
+                    <script type="text/javascript" src="web_files/module/jog_panel/js/lng.js"></script>
+                    <script type="text/javascript" src="web_files/module/jog_panel/js/main.js"></script>
                 </td>
             </tr>
         </table>
     </body>
 
     <!-- language script -->
-    <script type="text/javascript" src="js/lng/language.js"></script>
-    <script type="text/javascript" src="js/language.js"></script>
+    <script type="text/javascript" src="web_files/module/language/js/lng.js"></script>
+    <script type="text/javascript" src="web_files/module/language/js/main.js"></script>
 </html>

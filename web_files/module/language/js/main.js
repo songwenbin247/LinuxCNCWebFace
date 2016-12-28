@@ -151,7 +151,7 @@ lng.js_init = function()
         lng.tmp_settings_block.style.display = "none";
         document.querySelector("body").appendChild(lng.tmp_settings_block);
 
-        loadto("html/lng_settings_block.html", "a", lng.tmp_settings_block, 
+        loadto("web_files/module/language/html/lng_settings_block.html", "a", lng.tmp_settings_block, 
             function() {
                 lng.settings_block = set.add("&#x2009;Language&#x2009;", lng.tmp_settings_block.innerHTML);
                 document.querySelector("body").removeChild(lng.tmp_settings_block);

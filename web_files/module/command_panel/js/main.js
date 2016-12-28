@@ -215,7 +215,7 @@ cmd.js_init = function()
         cmd.tmp_settings_block.style.display = "none";
         document.querySelector("body").appendChild(cmd.tmp_settings_block);
 
-        loadto("html/cmd_settings_block.html", "a", cmd.tmp_settings_block, 
+        loadto("web_files/module/command_panel/html/cmd_settings_block.html", "a", cmd.tmp_settings_block, 
             function() {
                 cmd.settings_block = set.add("&#x2009;Command (MDI) panel&#x2009;", cmd.tmp_settings_block.innerHTML);
                 document.querySelector("body").removeChild(cmd.tmp_settings_block);

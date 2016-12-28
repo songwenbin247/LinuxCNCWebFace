@@ -214,25 +214,25 @@ jog.halsock_onmessage = function(e)
 
         switch ( jog.axes_used.join("") ) {
             case "xy": // laser, plasma
-                loadto( "html/JOG_table_xy.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xy.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xz": // lathe
-                loadto( "html/JOG_table_xz.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xz.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyz": // router
-                loadto( "html/JOG_table_xyz.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyz.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xza": // rotary axis A along X
-                loadto( "html/JOG_table_xza.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xza.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "yzb": // rotary axis B along Y
-                loadto( "html/JOG_table_yzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_yzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyza": // with rotary axis A along X
-                loadto( "html/JOG_table_xyza.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyza.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzb": // with rotary axis B along Y
-                loadto( "html/JOG_table_xyzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyzb.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzab": // with rotate table
-                loadto( "html/JOG_table_xyzab.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyzab.html", "before", "#JOG_table", jog.jog_table_init ); break;
             case "xyzac": // with rotate head
-                loadto( "html/JOG_table_xyzac.html", "before", "#JOG_table", jog.jog_table_init ); break;
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyzac.html", "before", "#JOG_table", jog.jog_table_init ); break;
             default:
-                loadto( "html/JOG_table_xyzabc.html", "before", "#JOG_table", jog.jog_table_init );
+                loadto( "web_files/module/jog_panel/html/JOG_table_xyzabc.html", "before", "#JOG_table", jog.jog_table_init );
         }
     }
 
@@ -795,7 +795,7 @@ jog.js_init = function()
         jog.tmp_settings_block.style.display = "none";
         document.querySelector("body").appendChild(jog.tmp_settings_block);
 
-        loadto("html/JOG_settings_block.html", "a", jog.tmp_settings_block, 
+        loadto("web_files/module/jog_panel/html/JOG_settings_block.html", "a", jog.tmp_settings_block, 
             function() {
                 jog.settings_block = set.add("&#x2009;JOG panel&#x2009;", jog.tmp_settings_block.innerHTML);
                 document.querySelector("body").removeChild(jog.tmp_settings_block);
