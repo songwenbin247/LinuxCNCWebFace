@@ -181,7 +181,7 @@ prog.tab_frame_load_end = function()
         // <link rel='stylesheet' href='css/main.css' type='text/css' media='screen' />
         var style = document.createElement("link");
         style.setAttribute("rel","stylesheet");
-        style.setAttribute("href","/css/program_text.css");
+        style.setAttribute("href","/web_files/module/program_tab/css/program_text.css");
         style.setAttribute("type","text/css");
         frame_doc.querySelector("head").appendChild(style);
         

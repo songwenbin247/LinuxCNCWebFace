@@ -169,8 +169,8 @@ print "<html>
     <head>
         <meta charset='utf-8'>
 		<title>".lng("Index of")." /" .$vpath. "</title>
-        <link rel='stylesheet' href='/css/explorer.css' type='text/css' media='screen' />
-        <script src='/js/explorer.js' type='text/javascript' ></script>
+        <link rel='stylesheet' href='/web_files/main/css/explorer.css' type='text/css' media='screen' />
+        <script src='/web_files/main/js/explorer.js' type='text/javascript' ></script>
 	</head>
 	<body>
 	<!--h2>".lng("Index of")." /" . $vpath ."</h2-->
