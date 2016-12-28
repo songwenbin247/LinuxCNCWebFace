@@ -17,22 +17,6 @@ var cmd =
     historyMaxItems:        100
 };
 
-// local strings to translate
-var lng_local_dic =
-[
-    { en:"Command (MDI) panel", ru:"Коммандная (MDI) панель" },
-    { en:"enter command here", ru:"введите команду" },
-    { en:"SEND", ru:"ПУСК" },
-];
-
-// add local strings to translate to the global translate list
-if ( !lng ) lng = {};
-if ( !lng.dic ) lng.dic = [];
-lng.dic = lng.dic.concat(lng_local_dic);
-
-
-
-
 // have we a localStorage?
 if ( window.localStorage ) cmd.db = window.localStorage;
 

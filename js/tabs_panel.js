@@ -10,19 +10,6 @@ var tabs =
     db: {},
 };
 
-// local strings to translate
-var lng_local_dic =
-[
-];
-
-// add local strings to translate to the global translate list
-if ( !lng ) lng = {};
-if ( !lng.dic ) lng.dic = [];
-lng.dic = lng.dic.concat(lng_local_dic);
-
-
-
-
 // have we a localStorage?
 if ( window.localStorage ) tabs.db = window.localStorage;
 

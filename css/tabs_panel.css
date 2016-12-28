@@ -35,7 +35,7 @@
 }
 .tabs_panel > .tabs_titles > .active_tab
 {
-    border-color:   rgba(0, 0, 0, 0.3);
+    border-color:   rgba(0, 0, 0, 1);
     background:     rgba(0, 0, 0, 0.1) !important;
     color:          rgba(0, 0, 0, 1);
 }
@@ -47,7 +47,7 @@
     right:          0px;
     bottom:         0px;
     overflow:       auto;
-    border:         1px solid rgba(0, 0, 0, 0.3);
+    border:         1px solid rgba(0, 0, 0, 1);
     background:     rgba(0,0,0,0.01);
     box-sizing:     border-box;
 }
