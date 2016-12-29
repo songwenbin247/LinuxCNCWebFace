@@ -40,7 +40,8 @@ prog.btn_clicked = function ( event )
 
     switch (id) {
         case "open_file": 
-            log.add("[PROG] Open file on the host PC");
+            tabs.activate("explorer");
+            log.add("[PROG] Opening files explorer");
             break;
         case "reload_file": 
             log.add("[PROG] Reload current file from the host PC");
