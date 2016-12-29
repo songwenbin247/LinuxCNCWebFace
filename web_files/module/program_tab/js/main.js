@@ -10,8 +10,6 @@ var prog =
     db: {},
     
     current_line: 0,
-    current_file: false,
-    current_dir: false
 };
 
 // have we a localStorage?
@@ -30,17 +28,6 @@ prog.simpleClickAnimation = function ( id )
 
 
 // some of the move buttons was clicked
-prog.path_btn_clicked = function ( event )
-{
-    var id = event.target.id;
-    prog.simpleClickAnimation(id);
-    
-    var path = event.target.getAttribute("data-path");
-    var expl = document.querySelector("#files_explorer");
-    
-    expl.src = path;
-}
-
 prog.btn_clicked = function ( event )
 {
     var id;
@@ -55,11 +42,11 @@ prog.btn_clicked = function ( event )
         case "open_file": 
             log.add("[PROG] Open file on the host PC");
             break;
+        case "reload_file": 
+            log.add("[PROG] Reload current file from the host PC");
+            break;
         case "save_file": 
             log.add("[PROG] File saved");
-            break;
-        case "upload_file": 
-            log.add("[PROG] Upload file to the host PC");
             break;
 
         case "play_program": 
@@ -142,89 +129,6 @@ prog.editor_goto_line = function ( number, select )
 
 
 
-prog.tab_frame_unload_start = function() 
-{
-    var expl = document.querySelector("#files_explorer");
-    expl.style.visibility = "hidden";
-}
-
-prog.tab_frame_load_end = function() 
-{
-    var expl        = document.querySelector("#files_explorer");
-    var frame_doc   = expl.contentDocument;
-    var frame_path  = decodeURI( frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1") );
-    var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
-    
-    expl.contentWindow.addEventListener("unload", prog.tab_frame_unload_start);
-
-    var is_file     = false;
-    var first_sript = frame_doc.querySelector("head script");
-    if (    
-        frame_doc.contentType != "text/html" ||
-        !first_sript ||
-        !first_sript.hasAttribute("src") || 
-        !first_sript.getAttribute("src").match(/explorer\.js/i) 
-    ) {
-        is_file = true;
-    }
-
-    prog.current_file   = is_file ? frame_path : false;
-    prog.current_dir    = is_file ? frame_path.replace(/\/[^\/]+$/im, "") : frame_path;
-
-    sub_paths.unshift("/");
-
-    var group = document.createElement("div"); 
-    group.classList.add("icon_group");
-
-    if ( is_file ) {
-        // add style for the program text
-        // <link rel='stylesheet' href='css/main.css' type='text/css' media='screen' />
-        var style = document.createElement("link");
-        style.setAttribute("rel","stylesheet");
-        style.setAttribute("href","/web_files/module/program_tab/css/program_text.css");
-        style.setAttribute("type","text/css");
-        frame_doc.querySelector("head").appendChild(style);
-        
-        // last folder
-        var icon = document.createElement("div");
-        icon.classList.add("icon","dir");
-        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 2].replace(/^\/([^\/])/igm,"$1") );
-        icon.id = "path_part_" + (sub_paths.length - 2);
-        icon.setAttribute( "data-path", toHTML(frame_path.replace(/\/[^\/]+$/im, "")) );
-        icon.setAttribute( "title", icon.getAttribute("data-path") );
-        icon.addEventListener("click", prog.path_btn_clicked);
-        group.appendChild(icon);
-
-        // file name
-        icon = document.createElement("div");
-        icon.classList.add("icon","file");
-        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 1].replace(/^\/([^\/])/igm,"$1") );
-        icon.setAttribute( "title", icon.innerHTML );
-        group.appendChild(icon);
-    } else {
-        for ( var d = 0, elem, path = ""; d < sub_paths.length; d++ ) {
-            path += sub_paths[d];
-            elem = document.createElement("div");
-            elem.classList.add("icon","dir");
-            elem.innerHTML = toHTML( sub_paths[d].replace(/^\/([^\/])/igm,"$1") );
-            elem.id = "path_part_"+d;
-            elem.setAttribute( "data-path", toHTML(path.replace(/^\/+/igm,"/")) );
-            elem.setAttribute( "title", elem.getAttribute("data-path") );
-            elem.addEventListener("click", prog.path_btn_clicked);
-            group.appendChild(elem);
-        }
-    }
-
-    var tools = document.querySelector("#program_tools");
-    tools.innerHTML = "";
-    tools.appendChild(group);
-
-    expl.style.visibility = "visible";
-}
-
-
-
-
 // do it when window is fully loaded
 prog.js_init = function()
 {
@@ -246,11 +150,10 @@ prog.js_init = function()
             prog.tab = tabs.add("&#x2009;Program&#x2009;", prog.tab_content.innerHTML, 0, true);
             document.querySelector("body").removeChild(prog.tab_content);
             // catch btns clicks
-//            document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
+            document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
 //            document.querySelector("#program_text").addEventListener("click", prog.editor_update );
 //            document.querySelector("#program_text").addEventListener("keyup", prog.editor_update );
             lng.update();
-            document.querySelector("#files_explorer").addEventListener("load", prog.tab_frame_load_end );
         }
     );
 }

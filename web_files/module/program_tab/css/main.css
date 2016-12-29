@@ -9,7 +9,7 @@
 {
     display: inline-block;
     box-sizing: border-box;
-    margin: 0 10px 5px 0;
+    margin: 0 20px 5px 0;
 }
 .program_tools > .icon_group > .icon
 {
@@ -18,7 +18,7 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 3px;
     padding: 2px 5px 4px 5px;
-    margin-right: 5px;
+    margin-right: 4px;
     font-size: 100%;
     transition: all 200ms linear;
     cursor: pointer;
@@ -48,13 +48,13 @@
 {
     background: rgba(255, 255, 0, 0.2);
 }
+.program_tools > .icon_group > .icon.reload_file
+{
+    background: rgba(255, 0, 255, 0.2);
+}
 .program_tools > .icon_group > .icon.save_file
 {
     background: rgba(0, 0, 255, 0.2);
-}
-.program_tools > .icon_group > .icon.upload_file
-{
-    background: rgba(255, 0, 255, 0.2);
 }
 
 .program_tools > .icon_group > .icon.play_program
@@ -71,7 +71,6 @@
 }
 .program_tools > .icon_group > .icon.abort_program
 {
-    font-size: 90%;
     background: rgba(255, 0, 0, 0.2);
 }
 
@@ -112,28 +111,6 @@
 }
 
 .program_box > .program_text
-{
-    display: none;
-
-    border: 0px solid;
-    border-radius: 3px; 
-    font-family: "DejaVu Sans Mono", "Courier New", monospace;
-    white-space: pre;
-    font-size: 100%;
-    background: rgba(0,0,0,0.02);
-    padding: 5px;
-    margin: 0;
-    width: 100%;
-    height: calc(100% - 24px);
-    box-sizing: border-box;
-}
-.program_box > .program_text body
-{
-    padding: 0;
-    margin: 0;
-}
-
-.program_box > .files_explorer
 {
     border: 0px solid;
     border-radius: 3px; 
