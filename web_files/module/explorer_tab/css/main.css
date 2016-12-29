@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+.explorer_tools 
+{
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+.explorer_tools > .icon_group
+{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 10px 5px 0;
+}
+.explorer_tools > .icon_group > .icon
+{
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    padding: 2px 5px 4px 5px;
+    margin-right: 5px;
+    font-size: 100%;
+    transition: all 200ms linear;
+    cursor: pointer;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 200px;
+    white-space: pre;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.explorer_tools > .icon_group > .icon:hover
+{
+    border-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.explorer_tools > .icon_group > .dir
+{
+    background: rgba(255, 255, 0, 0.2);
+}
+.explorer_tools > .icon_group > .file
+{
+    background: rgba(0, 0, 255, 0.1);
+}
+
+.explorer_tools > .icon_group > .icon.upload_file
+{
+    background: rgba(255, 0, 255, 0.2);
+}
+
+
+
+
+.explorer_box
+{
+    position: absolute;
+    top: 45px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    padding: 0;
+    overflow: auto;
+}
+
+.explorer_box > .explorer
+{
+    border: 0px solid;
+    border-radius: 3px; 
+    font-family: "DejaVu Sans Mono", "Courier New", monospace;
+    white-space: pre;
+    font-size: 100%;
+    background: rgba(0,0,0,0.02);
+    padding: 5px;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
