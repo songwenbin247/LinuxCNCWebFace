@@ -153,7 +153,7 @@ expl.js_init = function()
     // and load into it tab's content
     loadto("web_files/module/explorer_tab/html/explorer_tab.html", "a", expl.tab_content, 
         function() {
-            expl.tab = tabs.add("&#x2009;Explorer&#x2009;", expl.tab_content.innerHTML, 1, false);
+            expl.tab = tabs.add("&#x2009;Explorer&#x2009;", expl.tab_content.innerHTML, "explorer,manager", 1, false);
             document.querySelector("body").removeChild(expl.tab_content);
             // catch btns clicks
 //            document.querySelector("#program_tools").addEventListener("click", expl.btn_clicked );

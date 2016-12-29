@@ -147,7 +147,7 @@ prog.js_init = function()
     // and load into it tab's content
     loadto("web_files/module/program_tab/html/program_tab.html", "a", prog.tab_content, 
         function() {
-            prog.tab = tabs.add("&#x2009;Program&#x2009;", prog.tab_content.innerHTML, 0, true);
+            prog.tab = tabs.add("&#x2009;Program&#x2009;", prog.tab_content.innerHTML, "program,file,editor", 0, true);
             document.querySelector("body").removeChild(prog.tab_content);
             // catch btns clicks
             document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );

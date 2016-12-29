@@ -35,13 +35,15 @@ tabs.on_tab_title_click = function ( event )
 
 
 // add tab
-tabs.add = function ( tab_title, tab_content, index, active )
+tabs.add = function ( tab_title, tab_content, tab_tags, index, active )
 {
     var titles      = document.querySelector("#tabs_titles"),
         contents    = document.querySelector("#tabs_contents"),
         tab         = document.createElement("div"),
         content     = document.createElement("div");
     
+    tab.setAttribute( "data-tags", toHTML( String(tab_tags) ) );
+
     tab.innerHTML       = String(tab_title);
     content.innerHTML   = String(tab_content);
 
@@ -88,17 +90,21 @@ tabs.remove = function ( index )
 tabs.activate = function ( index )
 {
     var titles      = document.querySelector("#tabs_titles"),
-        contents    = document.querySelector("#tabs_contents");
+        contents    = document.querySelector("#tabs_contents"),
+        tags        = false;
 
     if ( titles.children.length <= 0 ) return;
 
-    index = Number(index).toFixed(0);
-    
-    if ( index < 0 ) index = 0;
-    else if ( index >= titles.children.length ) index = titles.children.length - 1;
+    if ( typeof(index) == "Number" ) {
+        index = Number(index).toFixed(0);
+        if ( index < 0 ) index = 0;
+        else if ( index >= titles.children.length ) index = titles.children.length - 1;
+    } else {
+        tags = String(index);
+    }
     
     for ( var i = 0; i < titles.children.length; i++ ) {
-        if ( index == i ) {
+        if ( (tags && titles.children[i].getAttribute("data-tags").includes(tags)) || index == i ) {
             titles.children[i].classList.add("active_tab");
             contents.children[i].style.display = "block";
         } else {
