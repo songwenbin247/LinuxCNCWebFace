@@ -46,7 +46,7 @@ set.js_init = function()
         return;
     }
     
-    set.tab = tabs.add("&#x2009;Settings&#x2009;", "");
+    set.tab = tabs.add("&#x2009;Settings&#x2009;", "", 99, false);
 }
 
 
