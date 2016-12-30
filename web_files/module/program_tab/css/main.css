@@ -115,7 +115,6 @@
     border: 0px solid;
     border-radius: 3px; 
     font-family: "DejaVu Sans Mono", "Courier New", monospace;
-    white-space: pre;
     font-size: 100%;
     background: rgba(0,0,0,0.02);
     padding: 5px;
@@ -123,4 +122,22 @@
     width: 100%;
     height: calc(100% - 24px);
     box-sizing: border-box;
+    overflow: auto;
 }
+
+.program_box > .program_text > .page
+{
+    white-space: pre;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.program_box > .program_text > .page > .comment { color: #999999; }
+.program_box > .program_text > .page > .g_code { color: #FFAA55; font-weight: bold; }
+.program_box > .program_text > .page > .m_code { color: #77FF11; font-weight: bold; }
+.program_box > .program_text > .page > .s_code { color: #9900FF; font-weight: bold; }
+.program_box > .program_text > .page > .f_code { color: #FFFF55; font-weight: bold; }
+.program_box > .program_text > .page > .xaui_code { color: green; }
+.program_box > .program_text > .page > .ybvj_code { color: blue; }
+.program_box > .program_text > .page > .zcwk_code { color: red; }
