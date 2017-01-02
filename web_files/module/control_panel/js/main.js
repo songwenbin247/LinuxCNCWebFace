@@ -28,7 +28,7 @@ if ( window.localStorage ) ctrl.db = window.localStorage;
 
 ctrl.lcncsock_onopen = function(e)
 {
-    if ( !ctrl.lcncsock_open ) log.add("[CTRL] [LCNC] Socket is open","green");
+    if ( !ctrl.lcncsock_open ) log.add("[CTRL] LCNC socket is open","green");
     ctrl.lcncsock_open = true;
     // send hello with some passwords
     ctrl.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" ctrllcnc 1\r\n");
@@ -95,7 +95,7 @@ ctrl.lcncsock_onmessage = function(e)
 }
 ctrl.lcncsock_onclose = function(e)
 {
-    if ( ctrl.lcncsock_open ) log.add("[CTRL] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( ctrl.lcncsock_open ) log.add("[CTRL] LCNC socket is closed ("+e.code+":"+e.reason+")","red");
     ctrl.lcncsock_open = false;
 }
 

@@ -80,7 +80,7 @@ cmd.on_cmd_input_keyup = function ( event )
 
 cmd.halsock_onopen = function(e)
 {
-    if ( !cmd.halsock_open ) log.add("[CMD] [HAL] Socket is open","green");
+    if ( !cmd.halsock_open ) log.add("[CMD] HAL socket is open","green");
     cmd.halsock_open = true;
     // send hello with some passwords
     cmd.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" cmdhal 1\r\n");
@@ -98,13 +98,13 @@ cmd.halsock_onmessage = function(e)
 }
 cmd.halsock_onclose = function(e)
 {
-    if ( cmd.halsock_open ) log.add("[CMD] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( cmd.halsock_open ) log.add("[CMD] HAL socket is closed ("+e.code+":"+e.reason+")","red");
     cmd.halsock_open = false;
 }
 
 cmd.lcncsock_onopen = function(e)
 {
-    if ( !cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is open","green");
+    if ( !cmd.lcncsock_open ) log.add("[CMD] LCNC socket is open","green");
     cmd.lcncsock_open = true;
     // send hello with some passwords
     cmd.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" cmdlcnc 1\r\n");
@@ -122,7 +122,7 @@ cmd.lcncsock_onmessage = function(e)
 }
 cmd.lcncsock_onclose = function(e)
 {
-    if ( cmd.lcncsock_open ) log.add("[CMD] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( cmd.lcncsock_open ) log.add("[CMD] LCNC socket is closed ("+e.code+":"+e.reason+")","red");
     cmd.lcncsock_open = false;
 }
 

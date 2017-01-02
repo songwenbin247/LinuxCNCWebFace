@@ -175,7 +175,7 @@ jog.simpleButtonEffect = function ( id, success, text, code_after )
 
 jog.halsock_onopen = function(e)
 {
-    if ( !jog.halsock_open ) log.add("[JOG] [HAL] Socket is open","green");
+    if ( !jog.halsock_open ) log.add("[JOG] HAL socket is open","green");
     jog.halsock_open = true;
     // send hello with some passwords
     jog.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" joghal 1\r\n");
@@ -239,13 +239,13 @@ jog.halsock_onmessage = function(e)
 }
 jog.halsock_onclose = function(e)
 {
-    if ( jog.halsock_open ) log.add("[JOG] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( jog.halsock_open ) log.add("[JOG] HAL socket is closed ("+e.code+":"+e.reason+")","red");
     jog.halsock_open = false;
 }
 
 jog.lcncsock_onopen = function(e)
 {
-    if ( !jog.lcncsock_open ) log.add("[JOG] [LCNC] Socket is open","green");
+    if ( !jog.lcncsock_open ) log.add("[JOG] LCNC socket is open","green");
     jog.lcncsock_open = true;
     // send hello with some passwords
     jog.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" joglcnc 1\r\n");
@@ -255,7 +255,7 @@ jog.lcncsock_onmessage = function(e)
 }
 jog.lcncsock_onclose = function(e)
 {
-    if ( jog.lcncsock_open ) log.add("[JOG] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( jog.lcncsock_open ) log.add("[JOG] LCNC socket is closed ("+e.code+":"+e.reason+")","red");
     jog.lcncsock_open = false;
 }
 

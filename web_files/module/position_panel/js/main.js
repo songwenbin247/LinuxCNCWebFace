@@ -38,7 +38,7 @@ if ( window.localStorage ) pos.db = window.localStorage;
 
 pos.halsock_onopen = function(e)
 {
-    if ( !pos.halsock_open ) log.add("[POS] [HAL] Socket is open","green");
+    if ( !pos.halsock_open ) log.add("[POS] HAL socket is open","green");
     pos.halsock_open = true;
     // send hello with some passwords
     pos.halsock.send("hello "+HALRMT_HELLO_PASSWORD+" poshal 1\r\n");
@@ -81,13 +81,13 @@ pos.halsock_onmessage = function(e)
 }
 pos.halsock_onclose = function(e)
 {
-    if ( pos.halsock_open ) log.add("[POS] [HAL] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( pos.halsock_open ) log.add("[POS] HAL socket is closed ("+e.code+":"+e.reason+")","red");
     pos.halsock_open = false;
 }
 
 pos.lcncsock_onopen = function(e)
 {
-    if ( !pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is open","green");
+    if ( !pos.lcncsock_open ) log.add("[POS] LCNC socket is open","green");
     pos.lcncsock_open = true;
     // send hello with some passwords
     pos.lcncsock.send("hello "+LINUXCNCRSH_HELLO_PASSWORD+" poslcnc 1\r\n");
@@ -197,7 +197,7 @@ pos.lcncsock_onmessage = function(e)
 }
 pos.lcncsock_onclose = function(e)
 {
-    if ( pos.lcncsock_open ) log.add("[POS] [LCNC] Socket is closed ("+e.code+":"+e.reason+")","red");
+    if ( pos.lcncsock_open ) log.add("[POS] LCNC socket is closed ("+e.code+":"+e.reason+")","red");
     pos.lcncsock_open = false;
 }
 
