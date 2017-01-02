@@ -8,8 +8,6 @@
 var set =
 {
     db: {},
-    
-    current_line: 0
 };
 
 // have we a localStorage?
