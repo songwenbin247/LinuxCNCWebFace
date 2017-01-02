@@ -84,6 +84,7 @@ $end = ($end && strlen($end) == $pos_bytes) ? unpack("L",$end)[1] : filesize($fi
 
 
 
+// output
 if ( is_int($start) && is_int($end) && $start < $end ) {
     $file = fopen($file_path,'r');
     fseek($file, $start, SEEK_SET);
@@ -104,7 +105,7 @@ if ( is_int($start) && is_int($end) && $start < $end ) {
 function safestr ($str = '')
 {
     $str = strip_tags($str); 
-    $str = preg_replace('/[\r\n\t ]+/', ' ', $str);
+    $str = preg_replace('/[\r\n\t]+/', ' ', $str);
     $str = preg_replace('/[\\\%\"\*\:\<\>\?\'\|]+/', '', $str);
     //$str = preg_replace('/^[\\\.\/]+/', '', $str);
     $str = preg_replace('/\/+$/', '', $str);
