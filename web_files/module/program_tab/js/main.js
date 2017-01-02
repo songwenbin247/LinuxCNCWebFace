@@ -10,6 +10,11 @@ var prog =
     db: {},
     
     current_line: 0,
+    file: "",
+    pages: 0,
+    
+    page_lines: 1000,
+    syntax_highlight: true
 };
 
 // have we a localStorage?
@@ -45,9 +50,6 @@ prog.btn_clicked = function ( event )
             break;
         case "reload_file": 
             log.add("[PROG] Reload current file from the host PC");
-            break;
-        case "save_file": 
-            log.add("[PROG] File saved");
             break;
 
         case "play_program": 
@@ -125,6 +127,45 @@ prog.editor_goto_line = function ( number, select )
     text.scrollLeft = 0;
     
     prog.editor_update();
+}
+
+
+
+
+prog.load_file = function ( file_path )
+{
+    var text_box = document.querySelector("#program_text");
+
+    text_box.innerHTML  = "";
+
+    prog.file           = file_path;
+    prog.current_line   = 0;
+    prog.pages          = 0;
+
+    loadto(
+        "web_files/module/program_tab/php/get_file_lines.php?file="+prog.file+"&start="+0+"&count="+prog.page_lines, "a", 
+        prog.add_page("", 0, prog.page_lines),
+        function() {
+            log.add("[PROG] File `"+prog.file+"` loaded");
+        }
+    );
+}
+
+prog.add_page = function ( text, start_line, lines )
+{
+    var text_box = document.querySelector("#program_text");
+    var page = document.createElement("DIV");
+
+    page.className = "page";
+    page.setAttribute("data-page_id", prog.pages);
+    page.setAttribute("data-start_line", start_line);
+    page.setAttribute("data-lines", lines);
+
+    text_box.appendChild(page);
+
+    prog.pages++;
+
+    return page;
 }
 
 
