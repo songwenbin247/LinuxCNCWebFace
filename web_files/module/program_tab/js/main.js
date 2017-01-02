@@ -49,7 +49,8 @@ prog.btn_clicked = function ( event )
             log.add("[PROG] Opening files explorer");
             break;
         case "reload_file": 
-            log.add("[PROG] Reload current file from the host PC");
+            if ( prog.file ) prog.load_file(prog.file);
+            else log.add("[PROG] Nothing to reload");
             break;
 
         case "play_program": 
