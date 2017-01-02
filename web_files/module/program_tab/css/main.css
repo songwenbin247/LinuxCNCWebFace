@@ -132,6 +132,10 @@
     padding: 0;
     margin: 0;
 }
+.program_box > .program_text > .page.hidden
+{
+    display: none;
+}
 
 .program_box > .program_text > .page > .comment { color: #999999; }
 .program_box > .program_text > .page > .g_code { color: #FFAA55; font-weight: bold; }
