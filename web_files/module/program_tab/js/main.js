@@ -11,10 +11,10 @@ var prog =
     
     module_dir: "web_files/module/program_tab/",
     
-    current_line: 0,
     file: "",
-    pages: 0,
-    last_page_id: 0,
+    file_pages_count: 0,
+    file_lines_count: 0,
+    current_line: 0,
     
     page_lines: 1000,
     syntax_highlight: true,
@@ -139,45 +139,6 @@ prog.editor_goto_line = function ( number, select )
 
 
 
-prog.load_file = function ( file_path )
-{
-    var text_box = document.querySelector("#program_text");
-
-    text_box.innerHTML  = "";
-
-    prog.file           = file_path;
-    prog.current_line   = 0;
-    prog.pages          = 0;
-
-    loadto(
-        "web_files/module/program_tab/php/get_file_lines.php?file="+prog.file+"&start="+0+"&count="+prog.page_lines, "a", 
-        prog.add_page(0, "", 0, prog.page_lines),
-        function() {
-            log.add("[PROG] File `"+prog.file+"` loaded");
-        }
-    );
-}
-
-prog.add_page = function ( id, text, start_line, lines )
-{
-    var text_box = document.querySelector("#program_text");
-    var page = document.createElement("DIV");
-
-    page.className = "page";
-    page.setAttribute("data-page_id", id);
-    page.setAttribute("data-start_line", start_line);
-    page.setAttribute("data-lines", lines);
-
-    text_box.appendChild(page);
-
-    prog.pages++;
-
-    return page;
-}
-
-
-
-
 prog.on_scroll = function ( event )
 {
     // when scroll bar almost at the top
@@ -191,13 +152,10 @@ prog.on_scroll = function ( event )
             var prev_page_id = top_page_id - 1;
             if ( prog.page_loaded(prev_page_id) ) 
             {
-                if ( !prog.page_visible(prev_page_id) ) prog.show_page(prev_page_id);
+                prog.show_page(prev_page_id);
 
                 var bottom_page_id = prog.bottom_visible_page_id();
-                if ( (bottom_page_id - top_page_id) > 1 ) // if we have more than 2 visible pages
-                { 
-                    if ( prog.page_visible(bottom_page_id) ) prog.hide_page(bottom_page_id);
-                }
+                if ( (bottom_page_id - top_page_id) > 1 ) prog.hide_page(bottom_page_id);
             }
         }
     } 
@@ -217,41 +175,84 @@ prog.on_scroll = function ( event )
 
 prog.top_visible_page_id = function ( )
 {
-    var page = prog.text_box.querySelector("not(.page.hidden)");
-    return ( page ) ? page.getAttribute("data-page_id"); : 0;
+    var page = prog.text_box.querySelector(".page:not(.hidden)");
+    return ( page ) ? page.getAttribute("data-page_id") : 0;
 }
 prog.bottom_visible_page_id = function ( )
 {
-    var page = prog.text_box.querySelector(".page");
-    return ( page ) ? page.getAttribute("data-page_id"); : 0;
+    var pages = prog.text_box.querySelectorAll(".page:not(.hidden)");
+    return ( pages ) ? pages[pages.length - 1].getAttribute("data-page_id") : 0;
 }
+
 prog.page_loaded = function ( page_id )
 {
-    var page = prog.text_box.querySelector("[data-page_id="+page_id+"]");
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id);
     return ( page ) ? true : false;
 }
 prog.page_visible = function ( page_id )
 {
-    var page = prog.text_box.querySelector("not(.page.hidden)[data-page_id="+page_id+"]");
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id+":not(.hidden)");
     return ( page ) ? true : false;
 }
-prog.page_hidden = function ( page_id )
+
+prog.load_file = function ( file_path )
 {
-    var page = prog.text_box.querySelector(".page.hidden[data-page_id="+page_id+"]");
-    return ( page ) ? true : false;
+    // reset file data
+    prog.text_box.innerHTML = "";
+    prog.file               = file_path;
+    prog.file_lines_count   = 0;
+    prog.current_line       = 0;
+    prog.file_pages_count   = 0;
+
+    // get file lines count
+    var tmp = document.createElement("DIV");
+    tmp.style.display = "none";
+    document.querySelector('body').appendChild(tmp);
+    prog.lines_count_tmp_element = tmp;
+    loadto(
+        prog.module_dir+"php/get_file_lines.php?file="+prog.file+"&count=1", 
+        "a", 
+        tmp,
+        function() {
+            prog.file_lines_count = n(prog.lines_count_tmp_element.innerHTML);
+            prog.file_pages_count = Math.ceil(prog.file_lines_count / prog.page_lines);
+            document.querySelector('body').removeChild(prog.lines_count_tmp_element);
+            delete prog.lines_count_tmp_element;
+        }
+    );
+
+    // load 1st page of this file
+    var page_loaded = prog.load_page(0);
+    if ( page_loaded ) log.add("[PROG] File `"+prog.file+"` loaded");
+    return page_loaded;
 }
 prog.load_page = function ( page_id )
 {
-    if ( page_id < 0 || (prog.last_page_id && page_id > prog.last_page_id) ) return;
+    if ( !prog.file || page_id < 0 ) return false;
+    if ( prog.file_pages_count && page_id >= prog.file_pages_count ) return false;
+    if ( prog.page_loaded(page_id) ) return false;
     
     var page = document.createElement("DIV");
 
     page.className = "page";
+    page.id = "program_text_page_" + page_id;
     page.setAttribute("data-page_id", page_id);
     page.setAttribute("data-start_line", page_id * prog.page_lines);
-    page.setAttribute("data-lines", prog.page_lines);
 
-    prog.text_box.appendChild(page);
+    var pages = prog.text_box.querySelectorAll(".page");
+    if ( pages && pages.length > 0 ) {
+        if ( pages[pages.length - 1].getAttribute("data-page_id") < page_id ) {
+            prog.text_box.appendChild(page);
+        } else {
+            for ( var p = pages.length - 1; p >= 0; p-- ) {
+                if ( pages[p].getAttribute("data-page_id") < page_id ) {
+                    prog.text_box.insertBefore( page, pages[p + 1] );
+                    break;
+                }
+            }
+        }
+    } 
+    else prog.text_box.appendChild(page);
 
     loadto(
         prog.module_dir+
@@ -261,17 +262,41 @@ prog.load_page = function ( page_id )
         "a", 
         page
     );
+    
+    return true;
 }
+prog.remove_page = function ( page_id )
+{
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id);
+    if ( page )
+    {
+        prog.text_box.removeChild(page);
+        return true;
+    }
+    return false;
+}
+
 prog.show_page = function ( page_id )
 {
-    var page = prog.text_box.querySelector("[data-page_id="+page_id+"]");
-    if ( page ) page.classList.remove("hidden");
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id);
+    if ( page ) 
+    {
+        page.classList.remove("hidden");
+        return true;
+    }
+    return false;
 }
 prog.hide_page = function ( page_id )
 {
-    var page = prog.text_box.querySelector("[data-page_id="+page_id+"]");
-    if ( page ) page.classList.add("hidden");
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id);
+    if ( page )
+    {
+        page.classList.add("hidden");
+        return true;
+    }
+    return false;
 }
+
 
 
 
@@ -291,13 +316,14 @@ prog.js_init = function()
     document.querySelector("body").appendChild(prog.tab_content);
     
     // and load into it tab's content
-    loadto("web_files/module/program_tab/html/program_tab.html", "a", prog.tab_content, 
+    loadto(prog.module_dir+"/html/program_tab.html", "a", prog.tab_content, 
         function() {
             prog.tab = tabs.add("&#x2009;Program&#x2009;", prog.tab_content.innerHTML, "program,file,editor", 0, true);
             document.querySelector("body").removeChild(prog.tab_content);
+            delete prog.tab_content;
             // catch btns clicks
             document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
-            document.querySelector("#program_text").addEventListener("scroll", prog.on_scroll );
+//            document.querySelector("#program_text").addEventListener("scroll", prog.on_scroll );
 //            document.querySelector("#program_text").addEventListener("click", prog.editor_update );
 //            document.querySelector("#program_text").addEventListener("keyup", prog.editor_update );
             prog.text_box = document.querySelector("#program_text");
