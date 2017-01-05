@@ -153,18 +153,33 @@ prog.on_scroll = function ( event )
             if ( prog.page_loaded(prev_page_id) ) 
             {
                 prog.show_page(prev_page_id);
-
-                var bottom_page_id = prog.bottom_visible_page_id();
-                if ( (bottom_page_id - top_page_id) > 1 ) prog.hide_page(bottom_page_id);
+                this.scrollTop += prog.text_box.querySelector("#program_text_page_"+prev_page_id).clientHeight;
             }
+            else prog.load_page(prev_page_id);
+
+            var bottom_page_id = prog.bottom_visible_page_id();
+            if ( (bottom_page_id - top_page_id) > 1 ) prog.hide_page(bottom_page_id);
         }
     } 
     // when scroll bar almost at the bottom
     else if ( 
         prog.last_scroll_pos <= (this.scrollHeight - prog.max_scroll_offset) &&
-        this.scrollBottom > (this.scrollHeight - prog.max_scroll_offset) 
+        this.scrollTop > (this.scrollHeight - prog.max_scroll_offset) 
     ) {
-        
+        var bottom_page_id = prog.bottom_visible_page_id();
+        if ( bottom_page_id < (prog.file_pages_count - 1) ) 
+        {
+            var post_page_id = bottom_page_id + 1;
+            if ( prog.page_loaded(post_page_id) ) 
+            {
+                prog.show_page(post_page_id);
+                this.scrollTop -= prog.text_box.querySelector("#program_text_page_"+post_page_id).clientHeight;
+            }
+            else prog.load_page(post_page_id);
+
+            var top_page_id = prog.top_visible_page_id();
+            if ( (bottom_page_id - top_page_id) > 1 ) prog.hide_page(top_page_id);
+        }
     }
     
     prog.last_scroll_pos = this.scrollTop;
@@ -176,12 +191,12 @@ prog.on_scroll = function ( event )
 prog.top_visible_page_id = function ( )
 {
     var page = prog.text_box.querySelector(".page:not(.hidden)");
-    return ( page ) ? page.getAttribute("data-page_id") : 0;
+    return ( page ) ? n(page.getAttribute("data-page_id")) : 0;
 }
 prog.bottom_visible_page_id = function ( )
 {
     var pages = prog.text_box.querySelectorAll(".page:not(.hidden)");
-    return ( pages ) ? pages[pages.length - 1].getAttribute("data-page_id") : 0;
+    return ( pages ) ? n(pages[pages.length - 1].getAttribute("data-page_id")) : 0;
 }
 
 prog.page_loaded = function ( page_id )
@@ -239,6 +254,9 @@ prog.load_page = function ( page_id )
     page.setAttribute("data-page_id", page_id);
     page.setAttribute("data-start_line", page_id * prog.page_lines);
 
+    // if it's last page, add a hard space to the end. It needs for visibility of last empty line
+    if ( page_id == (prog.file_pages_count - 1) ) page.innerHTML = "&nbsp;";
+
     var pages = prog.text_box.querySelectorAll(".page");
     if ( pages && pages.length > 0 ) {
         if ( pages[pages.length - 1].getAttribute("data-page_id") < page_id ) {
@@ -259,7 +277,7 @@ prog.load_page = function ( page_id )
             "php/get_file_lines.php?file="+prog.file+
             "&start="+(page_id * prog.page_lines)+
             "&count="+prog.page_lines, 
-        "a", 
+        "p", 
         page
     );
     
@@ -323,7 +341,7 @@ prog.js_init = function()
             delete prog.tab_content;
             // catch btns clicks
             document.querySelector("#program_tools").addEventListener("click", prog.btn_clicked );
-//            document.querySelector("#program_text").addEventListener("scroll", prog.on_scroll );
+            document.querySelector("#program_text").addEventListener("scroll", prog.on_scroll );
 //            document.querySelector("#program_text").addEventListener("click", prog.editor_update );
 //            document.querySelector("#program_text").addEventListener("keyup", prog.editor_update );
             prog.text_box = document.querySelector("#program_text");
