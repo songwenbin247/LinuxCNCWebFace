@@ -69,43 +69,45 @@ function u2u ( value, type, fixed )
 
 
 // load file into element
-function loadto ( file, loadmode, element, code )
+function loadto ( file, loadmode, element, code, cleanup_html )
 {
     if ( !parent.location.protocol.match("http") ) return;
-    if ( loadto.busy ) return setTimeout( loadto, 200, file, loadmode, element, code );
+    if ( loadto.busy ) return setTimeout( loadto, 200, file, loadmode, element, code, cleanup_html );
     if ( typeof(element) == "string" ) element = document.querySelector(element);
     if ( ! element ) return;
 
     loadto.busy                     = true;
     loadto.xhr                      = loadto.xhr ? loadto.xhr : new XMLHttpRequest();
     loadto.xhr.open('GET', file, true);
-    loadto.xhr.loadmode             = loadmode;
+    loadto.xhr.loadmode             = loadmode ? loadmode : "a";
     loadto.xhr.destElement          = element;
-    loadto.xhr.evalCode             = code;
+    loadto.xhr.evalCode             = code ? code : false;
+    loadto.xhr.cleanup_html         = cleanup_html ? true : false;
     loadto.xhr.onreadystatechange   = loadto.xhr.onreadystatechange ? loadto.xhr.onreadystatechange :
         function()
         {
             if ( this.readyState != 4 || !this.destElement ) return;
 
             this.destElement.style.opacity = 0;
+
+            var source = (this.status == 200) ? this.responseText : (this.status + ': ' + this.statusText);
+            if ( this.cleanup_html ) source = toHTML(source);
             
             switch ( this.loadmode ) {
                 case "p":
+                case "pre":
                 case "prepend":
                 case "before":
-                    this.destElement.innerHTML = 
-                        (this.status == 200 ? this.responseText : this.status + ': ' + this.statusText) +
-                        this.destElement.innerHTML;
+                    this.destElement.innerHTML = source + this.destElement.innerHTML;
                     break;
                 case "a":
+                case "post":
                 case "append":
                 case "after":
-                    this.destElement.innerHTML = 
-                        this.destElement.innerHTML +
-                        (this.status == 200 ? this.responseText : this.status + ': ' + this.statusText);
+                    this.destElement.innerHTML = this.destElement.innerHTML + source;
                     break;
                 default:
-                    this.destElement.innerHTML = this.status == 200 ? this.responseText : this.status + ': ' + this.statusText;
+                    this.destElement.innerHTML = source;
             }
 
             setTimeout( 
