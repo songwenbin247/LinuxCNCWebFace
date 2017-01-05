@@ -247,15 +247,26 @@ prog.load_page = function ( page_id )
     if ( prog.file_pages_count && page_id >= prog.file_pages_count ) return false;
     if ( prog.page_loaded(page_id) ) return false;
     
-    var page = document.createElement("DIV");
+    var page    = document.createElement("DIV");
+    var lines   = document.createElement("DIV");
+    var source  = document.createElement("DIV");
 
     page.className = "page";
     page.id = "program_text_page_" + page_id;
     page.setAttribute("data-page_id", page_id);
     page.setAttribute("data-start_line", page_id * prog.page_lines);
 
+    lines.className = "line_numbers";
+    lines.id = "program_text_page_lines_" + page_id;
+
+    source.className = "text";
+    source.id = "program_text_page_text_" + page_id;
+
+    page.appendChild(lines);
+    page.appendChild(source);
+
     // if it's last page, add a hard space to the end. It needs for visibility of last empty line
-    if ( page_id == (prog.file_pages_count - 1) ) page.innerHTML = "&nbsp;";
+    if ( page_id == (prog.file_pages_count - 1) ) source.innerHTML = "&nbsp;";
 
     var pages = prog.text_box.querySelectorAll(".page");
     if ( pages && pages.length > 0 ) {
@@ -278,7 +289,9 @@ prog.load_page = function ( page_id )
             "&start="+(page_id * prog.page_lines)+
             "&count="+prog.page_lines, 
         "p", 
-        page
+        source,
+        'prog.add_line_numbers_to_page('+page_id+');',
+        true
     );
     
     return true;
@@ -315,6 +328,40 @@ prog.hide_page = function ( page_id )
     return false;
 }
 
+prog.add_line_numbers_to_page = function ( page_id )
+{
+    var page = prog.text_box.querySelector("#program_text_page_"+page_id);
+    if ( page )
+    {
+        var source = page.querySelector("#program_text_page_text_"+page_id);
+
+        var lines = page.querySelector("#program_text_page_lines_"+page_id);
+        lines.innerHTML = "";
+
+        var number_chars = prog.file_lines_count.toString().length;
+        var blank = "0".repeat(number_chars);
+
+        var start_line = n( page.getAttribute("data-start_line") );
+        var newlines = source.innerHTML.match(/\n/mg);
+        var lines_count = newlines && newlines.length ? newlines.length : 0;
+        if ( lines_count <= 0 ) lines_count = 1;
+        if ( page_id == (prog.file_pages_count - 1) ) lines_count++;
+        
+        for ( 
+            var i = start_line, max = start_line + lines_count, num_str = "";
+            i < max;
+            i++
+        ) {
+            num_str = i.toString();
+            num_str = blank.substr(0, number_chars - num_str.length) + num_str;
+            lines.innerHTML += num_str + "\n";
+        }
+        
+        return true;
+    }
+
+    return false;
+}
 
 
 

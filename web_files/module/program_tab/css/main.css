@@ -117,17 +117,17 @@
     font-family: "DejaVu Sans Mono", "Courier New", monospace;
     font-size: 100%;
     background: rgba(0,0,0,0.02);
-    padding: 5px;
+    padding: 1px;
     margin: 0;
     width: 100%;
     height: calc(100% - 24px);
     box-sizing: border-box;
     overflow: auto;
+    white-space: nowrap;
 }
 
 .program_box > .program_text > .page
 {
-    white-space: pre;
     font-size: 100%;
     padding: 0;
     margin: 0;
@@ -135,6 +135,28 @@
 .program_box > .program_text > .page.hidden
 {
     display: none;
+}
+.program_box > .program_text > .page > .line_numbers
+{
+    display: inline-block;
+    white-space: pre;
+    font-size: 100%;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 0 4px 0 4px;
+    margin: 0;
+    vertical-align: top;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(0,0,0,0.05);
+}
+.program_box > .program_text > .page > .text
+{
+    display: inline-block;
+    white-space: pre;
+    font-size: 100%;
+    padding: 0 0 0 4px;
+    margin: 0;
+    vertical-align: top;
 }
 
 .program_box > .program_text > .page > .comment { color: #999999; }
