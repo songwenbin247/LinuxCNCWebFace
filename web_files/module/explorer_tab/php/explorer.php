@@ -246,10 +246,11 @@ foreach ($folderlist as $key=>$row) {
 if( isset($_GET['order']) && $_GET['order'] ) {
 	array_multisort($folder_order_by, SORT_DESC, $folderlist);
 	array_multisort($file_order_by, SORT_DESC, $filelist);
+	$order = "asc";
 } else {
 	array_multisort($folder_order_by, SORT_ASC, $folderlist);
 	array_multisort($file_order_by, SORT_ASC, $filelist);
-	$order = "&order=desc";
+	$order = "desc";
 }
 
 
@@ -264,9 +265,9 @@ $sort_methods['file_type'] = '&#x2009;'.lng("Type").'&#x2009;';
 
 foreach($sort_methods as $key=>$item) {
 	if($_GET['sort'] == $key) {
-		print "<th class='n'><a href='?sort=$key$order'>$item</a></th>";
+		print "<th class='n'><a href='javascript:expl.open_dir(\"$rel_path\",\"$key\",\"$order\")'>$item</a></th>";
 	} else {
-		print "<th class='n'><a href='?sort=$key'>$item</a></th>";
+		print "<th class='n'><a href='javascript:expl.open_dir(\"$rel_path\",\"$key\")'>$item</a></th>";
 	}
 }
 print "</tr></thead><tbody>";

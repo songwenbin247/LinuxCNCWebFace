@@ -65,10 +65,15 @@ expl.update_path_buttons = function ( dir_path )
 
 
 
-expl.open_dir = function ( path )
+expl.open_dir = function ( path, sort, order )
 {
     expl.update_path_buttons(path);
-    loadto("web_files/module/explorer_tab/php/explorer.php?path="+path, "r", "#explorer" ); 
+    
+    var uri = "web_files/module/explorer_tab/php/explorer.php?path="+path;
+    if ( sort ) uri += "&sort=" + sort;
+    if ( order ) uri += "&order=" + order;
+
+    loadto(uri, "r", "#explorer" ); 
     return true;
 }
 
