@@ -40,8 +40,8 @@ $calculate_folder_size = false;
 // Various file type associations
 $movie_types = array('mpg','mpeg','avi','asf','mp3','wav','mp4','wma','aif','aiff','ram', 'midi','mid','asf','au','flac');
 $image_types = array('jpg','jpeg','gif','png','tif','tiff','bmp','ico');
-$archive_types = array('zip','cab','7z','gz','tar.bz2','tar.gz','tar','rar',);
-$document_types = array('txt','text','doc','docx','abw','odt','pdf','rtf','tex','texinfo',);
+$archive_types = array('zip','cab','7z','gz','tar.bz2','tar.gz','tar','rar');
+$document_types = array('txt','text','doc','docx','abw','odt','pdf','rtf','tex','texinfo');
 $font_types = array('ttf','otf','abf','afm','bdf','bmf','fnt','fon','mgf','pcf','ttc','tfm','snf','sfd');
 
 
@@ -144,7 +144,12 @@ function format_bytes($size, $precision=0) {
 // This function returns the mime type of $file.
 //
 function get_file_type($file) {
-	global $image_types, $movie_types;
+	global 
+        $image_types, 
+        $movie_types,
+        $archive_types,
+        $document_types,
+        $font_types;
 	
 	$pos = strrpos($file, ".");
 	if ($pos === false) {
@@ -185,7 +190,9 @@ print "<table cellpadding='0' cellspacing='0'>";
 // Get all of the folders and files. 
 $folderlist = array();
 $filelist = array();
-if($handle = @opendir($path)) {
+$handle = opendir($path);
+if ( $handle ) 
+{
 	while(($item = readdir($handle)) !== false) {
 		if(is_dir($path.'/'.$item) and $item != '.' and $item != '..') {
 			if( $show_hidden_files == "false" ) {
@@ -215,7 +222,7 @@ if($handle = @opendir($path)) {
 			);
 		}
 	}
-	fclose($handle);
+	closedir($handle);
 }
 
 
@@ -236,7 +243,7 @@ foreach ($folderlist as $key=>$row) {
 }
 
 // Order the files and folders
-if($_GET['order']) {
+if( isset($_GET['order']) && $_GET['order'] ) {
 	array_multisort($folder_order_by, SORT_DESC, $folderlist);
 	array_multisort($file_order_by, SORT_DESC, $filelist);
 } else {
