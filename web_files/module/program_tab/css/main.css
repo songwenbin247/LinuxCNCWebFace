@@ -11,6 +11,11 @@
     box-sizing: border-box;
     margin: 0 20px 5px 0;
 }
+.program_tools > .icon_group.right
+{
+    float: right;
+    margin: 0 0 5px 10px;
+}
 .program_tools > .icon_group > .icon
 {
     display: inline-block;
@@ -29,6 +34,11 @@
     text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+.program_tools > .icon_group > .icon.right
+{
+    margin-right: 0px;
+    margin-left: 4px;
 }
 .program_tools > .icon_group > .icon:hover
 {
