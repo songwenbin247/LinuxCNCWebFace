@@ -381,7 +381,7 @@ prog.js_init = function()
     document.querySelector("body").appendChild(prog.tab_content);
     
     // and load into it tab's content
-    loadto(prog.module_dir+"/html/program_tab.html", "a", prog.tab_content, 
+    loadto(prog.module_dir+"html/program_tab.html", "new", prog.tab_content, 
         function() {
             prog.tab = tabs.add("&#x2009;Program&#x2009;", prog.tab_content.innerHTML, "program,file,editor", 0, true);
             document.querySelector("body").removeChild(prog.tab_content);
