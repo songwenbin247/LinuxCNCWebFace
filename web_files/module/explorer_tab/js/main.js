@@ -7,10 +7,7 @@
 // settings vars and functions
 var expl =
 {
-    db: {},
-    
-    current_file: false,
-    current_dir: false
+    db: {}
 };
 
 // have we a localStorage?
@@ -31,105 +28,55 @@ expl.simpleClickAnimation = function ( id )
 // some of the move buttons was clicked
 expl.path_btn_clicked = function ( event )
 {
-    var id = event.target.id;
-    expl.simpleClickAnimation(id);
-    
-    var path = event.target.getAttribute("data-path");
-    var frame = document.querySelector("#explorer");
-    
-    frame.src = path;
+    expl.simpleClickAnimation( event.target.id );
+    expl.open_dir( event.target.getAttribute("data-path") );
 }
 
-expl.btn_clicked = function ( event )
+expl.upload_clicked = function()
 {
-    var id;
-
-    if ( /_(file|program)$/.test(event.target.id) ) id = event.target.id;
-    else if ( /_(file|program)$/.test(event.target.parentElement.id) ) id = event.target.parentElement.id;
-    else return;
-
-    expl.simpleClickAnimation(id);
-
-    switch (id) {
-        case "upload_file": 
-            log.add("[PROG] Upload file to the host PC");
-            break;
-    }
+    log.add("[PROG] Upload file to the host PC");
 }
 
 
 
 
-expl.tab_frame_unload_start = function() 
+expl.update_path_buttons = function ( dir_path ) 
 {
-    var frame = document.querySelector("#explorer");
-    frame.style.visibility = "hidden";
-}
+    var group = document.querySelector("#explorer_path_buttons");
+    var sub_paths = dir_path.match(/\/[^\/]+/igm) || [];
 
-expl.tab_frame_load_end = function() 
-{
-    var frame       = document.querySelector("#explorer");
-    var frame_doc   = frame.contentDocument;
-    var frame_path  = decodeURI( frame_doc.location.pathname.replace(/([^\/])\/+$/igm, "$1") );
-    var sub_paths   = frame_path.match(/\/[^\/]+/igm) || [];
-    
-    frame.contentWindow.addEventListener("unload", expl.tab_frame_unload_start);
-
-    var is_file     = false;
-    var first_sript = frame_doc.querySelector("head script");
-    if (    
-        frame_doc.contentType != "text/html" ||
-        !first_sript ||
-        !first_sript.hasAttribute("src") || 
-        !first_sript.getAttribute("src").match(/explorer\.js/i) 
-    ) {
-        is_file = true;
-    }
-
-    expl.current_file   = is_file ? frame_path : false;
-    expl.current_dir    = is_file ? frame_path.replace(/\/[^\/]+$/im, "") : frame_path;
+    group.innerHTML = "";
 
     sub_paths.unshift("/");
 
-    var group = document.createElement("div"); 
-    group.classList.add("icon_group");
-
-    if ( is_file ) {
-        // last folder
-        var icon = document.createElement("div");
-        icon.classList.add("icon","dir");
-        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 2].replace(/^\/([^\/])/igm,"$1") );
-        icon.id = "path_part_" + (sub_paths.length - 2);
-        icon.setAttribute( "data-path", toHTML(frame_path.replace(/\/[^\/]+$/im, "")) );
-        icon.setAttribute( "title", icon.getAttribute("data-path") );
-        icon.addEventListener("click", expl.path_btn_clicked);
-        group.appendChild(icon);
-
-        // file name
-        icon = document.createElement("div");
-        icon.classList.add("icon","file");
-        icon.innerHTML = toHTML( sub_paths[sub_paths.length - 1].replace(/^\/([^\/])/igm,"$1") );
-        icon.setAttribute( "title", icon.innerHTML );
-        group.appendChild(icon);
-    } else {
-        for ( var d = 0, elem, path = ""; d < sub_paths.length; d++ ) {
-            path += sub_paths[d];
-            elem = document.createElement("div");
-            elem.classList.add("icon","dir");
-            elem.innerHTML = toHTML( sub_paths[d].replace(/^\/([^\/])/igm,"$1") );
-            elem.id = "path_part_"+d;
-            elem.setAttribute( "data-path", toHTML(path.replace(/^\/+/igm,"/")) );
-            elem.setAttribute( "title", elem.getAttribute("data-path") );
-            elem.addEventListener("click", expl.path_btn_clicked);
-            group.appendChild(elem);
-        }
+    for ( var d = 0, elem, path = ""; d < sub_paths.length; d++ ) {
+        path += sub_paths[d];
+        elem = document.createElement("div");
+        elem.id = "expl_path_btn_" + d;
+        elem.classList.add("icon","dir");
+        elem.innerHTML = toHTML( sub_paths[d].replace(/^\/([^\/])/igm,"$1") );
+        elem.setAttribute( "data-path", toHTML(path.replace(/^\/+/igm,"/")) );
+        elem.setAttribute( "title", elem.getAttribute("data-path") );
+        elem.addEventListener("click", expl.path_btn_clicked);
+        group.appendChild(elem);
     }
+}
 
-    var tools = document.querySelector("#explorer_tools");
-    tools.innerHTML = "";
-    tools.appendChild(group);
 
-    frame.style.visibility = "visible";
+
+
+expl.open_dir = function ( path )
+{
+    expl.update_path_buttons(path);
+    loadto("web_files/module/explorer_tab/php/explorer.php?path="+path, "r", "#explorer" ); 
+    return true;
+}
+
+expl.open_file = function ( path )
+{
+    if ( prog && prog.load_file ) prog.load_file(path);
+    tabs.activate("program");
+    return true;
 }
 
 
@@ -155,10 +102,9 @@ expl.js_init = function()
         function() {
             expl.tab = tabs.add("&#x2009;Explorer&#x2009;", expl.tab_content.innerHTML, "explorer,manager", 1, false);
             document.querySelector("body").removeChild(expl.tab_content);
-            // catch btns clicks
-//            document.querySelector("#program_tools").addEventListener("click", expl.btn_clicked );
             lng.update();
-            document.querySelector("#explorer").addEventListener("load", expl.tab_frame_load_end );
+            document.querySelector("#upload_file").addEventListener("click", expl.upload_clicked );
+            expl.open_dir("/"); 
         }
     );
 }
