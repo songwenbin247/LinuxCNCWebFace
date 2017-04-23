@@ -1,6 +1,10 @@
 ===Web Interface for the LinuxCNC
 Project uses PHP/HTML5/CSS3/JavaScript and WebSockets.
 
+**Soft usage**:
+* **lighttpd** (https://github.com/lighttpd/lighttpd1.4) + **mod_websocket** (https://github.com/nori0428/mod_websocket)
+* **linuxcncrsh** and **halrmt** components of the **LinuxCNC**
+
 **Targets**:
 * Good web interface for the LinuxCNC (https://github.com/LinuxCNC/linuxcnc)
 
