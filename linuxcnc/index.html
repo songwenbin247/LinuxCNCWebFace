@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>LinuxCNC + websocketd + python</title>
+    </head>
+    <body>
+        <!-- interface -->
+        <div style="text-align:center">
+            <div style="display:inline-block; width:50%; text-align:center">
+                <h2>LinuxCNC + websocketd + python</h2><br />
+                <div style="display:inline-block; width:100%; text-align:center">
+                    X: <input id="xpos" type="text" value="0.0" disabled /><br />
+                    Y: <input id="ypos" type="text" value="0.0" disabled /><br />
+                    Z: <input id="zpos" type="text" value="0.0" disabled />
+                </div><br />
+                <br />
+                <br />
+                <div style="display:inline-block; width:100%; text-align:center">
+                    MDI:
+                    <input id="mdi" type="text" title="Example: G0 X10 Y20 Z30" />
+                    <input id="ok" type="button" value="OK" />
+                </div><br />
+                <br />
+                <br />
+                <div id="log" style="height:150px; text-align:left; outline:1px solid; overflow:auto"></div>
+            </div>
+        </div>
+
+        <!-- logic -->
+        <script type="text/javascript">
+            // get main elements
+            var xpos    = document.querySelector("#xpos");
+            var ypos    = document.querySelector("#ypos");
+            var zpos    = document.querySelector("#zpos");
+            var mdi     = document.querySelector("#mdi");
+            var ok      = document.querySelector("#ok");
+            var log     = document.querySelector("#log");
+
+            // log messages output
+            function log_ms ( ms ) 
+            {
+                var t = new Date();
+                var out = "<strong>" + t.toLocaleTimeString() + "</strong>: ";
+                
+                out += ms + "<br />";
+
+                log.innerHTML = out + log.innerHTML;
+                log.scrollTop = 0;
+            }
+
+            // sending MDI commands
+            function mdi_ms ( ms ) 
+            {
+                log_ms(ms);
+                lcnc_ws.send("mdi " + ms);
+            }
+
+            // websockets
+            var ws_path = "ws://" + parent.location.hostname + "/lcnc_cmd.py";
+            var lcnc_ws = new WebSocket(ws_path);
+
+            lcnc_ws.onopen = function(e) { log_ms("`"+ws_path+"` websocket is open"); };
+            lcnc_ws.onclose = function(e) { log_ms("`"+ws_path+"` websocket is closed ("+e.code+":"+e.reason+")"); };
+            lcnc_ws.onmessage = function(e) 
+            {
+                log_ms("<u>LCNC</u>: "+e.data);
+            };
+            
+            // interface controls handling
+            ok.addEventListener( "click", function(e) { mdi_ms(mdi.value); } );
+            mdi.addEventListener( "keyup", function(e) { if ( event.keyCode == 13 ) mdi_ms(mdi.value); } );
+        </script>
+    </body>
+</html>
