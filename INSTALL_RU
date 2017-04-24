@@ -1,0 +1,60 @@
+1.  Скопируйте файлы из папки `linuxcnc` 
+    в папку `/home/{USER}/linuxcnc`.
+
+    Подсказка: {USER} это имя юзера, которое использует LinuxCNC
+
+    
+
+2.  Создайте папку `/home/{USER}/linuxcncweb` 
+    и скопируйте файлы из `linuxcncweb` в неё.
+
+    Подсказка: {USER} это имя юзера, которое использует LinuxCNC
+
+    
+    
+3.  Сделайте эти файлы исполняемыми
+
+        /home/{USER}/linuxcncweb/websocketd
+        /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+
+    Подсказки:
+    
+        sudo chmod 744 /home/{USER}/linuxcncweb/websocketd
+        sudo chmod 744 /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+        
+        {USER} это имя юзера, которое использует LinuxCNC.
+        744 значит, что все юзеры могут читать и только автор менять/запускать
+    
+    
+        
+4.  Запустите `websocketd` как указано ниже
+
+        /home/{USER}/linuxcncweb/websocketd --port=80 --dir=/home/{USER}/linuxcncweb/ws --staticdir=/home/{USER}/linuxcnc
+
+    Подсказки:
+        
+        {USER} это имя юзера, которое использует LinuxCNC.
+        Чтобы прервать работу программы нажмите `CTRL + C`.
+
+    
+    
+5.  Проверка веб интерфейса
+    
+    Вы должны узнать IP адрес вашей системы.
+    Для этого выполните команду
+    
+        sudo ifconfig
+    
+    и найдите в её выводе что-то похожее на
+    
+        eth1    Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX  
+                inet addr:192.168.X.X  Bcast:192.168.X.255  Mask:255.255.255.0
+                ...
+                
+    192.168.X.X и будет IP адрес вашей системы.
+    
+    Откройте ваш любимый браузер (Firefox, Chrome, ..)
+    Скопируйте IP адрес в поле веб адреса и нажмите Enter.
+    
+    Если всё в порядке, то вы увидите страницу
+    с названием "LinucCNC + websocketd + python".

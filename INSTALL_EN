@@ -1,0 +1,60 @@
+1.  Copy files from `linuxcnc` folder to the 
+    `/home/{USER}/linuxcnc` folder.
+
+    Tip: {USER} it's real user name which uses by LinuxCNC to run
+
+    
+
+2.  Create folder `/home/{USER}/linuxcncweb` 
+    and copy files from `linuxcncweb` to this folder.
+
+    Tip: {USER} it's real user name which uses by LinuxCNC to run
+
+    
+    
+3.  Make these files executable
+
+        /home/{USER}/linuxcncweb/websocketd
+        /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+
+    Tips:
+    
+        sudo chmod 744 /home/{USER}/linuxcncweb/websocketd
+        sudo chmod 744 /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+        
+        {USER} it's real user name which uses by LinuxCNC to run.
+        744 means all users can read, and only owner can edit/execute
+    
+    
+        
+4.  Run the `websocketd` like this
+
+        /home/{USER}/linuxcncweb/websocketd --port=80 --dir=/home/{USER}/linuxcncweb/ws --staticdir=/home/{USER}/linuxcnc
+
+    Tips:
+        
+        {USER} it's real user name which uses by LinuxCNC to run.
+        To abort program execution press `CTRL + C`.
+
+    
+    
+5.  Checking web interface
+    
+    We need to know the IP address of the current system.
+    So use this command
+    
+        sudo ifconfig
+    
+    and find in the output something like this
+    
+        eth1    Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX  
+                inet addr:192.168.X.X  Bcast:192.168.X.255  Mask:255.255.255.0
+                ...
+                
+    The 192.168.X.X it's your IP address.
+    
+    Open your favorite browser (Firefox, Chrome, etc.)
+    Copy your IP into address field and press Enter.
+    
+    If all things is OK you will see a test web page 
+    named "LinucCNC + websocketd + python".
