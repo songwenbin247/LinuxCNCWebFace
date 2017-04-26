@@ -29,7 +29,7 @@
         
 4.  Запустите `websocketd` как указано ниже
 
-        /home/{USER}/linuxcncweb/websocketd --port=80 --dir=/home/{USER}/linuxcncweb/ws --staticdir=/home/{USER}/linuxcnc
+        sudo /home/{USER}/linuxcncweb/websocketd --port=80 --dir=/home/{USER}/linuxcncweb/ws --staticdir=/home/{USER}/linuxcnc
 
     Подсказки:
         
