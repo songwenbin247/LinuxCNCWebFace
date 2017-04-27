@@ -15,12 +15,12 @@
 3.  Сделайте эти файлы исполняемыми
 
         /home/{USER}/linuxcncweb/websocketd
-        /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+        /home/{USER}/linuxcncweb/ws/lcnc.py
 
     Подсказки:
     
         sudo chmod 744 /home/{USER}/linuxcncweb/websocketd
-        sudo chmod 744 /home/{USER}/linuxcncweb/ws/lcnc_cmd.py
+        sudo chmod 744 /home/{USER}/linuxcncweb/ws/lcnc.py
         
         {USER} это имя юзера, которое использует LinuxCNC.
         744 значит, что все юзеры могут читать и только автор менять/запускать
