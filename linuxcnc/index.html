@@ -84,18 +84,24 @@
 
             // sending MDI commands
             function cmd_ms ( ms ) {
-                log_ms(ms);
-                lcnc_ws.send(ms);
+                if ( !lcnc_ws.open ) return;
+                log_ms("<u>YOU</u>: "+ms);
+                lcnc_ws.sock.send(ms);
             }
 
             // websockets
-            var ws_path = "ws://" + parent.location.hostname + "/lcnc.py";
-            var lcnc_ws = new WebSocket(ws_path);
+            var lcnc_ws = { open:0, path:"ws://" + parent.location.hostname + "/lcnc.py" };
 
-            lcnc_ws.onopen = function(e) { log_ms("`"+ws_path+"` websocket is open"); };
-            lcnc_ws.onclose = function(e) { log_ms("`"+ws_path+"` websocket is closed ("+e.code+":"+e.reason+")"); };
+            lcnc_ws.onopen = function(e) { 
+                lcnc_ws.open = 1;
+                log_ms("<u>index.html</u>: `"+lcnc_ws.path+"` websocket is open"); 
+            };
+            lcnc_ws.onclose = function(e) {
+                lcnc_ws.open = 0; 
+                log_ms("<u>index.html</u>: `"+lcnc_ws.path+"` websocket is closed (code:"+e.code+")");
+            };
             lcnc_ws.onmessage = function(e) {
-                if ( e.data.match(/linuxcnc\.stat\(\)\.joint_position/g) ) {
+                if ( e.data.match(/linuxcnc\.stat\(\)\.joint_position\s*=/g) ) {
                     var params = e.data.replace(/.+=/g,"").match(/[\-\.0-9e]+/gi);
                     if ( params ) {
                         if ( params[0] ) valx.value = parseFloat(params[0]).toFixed(4);
@@ -103,8 +109,17 @@
                         if ( params[2] ) valz.value = parseFloat(params[2]).toFixed(4);
                     }
                 }
-                else log_ms(e.data);
+                else log_ms("<u>lcnc.py</u>: "+e.data);
             };
+            lcnc_ws.connect = function() {
+                lcnc_ws.sock = new WebSocket(lcnc_ws.path);
+                lcnc_ws.sock.onopen = lcnc_ws.onopen;
+                lcnc_ws.sock.onclose = lcnc_ws.onclose;
+                lcnc_ws.sock.onmessage = lcnc_ws.onmessage;
+            }
+            
+            lcnc_ws.connect();
+            setInterval( function() { if (!lcnc_ws.open) lcnc_ws.connect(); }, 5000 );
             
             // command input field is active by default
             cmd.focus();
@@ -136,7 +151,7 @@
             document.querySelector("#posz").addEventListener( "mouseup",    function() { cmd_ms("linuxcnc.command().jog(linuxcnc.JOG_STOP, 2)"); } );
             
             // update coordinates every 0.2 sec
-            setInterval( function() { lcnc_ws.send("linuxcnc.stat().joint_position"); }, 200 );
+            setInterval( function() { if (lcnc_ws.open) lcnc_ws.sock.send("linuxcnc.stat().joint_position"); }, 200 );
         </script>
     </body>
 </html>
