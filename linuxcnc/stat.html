@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>linuxcnc.stat()</title>
+        <style type="text/css">
+            table {
+                font-size: 10pt;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- interface -->
+        <div style="text-align:center">
+            <div style="display:inline-block; width:70%; text-align:center">
+                <strong>linuxcnc.stat()</strong> 
+                (see <a href="http://www.linuxcnc.org/docs/html/config/python-interface.html">Python interface</a>)
+                <br />
+                Update interval = 10 seconds<br />
+                <br />
+                <table border=1 id="stat_val_table"></table>
+            </div>
+        </div>
+
+        <!-- logic -->
+        <script type="text/javascript">
+            var stat_ids = [
+                "acceleration", "active_queue", "actual_position", "adaptive_feed_enabled", "ain", "angular_units", "aout", 
+                "axes", "axis", "axis_mask", "block_delete", "call_level", "command", "current_line", "current_vel", "cycle_time", 
+                "debug", "delay_left", "din", "distance_to_go", "dout", "dtg", "echo_serial_number", "enabled", "estop", "exec_state", 
+                "feed_hold_enabled", "feed_override_enabled", "feedrate", "file", "flood", "g5x_index", "g5x_offset", "g92_offset", 
+                "gcodes", "homed", "id", "inpos", "input_timeout", "interp_state", "interpreter_errcode", "joint_actual_position", 
+                "joint_position", "kinematics_type", "limit", "linear_units", "lube", "lube_level", "max_acceleration", "max_velocity", 
+                "mcodes", "mist", "motion_line", "motion_mode", "motion_type", "optional_stop", "paused", "pocket_prepped", 
+                "position", "probe_tripped", "probe_val", "probed_position", "probing", "program_units", "queue", "queue_full", 
+                "queued_mdi_commands", "rapidrate", "read_line", "rotation_xy", "settings", "spindle_brake", "spindle_direction", 
+                "spindle_enabled", "spindle_increasing", "spindle_override_enabled", "spindle_speed", "spindlerate", "state", 
+                "task_mode", "task_paused", "task_state", "tool_in_spindle", "tool_offset", "tool_table", "velocity"
+            ];
+
+            // fill the stats table
+            for ( var s = 0, tr, t = document.querySelector("#stat_val_table"); s < stat_ids.length; s++ ) {
+                tr = document.createElement("tr");
+                tr.innerHTML = "<td><strong>"+stat_ids[s]+"</strong>:</td><td id=\"stat_"+stat_ids[s]+"\"></td>";
+                t.appendChild(tr);
+            }
+
+            function stat_data_request() { 
+                if (lcnc_ws.open) {
+                    console.log("requesting data..");
+                    lcnc_ws.sock.send("linuxcnc.stat().poll()");
+                    for ( var s = 0; s < stat_ids.length; s++ ) {
+                        lcnc_ws.sock.send("linuxcnc.stat()."+stat_ids[s]);
+                    }
+                } 
+            }
+            setInterval(stat_data_request, 10000);
+            
+            // websockets
+            var lcnc_ws = { open:0, path:"ws://" + parent.location.hostname + "/lcnc.py" };
+            lcnc_ws.onopen = function(e) { lcnc_ws.open = 1; console.log("ws opened"); stat_data_request(); };
+            lcnc_ws.onclose = function(e) { lcnc_ws.open = 0; console.log("ws closed"); };
+            lcnc_ws.onmessage = function(e) {
+                if ( e.data.match(/linuxcnc\.stat\(\)/g) ) {
+                    var params = e.data.match(/linuxcnc\.stat\(\)\.(\w+)\s+=\s+(.*)$/i);
+                    if ( !params ) return;
+                    var e = document.querySelector("#stat_"+params[1]);
+                    if (e) e.innerHTML = params[2];
+                }
+            };
+            lcnc_ws.connect = function() {
+                lcnc_ws.sock = new WebSocket(lcnc_ws.path);
+                lcnc_ws.sock.onopen = lcnc_ws.onopen;
+                lcnc_ws.sock.onclose = lcnc_ws.onclose;
+                lcnc_ws.sock.onmessage = lcnc_ws.onmessage;
+            }
+            lcnc_ws.connect();
+            setInterval( function() { if (!lcnc_ws.open) lcnc_ws.connect(); }, 5000 );
+        </script>
+    </body>
+</html>

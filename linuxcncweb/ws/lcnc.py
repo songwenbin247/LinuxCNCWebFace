@@ -17,7 +17,7 @@ except linuxcnc.error:
     exit(1)
     
 # compiled regex
-lcnc_stat_re    = re.compile( r'^linuxcnc\.stat\(\)\.\w+(\[[0-9]+\](\[(\'\w+\'|\"\w+\")\]|\.\w+)?)?$' )
+lcnc_stat_re    = re.compile( r'^linuxcnc\.stat\(\)\.\w[\s\w\(\)\[\]\'\",.-]+$' )
 lcnc_cmd_re     = re.compile( r'^linuxcnc\.command\(\)\.\w+(\([^\(\)]*\))?$' )
 lcnc_err_re     = re.compile( r'^linuxcnc\.error_channel\(\)\.\w+\(\)$' )
 lcnc_const_re   = re.compile( r'^linuxcnc\.[A-Z_]+$' )
@@ -40,22 +40,17 @@ while 1:
         line = line.strip(' \t\n\r')
 
         if lcnc_stat_re.search(line) :
-            try: 
-                s.poll()
+            code = line.replace('linuxcnc.stat()', 's')
+            try:
+                print line + ' = ' + str(eval(code))
+            except AttributeError:
+                print line + ' : Unknown attribute, linuxcnc.stat().???'
+            except IndexError:
+                print line + ' : Unknown index, linuxcnc.stat().list[???]'
+            except KeyError:
+                print line + ' : Unknown key, linuxcnc.stat().list[][???]'
             except linuxcnc.error, detail:
-                print 'linuxcnc.stat().poll() : linuxcnc.error', detail
-            else:
-                code = line.replace('linuxcnc.stat()', 's')
-                try:
-                    print line + ' = ' + str(eval(code))
-                except AttributeError:
-                    print line + ' : Unknown attribute, linuxcnc.stat().???'
-                except IndexError:
-                    print line + ' : Unknown index, linuxcnc.stat().list[???]'
-                except KeyError:
-                    print line + ' : Unknown key, linuxcnc.stat().list[][???]'
-                except linuxcnc.error, detail:
-                    print line + ' : linuxcnc.error', detail
+                print line + ' : linuxcnc.error', detail
 
         elif lcnc_cmd_re.search(line) :
             code = line.replace('linuxcnc.command()', 'c')

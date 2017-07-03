@@ -109,6 +109,9 @@
                         if ( params[2] ) valz.value = parseFloat(params[2]).toFixed(4);
                     }
                 }
+                else if ( e.data.match(/linuxcnc\.stat\(\)\.poll\(/g) ) {
+                    // nothing
+                }
                 else log_ms("<u>lcnc.py</u>: "+e.data);
             };
             lcnc_ws.connect = function() {
@@ -151,7 +154,15 @@
             document.querySelector("#posz").addEventListener( "mouseup",    function() { cmd_ms("linuxcnc.command().jog(linuxcnc.JOG_STOP, 2)"); } );
             
             // update coordinates every 0.2 sec
-            setInterval( function() { if (lcnc_ws.open) lcnc_ws.sock.send("linuxcnc.stat().joint_position"); }, 200 );
+            setInterval( 
+                function() { 
+                    if (lcnc_ws.open) {
+                        lcnc_ws.sock.send("linuxcnc.stat().poll()"); 
+                        lcnc_ws.sock.send("linuxcnc.stat().joint_position"); 
+                    }
+                }, 
+                200 
+            );
         </script>
     </body>
 </html>
